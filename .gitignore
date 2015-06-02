@@ -1,9 +1,7 @@
 .idea
 *.orig
 .sass-cache
-/var
 /node_modules
-/bower_components
 *.backup.json
-finder_demo-*.zip
+finder-demo-*.zip
 test-results.xml

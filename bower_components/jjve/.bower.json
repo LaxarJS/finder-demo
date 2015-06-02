@@ -1,0 +1,14 @@
+{
+  "name": "jjve",
+  "homepage": "https://github.com/silas/jjve",
+  "version": "0.5.0",
+  "_release": "0.5.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "0.5.0",
+    "commit": "01182a432ff58617f99ab514a46de6ab162bee97"
+  },
+  "_source": "git://github.com/silas/jjve.git",
+  "_target": "0.5.x",
+  "_originalSource": "silas/jjve"
+}

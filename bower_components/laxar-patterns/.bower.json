@@ -1,0 +1,33 @@
+{
+  "name": "laxar-patterns",
+  "version": "1.0.0-beta.0",
+  "description": "Utilities to implement standard event patterns in LaxarJS widgets",
+  "main": "dist/laxar-patterns.js",
+  "authors": [],
+  "license": "MIT",
+  "ignore": [
+    ".*",
+    "Gruntfile.js",
+    "node_modules",
+    "bower_components"
+  ],
+  "dependencies": {
+    "requirejs": "jrburke/requirejs#2.1.x",
+    "requirejs-plugins": "millermedeiros/requirejs-plugins#1.0.x",
+    "fast-json-patch": "Starcounter-Jack/JSON-Patch#~0.5.2"
+  },
+  "devDependencies": {
+    "laxar-patterns": "LaxarJS/laxar-patterns#^1.0.0-beta.0",
+    "laxar": "LaxarJS/laxar#^1.0.0-beta.0"
+  },
+  "homepage": "https://github.com/LaxarJS/dist-laxar-patterns",
+  "_release": "1.0.0-beta.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "v1.0.0-beta.0",
+    "commit": "beb7dd4b4ff42aa263e621025c24fcaaec895fbd"
+  },
+  "_source": "git://github.com/LaxarJS/dist-laxar-patterns.git",
+  "_target": "~1.0.0-beta.0",
+  "_originalSource": "laxar-patterns"
+}
