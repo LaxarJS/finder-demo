@@ -1,0 +1,6 @@
+[submodule "includes/widgets/laxarjs/ax-developer-tools-widget"]
+	path = includes/widgets/laxarjs/ax-developer-tools-widget
+	url = git@github.com:LaxarJS/ax-developer-tools-widget.git
+[submodule "includes/themes/cube.theme"]
+	path = includes/themes/cube.theme
+	url = git@github.com:LaxarJS/cube.theme.git

@@ -1,0 +1,11 @@
+{
+   "places": {
+      "entry": {
+         "redirectTo": "finder"
+      },
+
+      "finder/:query": {
+         "page":  "finder"
+      }
+   }
+}

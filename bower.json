@@ -1,0 +1,19 @@
+{
+   "name": "finder_demo",
+   "version": "0.1.0",
+   "description": "The Almighty Finder of Things.",
+   "license": "MIT",
+   "dependencies": {
+      "requirejs": "2.1.x",
+      "requirejs-plugins": "1.0.x",
+      "laxar": "~1.0.0-beta.0",
+      "laxar-uikit": "~1.0.0-beta.0",
+      "laxar-patterns": "~1.0.0-beta.0",
+
+      "ol3": "~3.4.x"
+   },
+   "devDependencies": {
+      "es5-shim": "2.3.x",
+      "jasmine": "1.3.x"
+   }
+}

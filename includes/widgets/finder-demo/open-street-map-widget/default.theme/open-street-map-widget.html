@@ -1,0 +1,41 @@
+<div data-ng-switch="functions.state()">
+
+   <h3 class="ax-function-point ax-logo">Open Street Map</h3>
+
+   <div data-ng-switch-when="SELECTED">
+      <div class="row">
+         <div class="col-md-6">
+            <h4>{{ model.selectedLocation.display_name }}</h4>
+         </div>
+         <div class="col-md-6">
+            <select class="form-control"
+                    data-ng-if="model.results.length > 1"
+                    data-ng-model="model.selectedLocation"
+                    data-ng-options="location as location.display_name for location in model.results"></select>
+         </div>
+      </div>
+      <div class="row">
+         <div class="col-md-12"
+              data-open-street-map-widget-map="model.selectedLocation"></div>
+      </div>
+   </div>
+
+   <div class="ax-alert" data-ng-switch-when="SEARCHING">
+      <p class="ax-alert__text ax-spinner" >
+         <i class="spinner"></i>Suche läuft
+      </p>
+   </div>
+
+   <div class="ax-alert" data-ng-switch-when="IDLE">
+      <p class="ax-alert__text" >
+          <i class="fa fa-search ax-alert__icon"></i>Keine Suche gestartet
+      </p>
+   </div>
+
+   <div class="ax-alert" data-ng-switch-when="NO_RESULTS">
+      <p class="ax-alert__text text-danger" >
+         <i class="fa fa-exclamation-triangle ax-alert__icon"></i>Zu Ihrer Suche konnte leider nichts gefunden werden.
+      </p>
+   </div>
+
+</div>

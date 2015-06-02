@@ -1,0 +1,29 @@
+{
+   "name": "SearchBoxWidget",
+   "description": "Simple Box for entering search words.",
+
+   "integration": {
+      "technology": "angular",
+      "type": "widget"
+   },
+
+   "features": {
+      "$schema": "http://json-schema.org/draft-04/schema#",
+      "type": "object",
+      "required": [ "search" ],
+      "properties": {
+
+         "search": {
+            "type": "object",
+            "required": [ "resource" ],
+            "properties": {
+               "resource": {
+                  "type": "string",
+                  "format": "topic"
+               }
+            }
+         }
+
+      }
+   }
+}

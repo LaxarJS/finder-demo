@@ -1,0 +1,43 @@
+{
+   "name": "OpenStreetMapWidget",
+   "description": "A widget displaying a map using location searching and maps from openstreetmap.org.",
+
+   "integration": {
+      "technology": "angular",
+      "type": "widget"
+   },
+
+   "controls": [
+      "laxar-uikit/controls/i18n",
+      "finder_demo_utilities/finder_demo_utilities"
+   ],
+
+   "features": {
+      "$schema": "http://json-schema.org/draft-04/schema#",
+      "type": "object",
+      "properties": {
+
+         "search": {
+            "type": "object",
+            "required": [ "resource" ],
+            "properties": {
+               "resource": {
+                  "type": "string",
+                  "format": "topic"
+               }
+            }
+         },
+
+         "i18n": {
+            "type": "object",
+            "properties": {
+               "locale": {
+                  "type": "string",
+                  "default": "default"
+               }
+            }
+         }
+
+      }
+   }
+}

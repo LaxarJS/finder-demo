@@ -1,0 +1,64 @@
+<div data-ng-switch="functions.state()">
+
+   <h3 class="ax-logo">Open Media Database</h3>
+   <div data-ng-switch-when="SELECTED">
+      <div class="row">
+         <div class="col-md-6">
+            <h4>{{ model.selectedMovie.Title }}</h4>
+         </div>
+         <div class="col-md-6">
+            <select class="form-control"
+                    data-ng-if="model.results.length > 1"
+                    data-ng-model="model.selectedMovie"
+                    data-ng-options="movie as movie.Title for movie in model.results"></select>
+         </div>
+      </div>
+      <div class="row">
+         <div class="col-md-12">
+            <a target="_blank"
+               data-ng-if="model.selectedMovieDetails.Poster && model.selectedMovieDetails.Poster != 'N/A'"
+               data-ng-href="{{ model.selectedMovieDetails.Poster }}"
+               ><img class="ax-result-image"
+                    data-ng-src="{{ model.selectedMovieDetails.Poster }}">
+            </a>
+            <p data-ng-bind="model.selectedMovieDetails.Plot"></p>
+         </div>
+      </div>
+
+      <div class="row">
+         <div class="col-md-12">
+            <table class="table">
+               <tbody>
+                  <tr data-ng-repeat="detail in model.details">
+                     <td>{{ messages[ detail.label ] | axLocalize:i18n }}:</td>
+                     <td>{{ model.selectedMovieDetails[ detail.key ] }}</td>
+                  </tr>
+               </tbody>
+            </table>
+         </div>
+      </div>
+
+      <a data-ng-href="{{ model.imdbPrefix }}{{ model.selectedMovie.imdbID | urlEncode }}"
+         target="_blank"
+         ><i class="fa fa-external-link"></i> {{ messages['Zum Film auf IMDb'] | axLocalize:i18n }}</a>
+   </div>
+
+   <div class="ax-alert" data-ng-switch-when="SEARCHING">
+      <p class="ax-alert__text ax-spinner" >
+         <i class="spinner"></i>Suche läuft
+      </p>
+   </div>
+
+   <div class="ax-alert" data-ng-switch-when="IDLE">
+      <p class="ax-alert__text" >
+          <i class="fa fa-search ax-alert__icon"></i>Keine Suche gestartet
+      </p>
+   </div>
+
+   <div class="ax-alert" data-ng-switch-when="NO_RESULTS">
+      <p class="ax-alert__text text-danger" >
+         <i class="fa fa-exclamation-triangle ax-alert__icon"></i>Zu Ihrer Suche konnte leider nichts gefunden werden.
+      </p>
+   </div>
+
+</div>

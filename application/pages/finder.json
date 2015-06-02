@@ -1,0 +1,69 @@
+{
+   "layout": "application",
+
+   "areas": {
+
+      "searchBox": [
+         {
+            "widget": "finder-demo/search-box-widget",
+            "features": {
+               "search": {
+                  "resource": "searchString"
+               }
+            }
+         }
+      ],
+
+      "header": [
+         {
+            "widget": "laxarjs/ax-developer-tools-widget"
+         }
+      ],
+
+      "content1c": [
+         {
+            "widget": "finder-demo/omdb-search-widget",
+            "features": {
+               "search": {
+                  "resource": "searchString"
+               }
+            },
+            "enabled": true
+         }
+      ],
+
+      "content1a": [
+         {
+            "widget": "finder-demo/wikipedia-search-widget",
+            "features": {
+               "search": {
+                  "resource": "searchString"
+               }
+            },
+            "enabled": true
+         }
+      ],
+      "content1b": [
+         {
+            "widget": "finder-demo/music-brainz-search-widget",
+            "features": {
+               "search": {
+                  "resource": "searchString"
+               }
+            },
+            "enabled": true
+         }
+      ],
+      "content2a": [
+         {
+            "widget": "finder-demo/open-street-map-widget",
+            "features": {
+               "search": {
+                  "resource": "searchString"
+               }
+            },
+            "enabled": true
+         }
+      ]
+   }
+}

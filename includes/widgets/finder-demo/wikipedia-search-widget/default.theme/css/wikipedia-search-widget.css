@@ -1,0 +1,112 @@
+@-webkit-keyframes spinner {
+  to {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+  }
+}
+@keyframes spinner {
+  to {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+  }
+}
+.wikipedia-search-widget {
+  padding: 1rem;
+  border: 10px solid rgba(230, 230, 230, 0.2);
+  box-shadow: 0 0 0 1px #ddd;
+  background-clip: padding-box;
+  position: relative;
+  background-image: -webkit-linear-gradient(160grad, white 5%, #f0f0f0 50%, transparent 90%), -webkit-linear-gradient(#f8f8f8, #f8f8f8 6rem, #f8f8f8 6rem);
+  background-image: linear-gradient(160grad, white 5%, #f0f0f0 50%, transparent 90%), linear-gradient(#f8f8f8, #f8f8f8 6rem, #f8f8f8 6rem);
+  background-size: 100% 6rem, 100% 100%;
+  background-repeat: no-repeat;
+}
+@media (max-width: 992px) {
+  .wikipedia-search-widget {
+    border-top-right-radius: 2.5em;
+  }
+}
+.wikipedia-search-widget:before, .wikipedia-search-widget:after {
+  position: absolute;
+  top: -1px;
+  left: 0;
+  width: 100%;
+  z-index: 5;
+  background-image: -webkit-linear-gradient(left, transparent 5%, #d9d9d9 50%, transparent 95%);
+  background-image: linear-gradient(left, transparent 5%, #d9d9d9 50%, transparent 95%);
+  content: "";
+  display: block;
+  height: 1px;
+}
+.wikipedia-search-widget:after {
+  background-image: -webkit-linear-gradient(left, transparent 5%, #d9d9d9 50%, transparent 95%);
+  background-image: linear-gradient(left, transparent 5%, #d9d9d9 50%, transparent 95%);
+  top: calc(6rem - 1px);
+}
+.wikipedia-search-widget .ax-logo {
+  padding-right: 6rem;
+  color: #333;
+  font-family: "Exo 2", Arial, sans-serif;
+  font-weight: 300;
+  font-size: 1.8rem;
+  height: 3rem;
+  line-height: 1.1;
+  margin-top: 0;
+  margin-bottom: 4rem;
+  background-image: url("../images/logo.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center right;
+}
+.wikipedia-search-widget .ax-result-image {
+  width: 35%;
+  float: right;
+  border: 1px solid #ccc;
+  background-color: white;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 0.2em;
+  margin-left: 0.5em;
+}
+.wikipedia-search-widget .ax-alert {
+  color: #aaa;
+  font-family: "Exo 2", Arial, sans-serif;
+  font-weight: 300;
+  font-size: 1.2rem;
+  min-height: 6rem;
+  position: relative;
+}
+.wikipedia-search-widget .ax-alert__text {
+  position: absolute;
+  top: 0.6rem;
+  padding-left: 2.5rem;
+}
+.wikipedia-search-widget .ax-alert__text.text-danger {
+  color: #d3201d;
+}
+.wikipedia-search-widget .ax-alert__icon {
+  font-size: 1.5rem;
+  width: 1.5rem;
+  left: 0;
+  position: absolute;
+}
+.wikipedia-search-widget .ax-spinner {
+  color: #03ade0;
+}
+.wikipedia-search-widget .spinner:before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-top: -0.85rem;
+}
+.wikipedia-search-widget .spinner:not(:required):before {
+  content: '';
+  border-radius: 50%;
+  border: 2px solid transparent;
+  border-top-color: #03ade0;
+  border-bottom-color: #03ade0;
+  animation: spinner .8s ease infinite;
+  -webkit-animation: spinner .8s ease infinite;
+}

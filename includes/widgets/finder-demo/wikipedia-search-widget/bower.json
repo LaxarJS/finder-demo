@@ -1,0 +1,14 @@
+{
+   "name": "finder-demo/wikipedia-search-widget",
+   "version": "0.1.0",
+   "license": "MIT",
+   "dependencies": {
+      "laxar": "~1.0.0-beta.0",
+      "laxar_patterns": "~1.0.0-beta.0",
+      "laxar_uikit": "~1.0.0-beta.0"
+   },
+   "devDependencies": {
+      "es5-shim": "2.3.x",
+      "jasmine": "1.3.x"
+   }
+}
