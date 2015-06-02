@@ -46,6 +46,11 @@ var require = {
       finder_demo_utilities: '../includes/lib/finder_demo_utilities',
       openlayers: 'ol3/build/ol'
    },
+   map: {
+      '*': {
+         'css': 'require-css/css'
+      }
+   },
    packages: [
       {
          name: 'laxar-application',
