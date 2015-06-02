@@ -9,8 +9,8 @@
       "laxar": "~1.0.0-beta.0",
       "laxar-uikit": "~1.0.0-beta.0",
       "laxar-patterns": "~1.0.0-beta.0",
-
-      "ol3": "~3.4.x"
+      "ol3": "~3.4.x",
+      "require-css": "~0.1.8"
    },
    "devDependencies": {
       "es5-shim": "2.3.x",
