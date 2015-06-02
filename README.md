@@ -8,7 +8,7 @@ If something was found, the first result is displayed, while possible further re
 
 The demo consists of a small set of LaxarJS widgets implemented in AngularJS.
 
-* [Show the live demo](http://laxarjs.github.io/finder_demo/)
+* [Show the live demo](http://laxarjs.github.io/finder-demo/)
 * [LaxarJS Homepage](http://laxarjs.org)
 * [LaxarJS on GitHub](https://github.com/LaxarJS/laxar)
 
@@ -20,8 +20,8 @@ To fetch the required tools and libraries, make sure that you have `npm` (comes 
 Use a shell to issue the following commands:
 
 ```sh
-git clone --recursive https://github.com/LaxarJS/finder_demo.git
-cd finder_demo
+git clone --recursive https://github.com/LaxarJS/finder-demo.git
+cd finder-demo
 npm install
 npm start
 ```
@@ -39,6 +39,6 @@ npm start
 ```
 
 Now you can browse the optimized demo at [http://localhost:8002/index.html](http://localhost:8002/index.html).
-Instead of using `npm start`, you can use any web server on your machine by having it serve the `finder_demo` directory.
+Instead of using `npm start`, you can use any web server on your machine by having it serve the `finder-demo` directory.
 
-Try modifying the widgets under `includes/widgets/finder_demo` or add new widgets for different APIs, to get a feel for how a LaxarJS application works.
+Try modifying the widgets under `includes/widgets/finder-demo` or add new widgets for different APIs, to get a feel for how a LaxarJS application works.
