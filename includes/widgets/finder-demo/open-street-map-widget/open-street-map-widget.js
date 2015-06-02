@@ -7,7 +7,8 @@ define( [
    'laxar',
    'laxar-patterns',
    'openlayers',
-   './messages'
+   './messages',
+   'css!ol3/css/ol.css'
 ], function( ng, ax, patterns, ol, messages ) {
    'use strict';
 
@@ -22,11 +23,9 @@ define( [
     */
    var locationSearchUrl = 'http://nominatim.openstreetmap.org/search?format=json&polygon=0&addressdetails=1&q=';
 
-   Controller.$inject = [ '$scope', '$http', 'axCssLoader', 'finderDemoUtilities' ];
+   Controller.$inject = [ '$scope', '$http', 'finderDemoUtilities' ];
 
-   function Controller( $scope, $http, cssLoader, finderDemoUtils ) {
-
-      cssLoader.load( 'bower_components/ol3/css/ol.css' );
+   function Controller( $scope, $http, finderDemoUtils ) {
 
       $scope.messages = messages;
 
