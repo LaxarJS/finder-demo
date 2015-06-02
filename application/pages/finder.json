@@ -14,12 +14,6 @@
          }
       ],
 
-      "header": [
-         {
-            "widget": "laxarjs/ax-developer-tools-widget"
-         }
-      ],
-
       "content1c": [
          {
             "widget": "finder-demo/omdb-search-widget",
