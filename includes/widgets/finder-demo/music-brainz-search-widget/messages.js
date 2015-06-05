@@ -5,29 +5,54 @@
  */
 define( {
 
-   'Aktiv seit': {
+   ACTIVE_SINCE: {
       de: 'Aktiv seit',
       en: 'Active since'
    },
 
-   'Aktiv bis': {
+   ACTIVE_UNTIL: {
       de: 'Aktiv bis',
       en: 'Active until'
    },
 
-   'Noch aktiv': {
-      de: 'Noch aktiv',
-      en: 'Still active'
+   AREA: {
+      de: 'Gegend',
+      en: 'Area'
    },
 
-   'Nicht mehr aktiv': {
+   EXTERNAL_LINK: {
+      de: 'Zum Künstler',
+      en: 'Open Artist Info'
+   },
+
+   NO_RESULTS: {
+      de: 'Zu Ihrer Suche konnte leider nichts gefunden werden.',
+      en: 'The request didn\'t return any results.'
+   },
+
+   NO_SEARCH_STARTED: {
+      de: 'Keine Suche gestartet',
+      en: 'No search started'
+   },
+
+   NOT_ACTIVE_ANYMORE: {
       de: 'Nicht mehr aktiv',
       en: 'Not active anymore'
    },
 
-   'Gegend': {
-      de: 'Gegend',
-      en: 'Area'
+   RECORD_RELEASES: {
+      de: 'Veröffentlichte Alben',
+      en: 'Record Releases'
+   },
+
+   SEARCHING: {
+      de: 'Suche läuft',
+      en: 'Searching ...'
+   },
+
+   STILL_ACTIVE: {
+      de: 'Noch aktiv',
+      en: 'Still active'
    }
 
 } );
