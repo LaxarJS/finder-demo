@@ -5034,7 +5034,6 @@ define( 'laxar/lib/runtime/flow',[
          // navigation ("willNavigate") and initiates loading of the new page. As soon as the new page is
          // loaded, the "didNavigate" event finishes the navigation logic. The flow controller then starts to
          // listen for subsequent navigateRequests.
-
          if( previousNavigateRequestSubscription_ ) {
             eventBus.unsubscribe( previousNavigateRequestSubscription_ );
             previousNavigateRequestSubscription_ = null;
@@ -5121,6 +5120,9 @@ define( 'laxar/lib/runtime/flow',[
          function finishNavigation( currentTarget_, didNavigateEvent ) {
             eventBus.subscribe( 'navigateRequest', handleNavigateRequest, subscriberOptions );
             log.setTag( 'PLCE', place.id );
+            if( previousNavigateRequestSubscription_ ) {
+               eventBus.unsubscribe( previousNavigateRequestSubscription_ );
+            }
             previousNavigateRequestSubscription_ = handleNavigateRequest;
             navigationInProgress_ = false;
             return eventBus.publish( 'didNavigate.' + currentTarget_, didNavigateEvent, eventOptions );
