@@ -8,7 +8,7 @@ define( [
 ], function( ax ) {
    'use strict';
 
-   var injections = [ 'axEventBus' ]
+   var injections = [ 'axEventBus' ];
 
    function create( eventBus ) {
 
