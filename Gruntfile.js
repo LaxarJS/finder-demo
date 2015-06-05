@@ -1,11 +1,13 @@
 /**
- * Copyright 2015 LaxarJS
+ * Copyright 2015 aixigo AG
  * Released under the MIT license.
  * www.laxarjs.org
  */
 /*global module,__dirname,__filename */
 module.exports = function( grunt ) {
    'use strict';
+
+   require( 'load-grunt-tasks' )( grunt );
 
    var serverPort = 8002;
    var testPort = 1000 + serverPort;
@@ -213,12 +215,6 @@ module.exports = function( grunt ) {
    }
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   grunt.loadNpmTasks( 'grunt-laxar' );
-   grunt.loadNpmTasks( 'grunt-contrib-cssmin' );
-   grunt.loadNpmTasks( 'grunt-contrib-concat' );
-   grunt.loadNpmTasks( 'grunt-contrib-compress' );
-   grunt.loadNpmTasks( 'grunt-contrib-watch' );
 
    grunt.registerTask( 'server', [ 'connect:default' ] );
    grunt.registerTask( 'build', [ 'directory_tree', 'laxar_application_dependencies' ] );

@@ -1,12 +1,13 @@
 /**
- * Copyright 2015 LaxarJS
+ * Copyright 2015 aixigo AG
  * Released under the MIT license.
  */
 define( [
    'angular',
    'laxar',
-   'laxar-patterns'
-], function( ng, ax, patterns ) {
+   'laxar-patterns',
+   './messages'
+], function( ng, ax, patterns, messages ) {
    'use strict';
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -14,6 +15,10 @@ define( [
    Controller.$inject = [ '$scope', 'axEventBus' ];
 
    function Controller( $scope, eventBus ) {
+
+      $scope.messages = messages;
+
+      patterns.i18n.handlerFor( $scope ).scopeLocaleFromFeature( 'i18n' );
 
       $scope.model = {
          queryString: ''

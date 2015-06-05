@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 LaxarJS
+ * Copyright 2015 aixigo AG
  * Released under the MIT license.
  */
 define( [
@@ -21,9 +21,10 @@ define( [
     *
     * @type {string}
     */
-   var searchUrl = 'http://de.wikipedia.org/w/api.php?action=query&list=search&continue=&format=json&callback=JSON_CALLBACK&srsearch=';
-   var extractsUrl = 'http://de.wikipedia.org/w/api.php?action=query&prop=extracts|pageimages&exintro=&exlimit=10&pilimit=5&continue=&format=json&callback=JSON_CALLBACK&titles=';
-   var imagesUrl = 'http://de.wikipedia.org/w/api.php?action=query&prop=imageinfo&iiprop=url&continue=&format=json&callback=JSON_CALLBACK&titles=';
+   var searchUrl = 'http://[languageTag].wikipedia.org/w/api.php?action=query&list=search&continue=&format=json&callback=JSON_CALLBACK&srsearch=';
+   var extractsUrl = 'http://[languageTag].wikipedia.org/w/api.php?action=query&prop=extracts|pageimages&exintro=&exlimit=10&pilimit=5&continue=&format=json&callback=JSON_CALLBACK&titles=';
+   var imagesUrl = 'http://[languageTag].wikipedia.org/w/api.php?action=query&prop=imageinfo&iiprop=url&continue=&format=json&callback=JSON_CALLBACK&titles=';
+   var externalLinkPrefix = 'http://[languageTag].wikipedia.org/wiki/';
 
    Controller.$inject = [ '$scope', '$http', 'finderDemoUtilities' ];
 
@@ -35,7 +36,6 @@ define( [
 
       $scope.resources = {};
       $scope.model = {
-         wikiPrefix: 'http://wikipedia.org/wiki/',
          selectedArticle: null,
          selectedArticleExtract: null,
          selectedArticleImage: null,
@@ -68,7 +68,14 @@ define( [
 
       $scope.functions = {
 
-         state: stateHandler.currentState
+         state: stateHandler.currentState,
+
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+         wikiLink: function( article ) {
+            var url = ax.string.format( externalLinkPrefix, { languageTag: $scope.i18n.tags[ 'default' ] } );
+            return url + encodeURIComponent( article.title );
+         }
 
       };
 
@@ -78,7 +85,9 @@ define( [
          stateHandler.searchStarted();
          $scope.model.selectedArticle = null;
 
-         $http.jsonp( searchUrl + encodeURIComponent( $scope.resources.search.queryString ) )
+         var url = ax.string.format( searchUrl, { languageTag: $scope.i18n.tags[ 'default' ] } );
+
+         $http.jsonp( url + encodeURIComponent( $scope.resources.search.queryString ) )
             .then( function( response ) {
                var results = ax.object.path( response.data, 'query.search', [] );
                $scope.model.resultCount = ax.object.path( response.data, 'query.searchinfo.totalhits', 0 );
@@ -97,7 +106,10 @@ define( [
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
       function queryDetailsForArticle( article ) {
-         return $http.jsonp( extractsUrl + article.title )
+
+         var url = ax.string.format( extractsUrl, { languageTag: $scope.i18n.tags[ 'default' ] } );
+
+         return $http.jsonp( url + article.title )
             .then( function( response ) {
                var pages = ax.object.path( response.data, 'query.pages', {} );
                var extract = pages[ Object.keys( pages )[ 0 ] ];
@@ -107,7 +119,8 @@ define( [
                };
 
                if( extract.pageimage ) {
-                  return $http.jsonp( imagesUrl + 'File:' + encodeURIComponent( extract.pageimage ) )
+                  var imageUrl = ax.string.format( imagesUrl, { languageTag: $scope.i18n.tags[ 'default' ] } );
+                  return $http.jsonp( imageUrl + 'File:' + encodeURIComponent( extract.pageimage ) )
                      .then( function( response ) {
                         var pages = ax.object.path( response.data, 'query.pages', {} );
                         details.images = Object.keys( pages ).map( function( key ) {

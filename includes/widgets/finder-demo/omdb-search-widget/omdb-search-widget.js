@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 LaxarJS
+ * Copyright 2015 aixigo AG
  * Released under the MIT license.
  */
 define( [
@@ -36,10 +36,10 @@ define( [
          results: [],
          pendingSearches: 0,
          details: [
-            { label: 'Erscheinungsjahr', key: 'Year' },
-            { label: 'Laufzeit', key: 'Runtime' },
-            { label: 'Genre', key: 'Genre' },
-            { label: 'IMDb Bewertung', key: 'imdbRating' }
+            { label: 'YEAR_OF_PUBLICATION', key: 'Year' },
+            { label: 'RUNTIME', key: 'Runtime' },
+            { label: 'GENRE', key: 'Genre' },
+            { label: 'IMDB_RATING', key: 'imdbRating' }
          ]
       };
 

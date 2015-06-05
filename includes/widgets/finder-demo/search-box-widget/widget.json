@@ -7,6 +7,10 @@
       "type": "widget"
    },
 
+   "controls": [
+      "laxar-uikit/controls/i18n"
+   ],
+
    "features": {
       "$schema": "http://json-schema.org/draft-04/schema#",
       "type": "object",
@@ -20,6 +24,16 @@
                "resource": {
                   "type": "string",
                   "format": "topic"
+               }
+            }
+         },
+
+         "i18n": {
+            "type": "object",
+            "properties": {
+               "locale": {
+                  "type": "string",
+                  "default": "default"
                }
             }
          }

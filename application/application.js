@@ -21,7 +21,7 @@ window.laxar = ( function() {
 
       i18n: {
          locales: {
-            'default': 'de'
+            'default': 'en'
          }
       },
 
