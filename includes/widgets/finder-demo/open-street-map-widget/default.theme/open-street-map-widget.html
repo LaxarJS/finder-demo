@@ -22,19 +22,19 @@
 
    <div class="ax-alert" data-ng-switch-when="SEARCHING">
       <p class="ax-alert__text ax-spinner" >
-         <i class="spinner"></i>Suche läuft
+         <i class="spinner"></i>{{ messages.SEARCHING | axLocalize:i18n }}
       </p>
    </div>
 
    <div class="ax-alert" data-ng-switch-when="IDLE">
       <p class="ax-alert__text" >
-          <i class="fa fa-search ax-alert__icon"></i>Keine Suche gestartet
+          <i class="fa fa-search ax-alert__icon"></i>{{ messages.NO_SEARCH_STARTED | axLocalize:i18n }}
       </p>
    </div>
 
    <div class="ax-alert" data-ng-switch-when="NO_RESULTS">
       <p class="ax-alert__text text-danger" >
-         <i class="fa fa-exclamation-triangle ax-alert__icon"></i>Zu Ihrer Suche konnte leider nichts gefunden werden.
+         <i class="fa fa-exclamation-triangle ax-alert__icon"></i>{{ messages.NO_RESULTS | axLocalize:i18n }}
       </p>
    </div>
 

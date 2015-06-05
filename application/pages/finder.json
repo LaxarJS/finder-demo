@@ -3,6 +3,12 @@
 
    "areas": {
 
+      "activities": [
+         {
+            "widget": "finder-demo/language-selection-activity"
+         }
+      ],
+
       "searchBox": [
          {
             "widget": "finder-demo/search-box-widget",
