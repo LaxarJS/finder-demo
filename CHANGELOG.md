@@ -2,6 +2,8 @@
 
 ## Last Changes
 
+- [#4](https://github.com/LaxarJS/finder-demo/issues/4): styling: add finder box control
+
 
 ## v1.0.0
 

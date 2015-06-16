@@ -50,7 +50,7 @@ $app-pot-flower: "../images/pot-flower.svg";
 }
 
 @media (max-width: $screen-md-min) {
-   .col + .col {
+   .app-content .col + .col {
       margin-top: 2em;
    }
 }
