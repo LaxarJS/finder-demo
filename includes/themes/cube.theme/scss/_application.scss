@@ -1,0 +1,125 @@
+$app-header-height: 115px;
+
+html,
+body {
+   font-size: $font-size-base;
+
+   @media (max-width: $screen-md-max) {
+      font-size: $font-size-small;
+   }
+}
+
+body {
+   background: url(../images/header-shadow.png) no-repeat center $app-header-height #e9ebed;
+}
+
+body:before {
+   content: "";
+   position: absolute;
+   top: 0;
+   left: 0;
+   right: 0;
+   height: $app-header-height;
+   background: #fff;
+   border-bottom: 1px solid #D3D3D3;
+}
+
+.container {
+   position: relative;
+}
+
+.app-header {
+   position: absolute;
+   left: 0;
+   right: 0;
+}
+
+//
+// HEADER
+// -----------------------------------------------------------------------------------------------------------
+
+.app-header {
+   top: 0;
+   height: 60px;
+   padding-top: 27px;
+   padding-bottom: 27px;
+}
+
+.app-header .form-group {
+   margin-top: 15px;
+   margin-bottom: 0;
+   line-height: 1;
+}
+
+.app-header h1 {
+   margin: 0;
+   position: relative;
+   top: 10px;
+   float: right;
+   width: auto;
+   font-size: 44px;
+   font-weight: 500;
+   line-height: 1;
+}
+
+.app-header h1 span {
+   font-weight: 200;
+}
+
+.app-header,
+.app-footer {
+   padding-left: 20px;
+   padding-right: 20px;
+
+   a {
+      white-space: nowrap;
+   }
+}
+
+
+//
+// Content
+// -----------------------------------------------------------------------------------------------------------
+
+.app-content-wrapper {
+   margin-top: $app-header-height + 40;
+}
+
+.app-content {
+   position: relative;
+   background-color: white;
+   padding: 20px;
+   border: 1px solid #d3d3d3;
+   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+   border-radius: 0 50px 0 0;
+}
+
+
+//
+// Footer
+// -----------------------------------------------------------------------------------------------------------
+
+.app-footer {
+   margin-top: 20px;
+   text-shadow: 1px  1px 0px #fff;
+   padding-bottom: 1em;
+
+   .app-version a {
+      margin-left: 0.5em;
+   }
+}
+
+.app-footer,
+.app-footer a {
+   color: $PRIMARY_COLOR_GREY_01;
+}
+
+.app-footer a {
+   border-bottom: 1px dotted $COLOR_SILVER_CHALICE;
+
+   &:hover,
+   &:focus {
+      color: #2a6496;
+      text-decoration: none;
+   }
+}

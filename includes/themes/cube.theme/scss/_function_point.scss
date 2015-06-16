@@ -1,0 +1,45 @@
+
+//
+// Function Point
+// -----------------------------------------------------------------------------------------------------------
+
+$ax-function-point-size: 50px;
+
+.ax-function-point {
+   color: $COLOR_SILVER;
+   line-height: $ax-function-point-size;
+   height: $ax-function-point-size;
+   font-family: $ax-font-family-effect;
+   font-size: 30px;
+   font-weight: 300;
+   margin-top: 0;
+   margin-bottom: 1em;
+
+   // outline: 1px solid deeppink;
+
+   .fa {
+      font-size: 30px;
+      background-color: $COLOR_SILVER;
+      color: white;
+      width: $ax-function-point-size;
+      height: $ax-function-point-size;
+      line-height: $ax-function-point-size;
+      border-radius: $ax-function-point-size;
+      text-align: center;
+      margin-right: 0.2em;
+   }
+
+   + .table {
+      border: 1px solid #ddd;
+      border-radius: 5px 5px 0 0;
+      border-collapse: separate;
+
+      th {
+         background-color: #ddd;
+      }
+
+      > thead + tbody > tr:first-child > td {
+         border-top: none;
+      }
+   }
+}

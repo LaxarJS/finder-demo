@@ -1,0 +1,72 @@
+@font-face {
+   font-family:'Exo 2';
+
+   /* IE < 9
+      The two src data are needed to circumvent a bug in IE for the rendering of the text.
+      IE9+ supports the type format *.woff. */
+   src: url('../fonts/Exo2-Medium.eot'); /* IE9 Compat Modes */
+   src: url('../fonts/Exo2-Medium.eot?#iefix') format('embedded-opentype'); /* IE6-IE8 */
+   src: url('../fonts/Exo2-Medium.svg?#svgFontName') format('svg'), /* Windows Chrome */
+        url('../fonts/Exo2-Medium.woff') format('woff'), /* Modern Browsers */
+        url('../fonts/Exo2-Medium.ttf') format('truetype'); /* Safari, Android, iOS */
+
+   /* To avoid a bug in Webkit-Browsers set all font-* properties to normal. */
+   font-weight: 500;
+   font-style: normal;
+   font-variant: normal;
+}
+
+@font-face {
+   font-family:'Exo 2';
+
+   /* IE < 9
+      The two src data are needed to circumvent a bug in IE for the rendering of the text.
+      IE9+ supports the type format *.woff. */
+   src: url('../fonts/Exo2-ExtraLight.eot'); /* IE9 Compat Modes */
+   src: url('../fonts/Exo2-ExtraLight.eot?#iefix') format('embedded-opentype'); /* IE6-IE8 */
+   src: url('../fonts/Exo2-ExtraLight.svg?#svgFontName') format('svg'), /* Windows Chrome */
+        url('../fonts/Exo2-ExtraLight.woff') format('woff'), /* Modern Browsers */
+        url('../fonts/Exo2-ExtraLight.ttf') format('truetype'); /* Safari, Android, iOS */
+
+   /* To avoid a bug in Webkit-Browsers set all font-* properties to normal. */
+   font-weight: 200;
+   font-style: normal;
+   font-variant: normal;
+}
+
+@font-face {
+   font-family:'Exo 2';
+
+   /* IE < 9
+      The two src data are needed to circumvent a bug in IE for the rendering of the text.
+      IE9+ supports the type format *.woff. */
+   src: url('../fonts/Exo2-Light.eot'); /* IE9 Compat Modes */
+   src: url('../fonts/Exo2-Light.eot?#iefix') format('embedded-opentype'); /* IE6-IE8 */
+   src: url('../fonts/Exo2-Light.svg?#svgFontName') format('svg'), /* Windows Chrome */
+        url('../fonts/Exo2-Light.woff') format('woff'), /* Modern Browsers */
+        url('../fonts/Exo2-Light.ttf') format('truetype'); /* Safari, Android, iOS */
+
+   /* To avoid a bug in Webkit-Browsers set all font-* properties to normal. */
+   font-weight: 300;
+   font-style: normal;
+   font-variant: normal;
+}
+
+
+@font-face {
+   font-family:'Exo 2';
+
+   /* IE < 9
+      The two src data are needed to circumvent a bug in IE for the rendering of the text.
+      IE9+ supports the type format *.woff. */
+   src: url('../fonts/Exo2-Bold.eot'); /* IE9 Compat Modes */
+   src: url('../fonts/Exo2-Bold.eot?#iefix') format('embedded-opentype'); /* IE6-IE8 */
+   src: url('../fonts/Exo2-Bold.svg?#svgFontName') format('svg'), /* Windows Chrome */
+        url('../fonts/Exo2-Bold.woff') format('woff'), /* Modern Browsers */
+        url('../fonts/Exo2-Bold.ttf') format('truetype'); /* Safari, Android, iOS */
+
+   /* To avoid a bug in Webkit-Browsers set all font-* properties to normal. */
+   font-weight: 700;
+   font-style: normal;
+   font-variant: normal;
+}

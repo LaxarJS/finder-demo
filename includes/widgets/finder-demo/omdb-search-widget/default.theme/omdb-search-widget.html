@@ -1,17 +1,14 @@
-<div data-ng-switch="functions.state()">
+<div data-finder-box
+     data-ng-switch="functions.state()">
 
-   <h3 class="ax-logo">Open Media Database</h3>
+   <h3 class="ax-finder-logo">Open Media Database</h3>
    <div data-ng-switch-when="SELECTED">
       <div class="row">
-         <div class="col-md-6">
-            <h4>{{ model.selectedMovie.Title }}</h4>
-         </div>
-         <div class="col-md-6">
-            <select class="form-control"
-                    data-ng-if="model.results.length > 1"
-                    data-ng-model="model.selectedMovie"
-                    data-ng-options="movie as movie.Title for movie in model.results"></select>
-         </div>
+         <select title="{{ model.selectedMovie.Title }}"
+                 class="form-control"
+                 data-ng-if="model.results.length > 1"
+                 data-ng-model="model.selectedMovie"
+                 data-ng-options="movie as movie.Title for movie in model.results"></select>
       </div>
       <div class="row">
          <div class="col-md-12">

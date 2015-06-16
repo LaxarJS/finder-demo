@@ -43,6 +43,7 @@ var require = {
       'laxar-path-default-theme': 'laxar-uikit/dist/themes/default.theme',
 
       // App specific
+      'finder-box-control': '../includes/controls/finder-demo/finder-box-control',
       finder_demo_utilities: '../includes/lib/finder_demo_utilities',
       openlayers: 'ol3/build/ol'
    },

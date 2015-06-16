@@ -1,5 +1,6 @@
 define( [
    'laxar-uikit/controls/i18n/ax-i18n-control',
+   'finder-box-control/finder-box-control',
    'finder_demo_utilities/finder_demo_utilities',
    'laxar-application/includes/widgets/finder-demo/search-box-widget/search-box-widget',
    'laxar-application/includes/widgets/finder-demo/omdb-search-widget/omdb-search-widget',
@@ -12,7 +13,7 @@ define( [
 
    var modules = [].slice.call( arguments );
    return {
-      'angular': modules.slice( 0, 7 ),
-      'plain': modules.slice( 7, 8 )
+      'angular': modules.slice( 0, 8 ),
+      'plain': modules.slice( 8, 9 )
    };
 } );

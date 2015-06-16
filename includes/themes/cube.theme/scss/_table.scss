@@ -1,0 +1,13 @@
+.table > thead > tr > th {
+   font-family: $ax-font-family-effect;
+   font-weight: 500;
+}
+.table > thead > tr > th,
+.table > tbody + tbody {
+   border-top: none;
+   border-bottom: none;
+}
+
+.table > thead + tbody > tr:first-child > td {
+   border-top-color: $COLOR_SILVER_CHALICE;
+}
