@@ -7,8 +7,6 @@
 module.exports = function( grunt ) {
    'use strict';
 
-   require( 'load-grunt-tasks' )( grunt );
-
    var serverPort = 8002;
    var testPort = 1000 + serverPort;
    var liveReloadPort = 30000 + serverPort;
@@ -215,6 +213,9 @@ module.exports = function( grunt ) {
    }
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+   require( 'load-grunt-tasks' )( grunt );
 
    grunt.registerTask( 'server', [ 'connect:default' ] );
    grunt.registerTask( 'build', [ 'directory_tree', 'laxar_application_dependencies' ] );

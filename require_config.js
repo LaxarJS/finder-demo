@@ -11,9 +11,9 @@ var require = {
       jjv: 'jjv/lib/jjv',
       jjve: 'jjve/jjve',
 
-      // LaxarJS Core Testing:
+      // LaxarJS Testing:
       jasmine: 'jasmine/lib/jasmine-core/jasmine',
-      q_mock: 'q_mock/q',
+      'promise-polyfill': 'promise-polyfill/Promise',
 
       // LaxarJS Core Legacy:
       text: 'requirejs-plugins/lib/text',
@@ -35,7 +35,7 @@ var require = {
 
       'laxar-application-dependencies': '../var/static/laxar_application_dependencies',
 
-      'laxar': 'laxar/dist/laxar',
+      //'laxar': 'laxar/dist/laxar',
       'laxar/laxar_testing': 'laxar/dist/laxar_testing',
       'laxar-patterns': 'laxar-patterns/dist/laxar-patterns',
       'laxar-uikit': 'laxar-uikit/dist/laxar-uikit',
@@ -43,7 +43,7 @@ var require = {
       'laxar-path-default-theme': 'laxar-uikit/dist/themes/default.theme',
 
       // App specific
-      finder_demo_utilities: '../includes/lib/finder_demo_utilities',
+      'finder-demo-utilities': '../includes/lib/finder-demo-utilities',
       openlayers: 'ol3/build/ol'
    },
    map: {
@@ -58,6 +58,16 @@ var require = {
          main: 'init'
       },
       {
+         name: 'laxar',
+         location: '../includes/lib/laxar',
+         main: 'laxar'
+      },
+      {
+         name: 'laxar-testing',
+         location: '../includes/lib/laxar-testing',
+         main: 'laxar-testing'
+      },
+      {
          name: 'moment',
          location: 'moment',
          main: 'moment'
@@ -65,9 +75,6 @@ var require = {
    ],
    shim: {
       angular: {
-         deps: [
-            'jquery'
-         ],
          exports: 'angular'
       },
       'angular-mocks': {
