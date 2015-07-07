@@ -2,6 +2,7 @@
 
 ## Last Changes
 
+- [#5](https://github.com/LaxarJS/finder-demo/issues/5): Fixed search box visibility on small screens
 - [#6](https://github.com/LaxarJS/finder-demo/issues/6): testing: use LaxarJS Testing for first widget tests
 
 
