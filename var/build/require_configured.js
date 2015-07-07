@@ -11,9 +11,9 @@ var require = {
       jjv: 'jjv/lib/jjv',
       jjve: 'jjve/jjve',
 
-      // LaxarJS Core Testing:
+      // LaxarJS Testing:
       jasmine: 'jasmine/lib/jasmine-core/jasmine',
-      q_mock: 'q_mock/q',
+      'promise-polyfill': 'promise-polyfill/Promise',
 
       // LaxarJS Core Legacy:
       text: 'requirejs-plugins/lib/text',
@@ -44,7 +44,7 @@ var require = {
 
       // App specific
       'finder-box-control': '../includes/controls/finder-demo/finder-box-control',
-      finder_demo_utilities: '../includes/lib/finder_demo_utilities',
+      'finder-demo-utilities': '../includes/lib/finder-demo-utilities',
       openlayers: 'ol3/build/ol'
    },
    map: {
@@ -59,6 +59,11 @@ var require = {
          main: 'init'
       },
       {
+         name: 'laxar-testing',
+         location: '../includes/lib/laxar-testing',
+         main: 'laxar-testing'
+      },
+      {
          name: 'moment',
          location: 'moment',
          main: 'moment'
@@ -66,9 +71,6 @@ var require = {
    ],
    shim: {
       angular: {
-         deps: [
-            'jquery'
-         ],
          exports: 'angular'
       },
       'angular-mocks': {

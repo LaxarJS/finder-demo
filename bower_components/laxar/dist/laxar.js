@@ -1677,805 +1677,6 @@ define( 'laxar/lib/directives/directives',[
  * http://laxarjs.org/license
  */
 /**
- * Utilities for dealing with internationalization (i18n).
- *
- * When requiring `laxar`, it is available as `laxar.i18n`.
- *
- * @module i18n
- */
-define( 'laxar/lib/i18n/i18n',[
-   '../utilities/string',
-   '../utilities/assert',
-   '../utilities/configuration'
-], function( string, assert, configuration ) {
-   'use strict';
-
-   var localize = localizeRelaxed;
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   var primitives = {
-      string: true,
-      number: true,
-      boolean: true
-   };
-
-   var fallbackTag;
-
-   var normalize = memoize( function( languageTag ) {
-      return languageTag.toLowerCase().replace( /[-]/g, '_' );
-   } );
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   // Shortcuts: it is assumed that this module is used heavily (or not at all).
-   var format = string.format;
-   var keys = Object.keys;
-
-   return {
-      localize: localize,
-      localizeStrict: localizeStrict,
-      localizeRelaxed: localizeRelaxed,
-      localizer: localizer,
-      languageTagFromI18n: languageTagFromI18n
-   };
-
-   /**
-    * Shortcut to {@link localizeRelaxed}.
-    *
-    * @name localize
-    * @type {Function}
-    */
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   /**
-    * Localize the given internationalized object using the given languageTag.
-    *
-    * @param {String} languageTag
-    *    the languageTag to lookup a localization with. Maybe `undefined`, if the value is not i18n (app does
-    *    not use i18n)
-    * @param {*} i18nValue
-    *    a possibly internationalized value:
-    *    - when passing a primitive value, it is returned as-is
-    *    - when passing an object, the languageTag is used as a key within that object
-    * @param {*} [optionalFallback]
-    *    a value to use if no localization is available for the given language tag
-    *
-    * @return {*}
-    *    the localized value if found, `undefined` otherwise
-    */
-   function localizeStrict( languageTag, i18nValue, optionalFallback ) {
-      assert( languageTag ).hasType( String );
-      if( !i18nValue || primitives[ typeof i18nValue ] ) {
-         // Value is not i18n
-         return i18nValue;
-      }
-      assert( languageTag ).isNotNull();
-
-      // Try one direct lookup before scanning the input keys,
-      // assuming that language-tags are written in consistent style.
-      var value = i18nValue[ languageTag ];
-      if( value !== undefined ) {
-         return value;
-      }
-
-      var lookupKey = normalize( languageTag );
-      var availableTags = keys( i18nValue );
-      var n = availableTags.length;
-      for( var i = 0; i < n; ++i ) {
-         var t = availableTags[ i ];
-         if( normalize( t ) === lookupKey ) {
-            return i18nValue[ t ];
-         }
-      }
-
-      return optionalFallback;
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   /**
-    * For controls (such as a date-picker), we cannot anticipate all required language tags, as they may be
-    * app-specific. The relaxed localize behaves like localize if an exact localization is available. If not,
-    * the language tag is successively generalized by stripping off the rightmost sub-tags until a
-    * localization is found. Eventually, a fallback ('en') is used.
-    *
-    * @param {String} languageTag
-    *    the languageTag to lookup a localization with. Maybe `undefined`, if the value is not i18n (app does
-    *    not use i18n)
-    * @param {*} i18nValue
-    *    a possibly internationalized value:
-    *    - when passing a primitive value, it is returned as-is
-    *    - when passing an object, the `languageTag` is used to look up a localization within that object
-    * @param {*} [optionalFallback]
-    *    a value to use if no localization is available for the given language tag
-    *
-    * @return {*}
-    *    the localized value if found, the fallback `undefined` otherwise
-    */
-   function localizeRelaxed( languageTag, i18nValue, optionalFallback ) {
-      assert( languageTag ).hasType( String );
-      if( !i18nValue || primitives[ typeof i18nValue ] ) {
-         // Value is not i18n (app does not use it)
-         return i18nValue;
-      }
-
-      var tagParts = languageTag ? languageTag.replace( /-/g, '_' ).split( '_' ) : [];
-      while( tagParts.length > 0 ) {
-         var currentLocaleTag = tagParts.join( '-' );
-         var value = localizeStrict( currentLocaleTag, i18nValue );
-         if( value !== undefined ) {
-            return value;
-         }
-         tagParts.pop();
-      }
-
-      if( fallbackTag === undefined ) {
-         fallbackTag = configuration.get( 'i18n.fallback', 'en' );
-      }
-
-      return ( fallbackTag && localizeStrict( fallbackTag, i18nValue ) ) || optionalFallback;
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   /**
-    * Encapsulate a given languageTag in a partially applied localize function.
-    *
-    * @param {String} languageTag
-    *    the languageTag to lookup localizations with
-    * @param {*} [optionalFallback]
-    *    a value to use by the localizer function whenever no localization is available for the language tag
-    *
-    * @return {Localizer}
-    *    A single-arg localize-Function, which always uses the given language-tag. It also has a `.format`
-    *    -method, which can be used as a shortcut to `string.format( localize( x ), args )`
-    */
-   function localizer( languageTag, optionalFallback ) {
-
-      /**
-       * @name Localizer
-       * @private
-       */
-      function partial( i18nValue ) {
-         return localize( languageTag, i18nValue, optionalFallback );
-      }
-
-      /**
-       * Shortcut to string.format, for simple chaining to the localizer.
-       *
-       * These are equal:
-       * - `string.format( i18n.localizer( tag )( i18nValue ), numericArgs, namedArgs )`
-       * - `i18n.localizer( tag ).format( i18nValue, numericArgs, namedArgs )`.
-       *
-       * @param {String} i18nValue
-       *    the value to localize and then format
-       * @param {Array} [optionalIndexedReplacements]
-       *    replacements for any numeric placeholders in the localized value
-       * @param {Object} [optionalNamedReplacements]
-       *    replacements for any named placeholders in the localized value
-       *
-       * @return {String}
-       *    the formatted string, taking i18n into account
-       *
-       * @memberOf Localizer
-       */
-      partial.format = function( i18nValue, optionalIndexedReplacements, optionalNamedReplacements ) {
-         var formatString = localize( languageTag, i18nValue );
-         if( formatString === undefined ) {
-            return optionalFallback;
-         }
-         return format( formatString, optionalIndexedReplacements, optionalNamedReplacements );
-      };
-
-      return partial;
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   /**
-    * Retrieve the language tag of the current locale from an i18n model object, such as used on the scope.
-    *
-    * @param {{locale: String, tags: Object<String, String>}} i18n
-    *    an internationalization model, with reference to the currently active locale and a map from locales
-    *    to language tags
-    * @param {*} [optionalFallbackLanguageTag]
-    *    a language tag to use if no tags are found on the given object
-    *
-    * @return {String}
-    *    the localized value if found, `undefined` otherwise
-    */
-   function languageTagFromI18n( i18n, optionalFallbackLanguageTag ) {
-      if( !i18n || !i18n.hasOwnProperty( 'tags' ) ) {
-         return optionalFallbackLanguageTag;
-      }
-      return i18n.tags[ i18n.locale ] || optionalFallbackLanguageTag;
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   function memoize( f ) {
-      var cache = {};
-      return function( key ) {
-         var value = cache[ key ];
-         if( value === undefined ) {
-            value = f( key );
-            cache[ key ] = value;
-         }
-         return value;
-      };
-   }
-
-} );
-
-/**
- * Copyright 2014 aixigo AG
- * Released under the MIT license.
- * http://laxarjs.org/license
- */
-/**
- * Utilities for dealing with functions.
- *
- * When requiring `laxar`, it is available as `laxar.fn`.
- *
- * @module fn
- */
-define( 'laxar/lib/utilities/fn',[], function() {
-   'use strict';
-
-   return {
-
-      /**
-       * [Underscore `debounce`](http://underscorejs.org/#debounce), but with LaxarJS offering mocking in
-       * tests. See [http://underscorejs.org/#debounce](http://underscorejs.org/#debounce) for detailed
-       * documentation.
-       *
-       * @param {Function} f
-       *    the function to return a debounced version of
-       * @param {Number} waitMs
-       *    milliseconds to debounce before invoking `f`
-       * @param {Boolean} immediate
-       *    if `true` `f` is invoked prior to start waiting `waitMs` milliseconds. Otherwise `f` is invoked
-       *    after the given debounce duration has passed. Default is `false`
-       *
-       * @return {Function}
-       *    the debounced function
-       */
-      debounce: function( f, waitMs, immediate ) {
-         var timeout, args, context, timestamp, result;
-         return function() {
-            context = this;
-            args = arguments;
-            timestamp = new Date();
-            var later = function() {
-               var last = (new Date()) - timestamp;
-               if( last < waitMs ) {
-                  timeout = setTimeout(later, waitMs - last);
-               }
-               else {
-                  timeout = null;
-                  if( !immediate ) {
-                     result = f.apply(context, args);
-                  }
-               }
-            };
-            var callNow = immediate && !timeout;
-            if( !timeout ) { timeout = setTimeout(later, waitMs); }
-            if( callNow ) { result = f.apply(context, args); }
-            return result;
-         };
-      }
-   };
-
-} );
-
-/**
- * Copyright 2014 aixigo AG
- * Released under the MIT license.
- * http://laxarjs.org/license
- */
-/**
- * Provides a convenient api over the browser's `window.localStorage` and `window.sessionStorage` objects. If
- * a browser doesn't support [web storage](http://www.w3.org/TR/webstorage/), a warning is logged to the
- * `console` (if available) and a non-persistent in-memory store will be used instead. Note that this can for
- * example also happen when using Mozilla Firefox with cookies disabled and as such isn't limited to older
- * browsers.
- *
- * Additionally, in contrast to plain *web storage* access, non-string values will be automatically passed
- * through JSON (de-) serialization on storage or retrieval. All keys will be prepended with a combination of
- * an arbitrary and a configured namespace to prevent naming clashes with other web applications running on
- * the same host and port. All {@link StorageApi} accessor methods should then be called without any namespace
- * since adding and removing it, is done automatically.
- *
- * When requiring `laxar`, it is available as `laxar.storage`.
- *
- * @module storage
- */
-define( 'laxar/lib/utilities/storage',[
-   './assert',
-   './configuration'
-], function( assert, configuration ) {
-   'use strict';
-
-   var SESSION = 'sessionStorage';
-   var LOCAL = 'localStorage';
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   /**
-    * @param {Object} backend
-    *    the K/V store, probably only accepting string values
-    * @param {String} namespace
-    *    prefix for all keys for namespacing purposes
-    *
-    * @return {StorageApi}
-    *    a storage wrapper to the given backend with `getItem`, `setItem` and `removeItem` methods
-    *
-    * @private
-    */
-   function createStorage( backend, namespace ) {
-
-      /**
-       * The api returned by one of the `get*Storage` functions of the *storage* module.
-       *
-       * @name StorageApi
-       * @constructor
-       */
-      return {
-         getItem: getItem,
-         setItem: setItem,
-         removeItem: removeItem
-      };
-
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-      /**
-       * Retrieves a `value` by `key` from the store. JSON deserialization will automatically be applied.
-       *
-       * @param {String} key
-       *    the key of the item to retrieve (without namespace prefix)
-       *
-       * @return {*}
-       *    the value or `null` if it doesn't exist in the store
-       *
-       * @memberOf StorageApi
-       */
-      function getItem( key ) {
-         var item = backend.getItem( namespace + '.' + key );
-         return item ? JSON.parse( item ) : item;
-      }
-
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-      /**
-       * Sets a `value` for a `key`. The value should be JSON serializable. An existing value will be
-       * overwritten.
-       *
-       * @param {String} key
-       *    the key of the item to set (without namespace prefix)
-       * @param {*} value
-       *    the new value to set
-       *
-       * @memberOf StorageApi
-       */
-      function setItem( key, value ) {
-         var nsKey = namespace + '.' + key;
-         if( value === undefined ) {
-            backend.removeItem( nsKey );
-         }
-         else {
-            backend.setItem( nsKey, JSON.stringify( value ) );
-         }
-      }
-
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-      /**
-       * Removes the value associated with `key` from the store.
-       *
-       * @param {String} key
-       *    the key of the item to remove (without namespace prefix)
-       *
-       * @memberOf StorageApi
-       */
-      function removeItem( key ) {
-         backend.removeItem( namespace + '.' + key );
-      }
-
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   function getOrFakeBackend( webStorageName ) {
-      var store = window[ webStorageName ];
-      if( store.setItem && store.getItem && store.removeItem ) {
-         try {
-            var testKey = 'ax.storage.testItem';
-            // In iOS Safari Private Browsing, this will fail:
-            store.setItem( testKey, 1 );
-            store.removeItem( testKey );
-            return store;
-         }
-         catch( e ) {
-            // setItem failed: must use fake storage
-         }
-      }
-
-      if( window.console ) {
-         var method = 'warn' in window.console ? 'warn' : 'log';
-         window.console[ method ](
-            'window.' + webStorageName + ' not available: Using non-persistent polyfill. \n' +
-            'Try disabling private browsing or enabling cookies.'
-         );
-      }
-
-      var backend = {};
-      return {
-         getItem: function( key ) {
-            return backend[ key ] || null;
-         },
-         setItem: function( key, val ) {
-            backend[ key ] = val;
-         },
-         removeItem: function( key ) {
-            if( key in backend ) {
-               delete backend[ key ];
-            }
-         }
-      };
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   function generateUniquePrefix() {
-      var prefix = configuration.get( 'storagePrefix' );
-      if( prefix ) {
-         return prefix;
-      }
-
-      var str = configuration.get( 'name', '' );
-      var res = 0;
-      /* jshint bitwise:false */
-      for( var i = str.length - 1; i > 0; --i ) {
-         res = ((res << 5) - res) + str.charCodeAt( i );
-         res |= 0;
-      }
-      return Math.abs( res );
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   /**
-    * Creates a new storage module. In most cases this module will be called without arguments,
-    * but having the ability to provide them is useful e.g. for mocking purposes within tests.
-    * If the arguments are omitted, an attempt is made to access the native browser WebStorage api.
-    * If that fails, storage is only mocked by an in memory map (thus actually unavailable).
-    *
-    * Developers are free to use polyfills to support cases where local- or session-storage may not be
-    * available. Just make sure to initialize the polyfills before this module.
-    *
-    * @param {Object} [localStorageBackend]
-    *    the backend for local storage, Default is `window.localStorage`
-    * @param {Object} [sessionStorageBackend]
-    *    the backend for session storage, Default is `window.sessionStorage`
-    *
-    * @return {Object}
-    *    a new storage module
-    */
-   function create( localStorageBackend, sessionStorageBackend ) {
-
-      var localBackend = localStorageBackend || getOrFakeBackend( LOCAL );
-      var sessionBackend = sessionStorageBackend || getOrFakeBackend( SESSION );
-      var prefix = 'ax.' + generateUniquePrefix() + '.';
-
-      return {
-
-         /**
-          * Returns a local storage object for a specific local namespace.
-          *
-          * @param {String} namespace
-          *    the namespace to prepend to keys
-          *
-          * @return {StorageApi}
-          *    the local storage object
-          */
-         getLocalStorage: function( namespace ) {
-            assert( namespace ).hasType( String ).isNotNull();
-
-            return createStorage( localBackend, prefix + namespace );
-         },
-
-         /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-         /**
-          * Returns a session storage object for a specific local namespace.
-          *
-          * @param {String} namespace
-          *    the namespace to prepend to keys
-          *
-          * @return {StorageApi}
-          *    the session storage object
-          */
-         getSessionStorage: function( namespace ) {
-            assert( namespace ).hasType( String ).isNotNull();
-
-            return createStorage( sessionBackend, prefix + namespace );
-         },
-
-         /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-         /**
-          * Returns the local storage object for application scoped keys. This is equivalent to
-          * `storage.getLocalStorage( 'app' )`.
-          *
-          * @return {StorageApi}
-          *    the application local storage object
-          */
-         getApplicationLocalStorage: function() {
-            return createStorage( localBackend, prefix + 'app' );
-         },
-
-         /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-         /**
-          * Returns the session storage object for application scoped keys. This is equivalent to
-          * `storage.getSessionStorage( 'app' )`.
-          *
-          * @return {StorageApi}
-          *    the application session storage object
-          */
-         getApplicationSessionStorage: function() {
-            return createStorage( sessionBackend, prefix + 'app' );
-         },
-
-         /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-         create: create
-
-      };
-
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   return create();
-
-} );
-
-/**
- * Copyright 2014 aixigo AG
- * Released under the MIT license.
- * http://laxarjs.org/license
- */
-define( 'laxar/lib/utilities/path',[
-   './assert'
-], function( assert ) {
-   'use strict';
-
-   var PATH_SEPARATOR = '/';
-   var PARENT = '..';
-   var ABSOLUTE = /^([a-z0-9]+:\/\/[^\/]+\/|\/)(.*)$/;
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   /**
-    * Joins multiple path fragments into one normalized path. Absolute paths (paths starting with a `/`)
-    * and URLs will "override" any preceding paths. I.e. joining a URL or an absolute path to _anything_
-    * will give the URL or absolute path.
-    *
-    * @param {...String} fragments
-    *    the path fragments to join
-    *
-    * @return {String}
-    *    the joined path
-    */
-   function join( /* firstFragment, secondFragment, ... */ ) {
-      var fragments = Array.prototype.slice.call( arguments, 0 );
-      if( fragments.length === 0 ) {
-         return '';
-      }
-
-      var prefix = '';
-
-      fragments = fragments.reduce( function( fragments, fragment ) {
-         assert( fragment ).hasType( String ).isNotNull();
-
-         var matchAbsolute = ABSOLUTE.exec( fragment );
-
-         if( matchAbsolute ) {
-            prefix = matchAbsolute[1];
-            fragment = matchAbsolute[2];
-            return fragment.split( PATH_SEPARATOR );
-         }
-
-         return fragments.concat( fragment.split( PATH_SEPARATOR ) );
-      }, [] );
-
-      var pathStack = normalizeFragments( fragments );
-
-      return prefix + pathStack.join( PATH_SEPARATOR );
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   /**
-    * Normalizes a path. Removes multiple consecutive slashes, strips trailing slashes, removes `.`
-    * references and resolves `..` references (unless there are no preceding directories).
-    *
-    * @param {String} path
-    *    the path to normalize
-    *
-    * @return {String}
-    *    the normalized path
-    */
-   function normalize( path ) {
-      var prefix = '';
-      var matchAbsolute = ABSOLUTE.exec( path );
-
-      if( matchAbsolute ) {
-         prefix = matchAbsolute[1];
-         path = matchAbsolute[2];
-      }
-
-      var pathStack = normalizeFragments( path.split( PATH_SEPARATOR ) );
-
-      return prefix + pathStack.join( PATH_SEPARATOR );
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   /**
-    * Compute a relative path. Takes two absolute paths and returns a normalized path, relative to
-    * the first path.
-    * Note that if both paths are URLs they are threated as if they were on the same host. I.e. this function
-    * does not complain when called with `http://localhost/path` and `http://example.com/another/path`.
-    *
-    * @param {String} from
-    *    the starting point from which to determine the relative path
-    *
-    * @param {String} path
-    *    the target path
-    *
-    * @return {String}
-    *    the relative path from `from` to `to`
-    */
-   function relative( from, path ) {
-      var matchAbsoluteFrom = ABSOLUTE.exec( from );
-      var matchAbsolutePath = ABSOLUTE.exec( path );
-
-      assert( matchAbsoluteFrom ).isNotNull();
-      assert( matchAbsolutePath ).isNotNull();
-
-      var fromStack = normalizeFragments( matchAbsoluteFrom[2].split( PATH_SEPARATOR ) );
-      var pathStack = normalizeFragments( matchAbsolutePath[2].split( PATH_SEPARATOR ) );
-
-      return fromStack.reduce( function( path, fragment ) {
-         if( path[0] === fragment ) {
-            path.shift();
-         } else {
-            path.unshift( '..' );
-         }
-         return path;
-      }, pathStack ).join( PATH_SEPARATOR ) || '.';
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   function normalizeFragments( fragments ) {
-      return fragments.reduce( function( pathStack, fragment ) {
-         fragment = fragment.replace( /^\/+|\/+$/g, '' );
-
-         if( fragment === '' || fragment === '.' ) {
-            return pathStack;
-         }
-
-         if( pathStack.length === 0 ) {
-            return [ fragment ];
-         }
-
-         if( fragment === PARENT && pathStack.length > 0 && pathStack[ pathStack.length - 1 ] !== PARENT ) {
-            pathStack.pop();
-            return pathStack;
-         }
-         pathStack.push( fragment );
-
-         return pathStack;
-      }, [] );
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   return {
-      join: join,
-      normalize: normalize,
-      relative: relative
-   };
-
-} );
-
-/**
- * Copyright 2014 aixigo AG
- * Released under the MIT license.
- * http://laxarjs.org/license
- */
-define( 'laxar/lib/loaders/paths',[
-   'require'
-], function( require ) {
-   'use strict';
-
-   return {
-      PRODUCT: require.toUrl( 'laxar-path-root' ),
-      THEMES: require.toUrl( 'laxar-path-themes' ),
-      LAYOUTS: require.toUrl( 'laxar-path-layouts' ),
-      WIDGETS: require.toUrl( 'laxar-path-widgets' ),
-      PAGES: require.toUrl( 'laxar-path-pages' ),
-      FLOW_JSON: require.toUrl( 'laxar-path-flow' ),
-      DEFAULT_THEME: require.toUrl( 'laxar-path-default-theme' )
-   };
-
-} );
-
-/**
- * Copyright 2014 aixigo AG
- * Released under the MIT license.
- * http://laxarjs.org/license
- */
-define( 'laxar/lib/runtime/runtime',[
-   'angular',
-   '../utilities/path',
-   '../loaders/paths'
-], function( ng, path, paths ) {
-   'use strict';
-
-   var module = ng.module( 'axRuntime', [] );
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   // Patching AngularJS with more aggressive scope destruction and memory leak prevention
-   module.run( [ '$rootScope', '$window', function( $rootScope, $window ) {
-      ng.element( $window ).one( 'unload', function() {
-         while( $rootScope.$$childHead ) {
-            $rootScope.$$childHead.$destroy();
-         }
-         $rootScope.$destroy();
-      } );
-   } ] );
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   // Initialize the theme manager
-   module.run( [ 'axCssLoader', 'axThemeManager', function( CssLoader, themeManager ) {
-      themeManager
-         .urlProvider( path.join( paths.THEMES, '[theme]' ), null, paths.DEFAULT_THEME )
-         .provide( [ 'css/theme.css' ] )
-         .then( function( files ) {
-            CssLoader.load( files[0] );
-         } );
-   } ] );
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   // Initialize i18n for i18n controls in non-i18n widgets
-   module.run( [ '$rootScope', 'axConfiguration', function( $rootScope, configuration ) {
-      $rootScope.i18n = {
-         locale: 'default',
-         tags: configuration.get( 'i18n.locales', { 'default': 'en' } )
-      };
-   } ] );
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   return module;
-
-} );
-
-/**
- * Copyright 2014 aixigo AG
- * Released under the MIT license.
- * http://laxarjs.org/license
- */
-/**
  * The *event_bus* module contains the implementation of the *LaxarJS EventBus*. In an application you'll
  * never use this module or instantiate an event bus instance directly. Instead within a widget the event bus
  * can be injected via service or accessed as property on the AngularJS `$scope` or `axContext` injections.
@@ -3203,6 +2404,157 @@ define( 'laxar/lib/event_bus/event_bus',[
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
+define( 'laxar/lib/utilities/path',[
+   './assert'
+], function( assert ) {
+   'use strict';
+
+   var PATH_SEPARATOR = '/';
+   var PARENT = '..';
+   var ABSOLUTE = /^([a-z0-9]+:\/\/[^\/]+\/|\/)(.*)$/;
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   /**
+    * Joins multiple path fragments into one normalized path. Absolute paths (paths starting with a `/`)
+    * and URLs will "override" any preceding paths. I.e. joining a URL or an absolute path to _anything_
+    * will give the URL or absolute path.
+    *
+    * @param {...String} fragments
+    *    the path fragments to join
+    *
+    * @return {String}
+    *    the joined path
+    */
+   function join( /* firstFragment, secondFragment, ... */ ) {
+      var fragments = Array.prototype.slice.call( arguments, 0 );
+      if( fragments.length === 0 ) {
+         return '';
+      }
+
+      var prefix = '';
+
+      fragments = fragments.reduce( function( fragments, fragment ) {
+         assert( fragment ).hasType( String ).isNotNull();
+
+         var matchAbsolute = ABSOLUTE.exec( fragment );
+
+         if( matchAbsolute ) {
+            prefix = matchAbsolute[1];
+            fragment = matchAbsolute[2];
+            return fragment.split( PATH_SEPARATOR );
+         }
+
+         return fragments.concat( fragment.split( PATH_SEPARATOR ) );
+      }, [] );
+
+      var pathStack = normalizeFragments( fragments );
+
+      return prefix + pathStack.join( PATH_SEPARATOR );
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   /**
+    * Normalizes a path. Removes multiple consecutive slashes, strips trailing slashes, removes `.`
+    * references and resolves `..` references (unless there are no preceding directories).
+    *
+    * @param {String} path
+    *    the path to normalize
+    *
+    * @return {String}
+    *    the normalized path
+    */
+   function normalize( path ) {
+      var prefix = '';
+      var matchAbsolute = ABSOLUTE.exec( path );
+
+      if( matchAbsolute ) {
+         prefix = matchAbsolute[1];
+         path = matchAbsolute[2];
+      }
+
+      var pathStack = normalizeFragments( path.split( PATH_SEPARATOR ) );
+
+      return prefix + pathStack.join( PATH_SEPARATOR );
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   /**
+    * Compute a relative path. Takes two absolute paths and returns a normalized path, relative to
+    * the first path.
+    * Note that if both paths are URLs they are threated as if they were on the same host. I.e. this function
+    * does not complain when called with `http://localhost/path` and `http://example.com/another/path`.
+    *
+    * @param {String} from
+    *    the starting point from which to determine the relative path
+    *
+    * @param {String} path
+    *    the target path
+    *
+    * @return {String}
+    *    the relative path from `from` to `to`
+    */
+   function relative( from, path ) {
+      var matchAbsoluteFrom = ABSOLUTE.exec( from );
+      var matchAbsolutePath = ABSOLUTE.exec( path );
+
+      assert( matchAbsoluteFrom ).isNotNull();
+      assert( matchAbsolutePath ).isNotNull();
+
+      var fromStack = normalizeFragments( matchAbsoluteFrom[2].split( PATH_SEPARATOR ) );
+      var pathStack = normalizeFragments( matchAbsolutePath[2].split( PATH_SEPARATOR ) );
+
+      return fromStack.reduce( function( path, fragment ) {
+         if( path[0] === fragment ) {
+            path.shift();
+         } else {
+            path.unshift( '..' );
+         }
+         return path;
+      }, pathStack ).join( PATH_SEPARATOR ) || '.';
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function normalizeFragments( fragments ) {
+      return fragments.reduce( function( pathStack, fragment ) {
+         fragment = fragment.replace( /^\/+|\/+$/g, '' );
+
+         if( fragment === '' || fragment === '.' ) {
+            return pathStack;
+         }
+
+         if( pathStack.length === 0 ) {
+            return [ fragment ];
+         }
+
+         if( fragment === PARENT && pathStack.length > 0 && pathStack[ pathStack.length - 1 ] !== PARENT ) {
+            pathStack.pop();
+            return pathStack;
+         }
+         pathStack.push( fragment );
+
+         return pathStack;
+      }, [] );
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   return {
+      join: join,
+      normalize: normalize,
+      relative: relative
+   };
+
+} );
+
+/**
+ * Copyright 2014 aixigo AG
+ * Released under the MIT license.
+ * http://laxarjs.org/license
+ */
 /**
  * The *file_resource_provider* module defines a mechanism to load static assets from the web server of the
  * LaxarJS application efficiently. Whenever a file should be requested from the server, the file resource
@@ -3512,6 +2864,1667 @@ define( 'laxar/lib/file_resource_provider/file_resource_provider',[
       }
 
    };
+
+} );
+
+/**
+ * Copyright 2014 aixigo AG
+ * Released under the MIT license.
+ * http://laxarjs.org/license
+ */
+/**
+ * Utilities for dealing with internationalization (i18n).
+ *
+ * When requiring `laxar`, it is available as `laxar.i18n`.
+ *
+ * @module i18n
+ */
+define( 'laxar/lib/i18n/i18n',[
+   '../utilities/string',
+   '../utilities/assert',
+   '../utilities/configuration'
+], function( string, assert, configuration ) {
+   'use strict';
+
+   var localize = localizeRelaxed;
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   var primitives = {
+      string: true,
+      number: true,
+      boolean: true
+   };
+
+   var fallbackTag;
+
+   var normalize = memoize( function( languageTag ) {
+      return languageTag.toLowerCase().replace( /[-]/g, '_' );
+   } );
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   // Shortcuts: it is assumed that this module is used heavily (or not at all).
+   var format = string.format;
+   var keys = Object.keys;
+
+   return {
+      localize: localize,
+      localizeStrict: localizeStrict,
+      localizeRelaxed: localizeRelaxed,
+      localizer: localizer,
+      languageTagFromI18n: languageTagFromI18n
+   };
+
+   /**
+    * Shortcut to {@link localizeRelaxed}.
+    *
+    * @name localize
+    * @type {Function}
+    */
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   /**
+    * Localize the given internationalized object using the given languageTag.
+    *
+    * @param {String} languageTag
+    *    the languageTag to lookup a localization with. Maybe `undefined`, if the value is not i18n (app does
+    *    not use i18n)
+    * @param {*} i18nValue
+    *    a possibly internationalized value:
+    *    - when passing a primitive value, it is returned as-is
+    *    - when passing an object, the languageTag is used as a key within that object
+    * @param {*} [optionalFallback]
+    *    a value to use if no localization is available for the given language tag
+    *
+    * @return {*}
+    *    the localized value if found, `undefined` otherwise
+    */
+   function localizeStrict( languageTag, i18nValue, optionalFallback ) {
+      assert( languageTag ).hasType( String );
+      if( !i18nValue || primitives[ typeof i18nValue ] ) {
+         // Value is not i18n
+         return i18nValue;
+      }
+      assert( languageTag ).isNotNull();
+
+      // Try one direct lookup before scanning the input keys,
+      // assuming that language-tags are written in consistent style.
+      var value = i18nValue[ languageTag ];
+      if( value !== undefined ) {
+         return value;
+      }
+
+      var lookupKey = normalize( languageTag );
+      var availableTags = keys( i18nValue );
+      var n = availableTags.length;
+      for( var i = 0; i < n; ++i ) {
+         var t = availableTags[ i ];
+         if( normalize( t ) === lookupKey ) {
+            return i18nValue[ t ];
+         }
+      }
+
+      return optionalFallback;
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   /**
+    * For controls (such as a date-picker), we cannot anticipate all required language tags, as they may be
+    * app-specific. The relaxed localize behaves like localize if an exact localization is available. If not,
+    * the language tag is successively generalized by stripping off the rightmost sub-tags until a
+    * localization is found. Eventually, a fallback ('en') is used.
+    *
+    * @param {String} languageTag
+    *    the languageTag to lookup a localization with. Maybe `undefined`, if the value is not i18n (app does
+    *    not use i18n)
+    * @param {*} i18nValue
+    *    a possibly internationalized value:
+    *    - when passing a primitive value, it is returned as-is
+    *    - when passing an object, the `languageTag` is used to look up a localization within that object
+    * @param {*} [optionalFallback]
+    *    a value to use if no localization is available for the given language tag
+    *
+    * @return {*}
+    *    the localized value if found, the fallback `undefined` otherwise
+    */
+   function localizeRelaxed( languageTag, i18nValue, optionalFallback ) {
+      assert( languageTag ).hasType( String );
+      if( !i18nValue || primitives[ typeof i18nValue ] ) {
+         // Value is not i18n (app does not use it)
+         return i18nValue;
+      }
+
+      var tagParts = languageTag ? languageTag.replace( /-/g, '_' ).split( '_' ) : [];
+      while( tagParts.length > 0 ) {
+         var currentLocaleTag = tagParts.join( '-' );
+         var value = localizeStrict( currentLocaleTag, i18nValue );
+         if( value !== undefined ) {
+            return value;
+         }
+         tagParts.pop();
+      }
+
+      if( fallbackTag === undefined ) {
+         fallbackTag = configuration.get( 'i18n.fallback', 'en' );
+      }
+
+      return ( fallbackTag && localizeStrict( fallbackTag, i18nValue ) ) || optionalFallback;
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   /**
+    * Encapsulate a given languageTag in a partially applied localize function.
+    *
+    * @param {String} languageTag
+    *    the languageTag to lookup localizations with
+    * @param {*} [optionalFallback]
+    *    a value to use by the localizer function whenever no localization is available for the language tag
+    *
+    * @return {Localizer}
+    *    A single-arg localize-Function, which always uses the given language-tag. It also has a `.format`
+    *    -method, which can be used as a shortcut to `string.format( localize( x ), args )`
+    */
+   function localizer( languageTag, optionalFallback ) {
+
+      /**
+       * @name Localizer
+       * @private
+       */
+      function partial( i18nValue ) {
+         return localize( languageTag, i18nValue, optionalFallback );
+      }
+
+      /**
+       * Shortcut to string.format, for simple chaining to the localizer.
+       *
+       * These are equal:
+       * - `string.format( i18n.localizer( tag )( i18nValue ), numericArgs, namedArgs )`
+       * - `i18n.localizer( tag ).format( i18nValue, numericArgs, namedArgs )`.
+       *
+       * @param {String} i18nValue
+       *    the value to localize and then format
+       * @param {Array} [optionalIndexedReplacements]
+       *    replacements for any numeric placeholders in the localized value
+       * @param {Object} [optionalNamedReplacements]
+       *    replacements for any named placeholders in the localized value
+       *
+       * @return {String}
+       *    the formatted string, taking i18n into account
+       *
+       * @memberOf Localizer
+       */
+      partial.format = function( i18nValue, optionalIndexedReplacements, optionalNamedReplacements ) {
+         var formatString = localize( languageTag, i18nValue );
+         if( formatString === undefined ) {
+            return optionalFallback;
+         }
+         return format( formatString, optionalIndexedReplacements, optionalNamedReplacements );
+      };
+
+      return partial;
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   /**
+    * Retrieve the language tag of the current locale from an i18n model object, such as used on the scope.
+    *
+    * @param {{locale: String, tags: Object<String, String>}} i18n
+    *    an internationalization model, with reference to the currently active locale and a map from locales
+    *    to language tags
+    * @param {*} [optionalFallbackLanguageTag]
+    *    a language tag to use if no tags are found on the given object
+    *
+    * @return {String}
+    *    the localized value if found, `undefined` otherwise
+    */
+   function languageTagFromI18n( i18n, optionalFallbackLanguageTag ) {
+      if( !i18n || !i18n.hasOwnProperty( 'tags' ) ) {
+         return optionalFallbackLanguageTag;
+      }
+      return i18n.tags[ i18n.locale ] || optionalFallbackLanguageTag;
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function memoize( f ) {
+      var cache = {};
+      return function( key ) {
+         var value = cache[ key ];
+         if( value === undefined ) {
+            value = f( key );
+            cache[ key ] = value;
+         }
+         return value;
+      };
+   }
+
+} );
+
+/**
+ * Copyright 2014 aixigo AG
+ * Released under the MIT license.
+ * http://laxarjs.org/license
+ */
+define( 'laxar/lib/loaders/paths',[
+   'require'
+], function( require ) {
+   'use strict';
+
+   return {
+      PRODUCT: require.toUrl( 'laxar-path-root' ),
+      THEMES: require.toUrl( 'laxar-path-themes' ),
+      LAYOUTS: require.toUrl( 'laxar-path-layouts' ),
+      WIDGETS: require.toUrl( 'laxar-path-widgets' ),
+      PAGES: require.toUrl( 'laxar-path-pages' ),
+      FLOW_JSON: require.toUrl( 'laxar-path-flow' ),
+      DEFAULT_THEME: require.toUrl( 'laxar-path-default-theme' )
+   };
+
+} );
+
+/**
+ * Copyright 2014 aixigo AG
+ * Released under the MIT license.
+ * http://laxarjs.org/license
+ */
+define( 'laxar/lib/json/schema',[
+   '../utilities/object'
+], function( object ) {
+   'use strict';
+
+   function transformV3V4Recursively( schema, parentKey, parentSchema, originalParentSchema ) {
+      var resultingSchema = {};
+
+      Object.keys( schema ).forEach( function( key ) {
+
+         var value = schema[ key ];
+
+         switch( key ) {
+            case 'required':
+               if( value !== true ) {
+                  break;
+               }
+
+               if( isNamedProperty( parentKey, originalParentSchema ) && !( 'default' in schema ) ) {
+                  if( !( 'required' in parentSchema ) ) {
+                     parentSchema.required = [];
+                  }
+                  parentSchema.required.push( parentKey );
+               }
+               break;
+
+            case 'items':
+               resultingSchema[ key ] = transformV3V4Recursively( value, key, resultingSchema, schema );
+               break;
+
+            case 'additionalProperties':
+               if( typeof value === 'object' ) {
+                  resultingSchema[ key ] = transformV3V4Recursively( value, key, resultingSchema, schema );
+               }
+               else {
+                  resultingSchema[ key ] = value;
+               }
+               break;
+
+            case 'properties':
+            case 'patternProperties':
+               resultingSchema[ key ] = {};
+               object.forEach( value, function( patternSchema, pattern ) {
+                  resultingSchema[ key ][ pattern ] =
+                     transformV3V4Recursively( patternSchema, pattern, resultingSchema, schema );
+               } );
+               break;
+
+            default:
+               resultingSchema[ key ] = value;
+
+         }
+
+      } );
+
+      // LaxarJS specific: transform "not required" to "allow null"
+      if( isNamedProperty( parentKey, originalParentSchema ) && !schema.required ) {
+         var propertyType = resultingSchema.type;
+         if( typeof propertyType === 'string' && propertyType !== 'null' ) {
+            resultingSchema.type = [ propertyType, 'null' ];
+         }
+         else if( Array.isArray( propertyType ) && propertyType.indexOf( 'null' ) === -1 ) {
+            propertyType.push( 'null' );
+         }
+      }
+
+      return resultingSchema;
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function prohibitAdditionalPropertiesRecursively( schema ) {
+      if( ( 'properties' in schema || 'patternProperties' in schema ) &&
+         !( 'additionalProperties' in schema ) ) {
+         schema.additionalProperties = false;
+      }
+
+      if( 'properties' in schema ) {
+         Object.keys( schema.properties ).forEach( function( name ) {
+            prohibitAdditionalPropertiesRecursively( schema.properties[ name ] );
+         } );
+      }
+
+      if( 'additionalProperties' in schema && typeof schema.additionalProperties === 'object' ) {
+         prohibitAdditionalPropertiesRecursively( schema.additionalProperties );
+      }
+
+      if( 'patternProperties' in schema ) {
+         Object.keys( schema.patternProperties ).forEach( function( pattern ) {
+            prohibitAdditionalPropertiesRecursively( schema.patternProperties[ pattern ] );
+         } );
+      }
+
+      if( 'items' in schema ) {
+         prohibitAdditionalPropertiesRecursively( schema.items );
+      }
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function isNamedProperty( key, parentSchema ) {
+      return parentSchema &&
+         schemaAllowsType( parentSchema, 'object' ) &&
+         object.path( parentSchema, 'properties.' + key );
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function schemaAllowsType( schema, type ) {
+      var schemaType = schema.type;
+      if( typeof schemaType === 'string' ) {
+         return schemaType === type;
+      }
+      if( Array.isArray( schemaType ) ) {
+         return schemaType.indexOf( type ) !== -1;
+      }
+
+      return true;
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   return {
+
+      transformV3ToV4: function( schema ) {
+         return transformV3V4Recursively( schema );
+      },
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      prohibitAdditionalProperties: function( schema ) {
+         prohibitAdditionalPropertiesRecursively( schema );
+      }
+
+   };
+
+} );
+
+/**
+ * Copyright 2014 aixigo AG
+ * Released under the MIT license.
+ * http://laxarjs.org/license
+ */
+define( 'laxar/lib/json/validator',[
+   'jjv',
+   'jjve',
+   './schema',
+   '../utilities/object'
+], function( jjv, jjve, schema, objectUtils ) {
+   'use strict';
+
+   var JSON_SCHEMA_V4_URI = 'http://json-schema.org/draft-04/schema#';
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function transformResult( result, schema, object, env ) {
+      if( !result ) {
+         return {
+            errors: []
+         };
+      }
+
+      var messageGenerator = jjve( env );
+
+      return {
+         errors: messageGenerator( schema, object, result )
+            .map( function( error ) {
+               return objectUtils.options( {
+                  message: error.message + '. Path: "' + error.path + '".'
+               }, error );
+            } )
+      };
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   return {
+
+      /**
+       * Creates and returns a new JSON validator for schema draft version 4. Minimal conversion from v3 to v4
+       * is builtin, but it is strongly advised to create new schemas using the version 4 draft. Version
+       * detection for v4 is realized by checking if the `$schema` property of the root schema equals the
+       * uri `http://json-schema.org/draft-04/schema#`. If the `$schema` property is missing or has a
+       * different value, v3 is assumed.
+       * See https://github.com/json-schema/json-schema/wiki/ChangeLog for differences between v3 and v4.
+       *
+       * @param {Object} jsonSchema
+       *    the JSON schema to use when validating
+       * @param {Object} [options]
+       *    an optional set of options
+       * @param {Boolean} options.prohibitAdditionalProperties
+       *    sets additionalProperties to false if not defined otherwise for the according object schema
+       * @param {Boolean} options.checkRequired
+       *    (jjv option) if `true` it reports missing required properties, otherwise it allows missing
+       *    required properties. Default is `true`
+       * @param {Boolean} options.useDefault
+       *    (jjv option) If true it modifies the validated object to have the default values for missing
+       *    non-required fields. Default is `false`
+       * @param {Boolean} options.useCoerce
+       *    (jjv option) if `true` it enables type coercion where defined. Default is `false`
+       * @param {Boolean} options.removeAdditional
+       *    (jjv option) if `true` it removes all attributes of an object which are not matched by the
+       *    schema's specification. Default is `false`
+       *
+       *
+       * @return {Object}
+       *    a new instance of JsonValidator
+       */
+      create: function( jsonSchema, options ) {
+         var env = jjv();
+         options = objectUtils.options( options, {
+            prohibitAdditionalProperties: false
+         } );
+         env.defaultOptions = objectUtils.options( options, env.defaultOptions );
+
+         if( !( '$schema' in jsonSchema ) || jsonSchema.$schema !== JSON_SCHEMA_V4_URI ) {
+            // While schema draft v4 is directly supported by the underlying validator, we need to transform
+            // older v3 schemas to valid v4 schemas. Furthermore all of our existing schemas are v3 without
+            // version info. Thus, whenever we find a schema without version info or a version info that isn't
+            // v4, we assume a v3 schema and translate it to v4.
+            // Note that only the small subset of v3 features is transformed v4 features that is needed for
+            // legacy schemas.
+            // Using `this` reference for testability / spying
+            jsonSchema = schema.transformV3ToV4( jsonSchema );
+            jsonSchema.$schema = JSON_SCHEMA_V4_URI;
+
+            env.addType( 'any', function( value ) {
+               return true;
+            } );
+         }
+
+         if( options.prohibitAdditionalProperties ) {
+            schema.prohibitAdditionalProperties( jsonSchema );
+         }
+
+         var origValidate = env.validate;
+
+         env.validate = function( object ) {
+            var result = origValidate.call( env, jsonSchema, object );
+            return transformResult( result, jsonSchema, object, env );
+         };
+
+         return env;
+      },
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      JSON_SCHEMA_V4_URI: JSON_SCHEMA_V4_URI
+
+   };
+
+} );
+
+/**
+ * Copyright 2014 aixigo AG
+ * Released under the MIT license.
+ * http://laxarjs.org/license
+ */
+define( 'laxar/lib/loaders/features_provider',[
+   '../json/validator',
+   '../utilities/object',
+   '../utilities/string'
+], function( jsonValidator, object, string ) {
+   'use strict';
+
+   // JSON schema formats:
+   var TOPIC_IDENTIFIER = '([a-z][+a-zA-Z0-9]*|[A-Z][+A-Z0-9]*)';
+   var SUB_TOPIC_FORMAT = new RegExp( '^' + TOPIC_IDENTIFIER + '$' );
+   var TOPIC_FORMAT = new RegExp( '^(' + TOPIC_IDENTIFIER + '(-' + TOPIC_IDENTIFIER + ')*)$' );
+   var FLAG_TOPIC_FORMAT = new RegExp( '^[!]?(' + TOPIC_IDENTIFIER + '(-' + TOPIC_IDENTIFIER + ')*)$' );
+   // simplified RFC-5646 language-tag matcher with underscore/dash relaxation:
+   // the parts are: language *("-"|"_" script|region|variant) *("-"|"_" extension|privateuse)
+   var LANGUAGE_TAG_FORMAT = /^[a-z]{2,8}([-_][a-z0-9]{2,8})*([-_][a-z0-9][-_][a-z0-9]{2,8})*$/i;
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function featuresForWidget( widgetSpecification, widgetConfiguration, throwError ) {
+      if( !widgetSpecification.features ) {
+         return {};
+      }
+
+      var featureConfiguration = widgetConfiguration.features || {};
+      var featuresSpec = widgetSpecification.features;
+      if( !( '$schema' in featuresSpec ) ) {
+         // we assume an "old style" feature specification (i.e. first level type specification is omitted)
+         // if no schema version was defined.
+         featuresSpec = {
+            $schema: 'http://json-schema.org/draft-03/schema#',
+            type: 'object',
+            properties: widgetSpecification.features
+         };
+      }
+
+      object.forEach( featuresSpec.properties, function( feature, name ) {
+         // ensure that simple object/array features are at least defined
+         if( name in featureConfiguration ) {
+            return;
+         }
+
+         if( feature.type === 'object' ) {
+            featureConfiguration[ name ] = {};
+         }
+         else if( feature.type === 'array' ) {
+            featureConfiguration[ name ] = [];
+         }
+      } );
+
+      var validator = createFeaturesValidator( featuresSpec );
+      var report = validator.validate( featureConfiguration );
+
+      if( report.errors.length > 0 ) {
+         var message = 'Validation for widget features failed. Errors: ';
+
+         report.errors.forEach( function( error ) {
+            message += '\n - ' + error.message.replace( /\[/g, '\\[' );
+         } );
+
+         throwError( message );
+      }
+
+      return featureConfiguration;
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function createFeaturesValidator( featuresSpec ) {
+      var validator = jsonValidator.create( featuresSpec, {
+         prohibitAdditionalProperties: true,
+         useDefault: true
+      } );
+
+      // allows 'mySubTopic0815', 'MY_SUB_TOPIC+OK' and variations:
+      validator.addFormat( 'sub-topic', function( subTopic ) {
+         return ( typeof subTopic !== 'string' ) || SUB_TOPIC_FORMAT.test( subTopic );
+      } );
+
+      // allows 'myTopic', 'myTopic-mySubTopic-SUB_0815+OK' and variations:
+      validator.addFormat( 'topic', function( topic ) {
+         return ( typeof topic !== 'string' ) || TOPIC_FORMAT.test( topic );
+      } );
+
+      // allows 'myTopic', '!myTopic-mySubTopic-SUB_0815+OK' and variations:
+      validator.addFormat( 'flag-topic', function( flagTopic ) {
+         return ( typeof flagTopic !== 'string' ) || FLAG_TOPIC_FORMAT.test( flagTopic );
+      } );
+
+      // allows 'de_DE', 'en-x-laxarJS' and such:
+      validator.addFormat( 'language-tag', function( languageTag ) {
+         return ( typeof languageTag !== 'string' ) || LANGUAGE_TAG_FORMAT.test( languageTag );
+      } );
+
+      // checks that object keys have the 'topic' format
+      validator.addFormat( 'topic-map', function( topicMap ) {
+         return ( typeof topicMap !== 'object' ) || Object.keys( topicMap ).every( function( topic ) {
+            return TOPIC_FORMAT.test( topic );
+         } );
+      } );
+
+      // checks that object keys have the 'language-tag' format
+      validator.addFormat( 'localization', function( localization ) {
+         return ( typeof localization !== 'object' ) || Object.keys( localization ).every( function( tag ) {
+            return LANGUAGE_TAG_FORMAT.test( tag );
+         } );
+      } );
+
+      return validator;
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   return {
+      featuresForWidget: featuresForWidget
+   };
+
+} );
+
+/**
+ * Copyright 2015 aixigo AG
+ * Released under the MIT license.
+ * http://laxarjs.org/license
+ */
+define( 'laxar/lib/widget_adapters/plain_adapter',[], function() {
+   'use strict';
+
+   var widgetModules = {};
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function bootstrap( modules ) {
+      modules.forEach( function( module ) {
+         widgetModules[ module.name ] = module;
+      } );
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   /**
+    *
+    * @param {Object}      environment
+    * @param {HTMLElement} environment.anchorElement
+    * @param {Object}      environment.context
+    * @param {EventBus}    environment.context.eventBus
+    * @param {Object}      environment.context.features
+    * @param {Function}    environment.context.id
+    * @param {Object}      environment.context.widget
+    * @param {String}      environment.context.widget.area
+    * @param {String}      environment.context.widget.id
+    * @param {String}      environment.context.widget.path
+    * @param {Object}      environment.specification
+    *
+    * @return {Object}
+    */
+   function create( environment ) {
+
+      var exports = {
+         createController: createController,
+         domAttachTo: domAttachTo,
+         domDetach: domDetach,
+         destroy: function() {}
+      };
+
+      var widgetName = environment.specification.name;
+      var moduleName = widgetName.replace( /^./, function( _ ) { return _.toLowerCase(); } );
+      var context = environment.context;
+      var controller = null;
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      function createController( config ) {
+         var module = widgetModules[ moduleName ];
+         var injector = createInjector();
+         var injections = ( module.injections || [] ).map( function( injection ) {
+            return injector.get( injection );
+         } );
+
+         config.onBeforeControllerCreation( environment, injector.get() );
+         controller = module.create.apply( module, injections );
+      }
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      function domAttachTo( areaElement, htmlTemplate ) {
+         if( htmlTemplate === null ) {
+            return;
+         }
+         environment.anchorElement.innerHTML = htmlTemplate;
+         areaElement.appendChild( environment.anchorElement );
+         controller.renderTo( environment.anchorElement );
+      }
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      function domDetach() {
+         var parent = environment.anchorElement.parentNode;
+         if( parent ) {
+            parent.removeChild( environment.anchorElement );
+         }
+      }
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      function createInjector() {
+         var map = {
+            axContext: context,
+            axEventBus: context.eventBus,
+            axFeatures: context.features || {}
+         };
+
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+         return {
+            get: function( name ) {
+               if( arguments.length === 0 ) {
+                  return map;
+               }
+
+               if( !( name in map ) ) {
+                  throw new Error( 'Unknown dependency "' + name + '".' );
+               }
+
+               return map[ name ];
+            }
+         };
+      }
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      return exports;
+
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   return {
+      applyViewChanges: function() {},
+      technology: 'plain',
+      bootstrap: bootstrap,
+      create: create
+   };
+
+} );
+
+/**
+ * Copyright 2014 aixigo AG
+ * Released under the MIT license.
+ * http://laxarjs.org/license
+ */
+define( 'laxar/lib/widget_adapters/angular_adapter',[
+   'angular',
+   'require',
+   '../utilities/assert',
+   '../logging/log'
+], function( ng, require, assert, log ) {
+   'use strict';
+
+   var $compile;
+   var $controller;
+   var $rootScope;
+
+   var controllerNames = {};
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function bootstrap( widgetModules ) {
+      var dependencies = ( widgetModules || [] ).map( function( module ) {
+         controllerNames[ module.name ] = capitalize( module.name ) + 'Controller';
+         supportPreviousNaming( module.name );
+         return module.name;
+      } );
+
+      return ng.module( 'axAngularWidgetAdapter', dependencies )
+         .run( [ '$compile', '$controller', '$rootScope', function( _$compile_, _$controller_, _$rootScope_ ) {
+            $controller = _$controller_;
+            $compile = _$compile_;
+            $rootScope = _$rootScope_;
+         } ] );
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   /**
+    *
+    * @param {Object}      environment
+    * @param {HTMLElement} environment.anchorElement
+    * @param {Object}      environment.context
+    * @param {EventBus}    environment.context.eventBus
+    * @param {Object}      environment.context.features
+    * @param {Function}    environment.context.id
+    * @param {Object}      environment.context.widget
+    * @param {String}      environment.context.widget.area
+    * @param {String}      environment.context.widget.id
+    * @param {String}      environment.context.widget.path
+    * @param {Object}      environment.specification
+    *
+    * @return {Object}
+    */
+   function create( environment ) {
+
+      var exports = {
+         createController: createController,
+         domAttachTo: domAttachTo,
+         domDetach: domDetach,
+         destroy: destroy
+      };
+
+      var context = environment.context;
+      var scope_;
+      var injections_;
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      function createController( config ) {
+         var widgetName = environment.specification.name;
+         var moduleName = widgetName.replace( /^./, function( _ ) { return _.toLowerCase(); } );
+         var controllerName = controllerNames[ moduleName ];
+
+         injections_ = {
+            axContext: context,
+            axEventBus: context.eventBus
+         };
+         Object.defineProperty( injections_, '$scope', {
+            enumerable: true,
+            get: function() {
+               if( !scope_ ) {
+                  scope_ = $rootScope.$new();
+                  ng.extend( scope_, context );
+               }
+               return scope_;
+            }
+         } );
+
+         config.onBeforeControllerCreation( environment, injections_ );
+         $controller( controllerName, injections_ );
+      }
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      /**
+       * Synchronously attach the widget DOM to the given area.
+       *
+       * @param {HTMLElement} areaElement
+       *    The widget area to attach this widget to.
+       * @param {String} templateHtml
+       *
+       */
+      function domAttachTo( areaElement, templateHtml ) {
+         if( templateHtml === null ) {
+            return;
+         }
+
+         var element = ng.element( environment.anchorElement );
+         element.html( templateHtml );
+         areaElement.appendChild( environment.anchorElement );
+         $compile( environment.anchorElement )( injections_.$scope );
+         templateHtml = null;
+      }
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      function domDetach() {
+         var parent = environment.anchorElement.parentNode;
+         if( parent ) {
+            parent.removeChild( environment.anchorElement );
+         }
+      }
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      function destroy() {
+         if( scope_ ) {
+            scope_.$destroy();
+         }
+      }
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      return exports;
+
+   }
+
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function capitalize( _ ) {
+      return _.replace( /^./, function( _ ) { return _.toUpperCase(); } );
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function supportPreviousNaming( moduleName ) {
+      if( moduleName.indexOf( '.' ) === -1 ) {
+         return;
+      }
+
+      var lookupName = moduleName.replace( /^.*\.([^.]+)$/, function( $_, $1 ) {
+         return $1.replace( /_(.)/g, function( $_, $1 ) { return $1.toUpperCase(); } );
+      } );
+      controllerNames[ lookupName ] = controllerNames[ moduleName ] = moduleName + '.Controller';
+
+      log.warn( 'Deprecation: AngularJS widget module name "' + moduleName + '" violates naming rules! ' +
+                'Module should be named "' + lookupName + '". ' +
+                'Controller should be named "' + capitalize( lookupName ) + 'Controller".' );
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function applyViewChanges() {
+      $rootScope.$apply();
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   return {
+      applyViewChanges: applyViewChanges,
+      technology: 'angular',
+      bootstrap: bootstrap,
+      create: create
+   };
+
+} );
+
+/**
+ * Copyright 2015 aixigo AG
+ * Released under the MIT license.
+ * http://laxarjs.org/license
+ */
+define( 'laxar/lib/widget_adapters/adapters',[
+   './plain_adapter',
+   './angular_adapter'
+], function( plainAdapter, angularAdapter ) {
+   'use strict';
+
+   var adapters = {};
+   adapters[ plainAdapter.technology ] = plainAdapter;
+   adapters[ angularAdapter.technology ] = angularAdapter;
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   return {
+
+      getFor: function( technology ) {
+         return adapters[ technology ];
+      },
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      getSupportedTechnologies: function() {
+         return Object.keys( adapters );
+      },
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      addAdapters: function( additionalAdapters ) {
+         additionalAdapters.forEach( function( adapter ) {
+            adapters[ adapter.technology ] = adapter;
+         } );
+      }
+
+   };
+
+} );
+
+/**
+ * Copyright 2014 aixigo AG
+ * Released under the MIT license.
+ * http://laxarjs.org/license
+ */
+define( 'laxar/lib/loaders/widget_loader',[
+   '../logging/log',
+   '../utilities/path',
+   '../utilities/assert',
+   '../utilities/object',
+   '../utilities/string',
+   './paths',
+   './features_provider',
+   '../widget_adapters/adapters'
+], function( log, path, assert, object, string, paths, featuresProvider, adapters ) {
+   'use strict';
+
+   var TYPE_WIDGET = 'widget';
+   var TYPE_ACTIVITY = 'activity';
+   var TECHNOLOGY_ANGULAR = 'angular';
+
+   var DEFAULT_INTEGRATION = { type: TYPE_WIDGET, technology: TECHNOLOGY_ANGULAR };
+
+   var ID_SEPARATOR = '-';
+   var INVALID_ID_MATCHER = /[^A-Za-z0-9_\.-]/g;
+
+   /**
+    * @typedef {{then: Function}} Promise
+    *
+    * @param q
+    * @param fileResourceProvider
+    * @param themeManager
+    * @param cssLoader
+    * @param eventBus
+    * @returns {{load: Function}}
+    */
+   function create( q, fileResourceProvider, themeManager, cssLoader, eventBus ) {
+
+      return {
+         load: load
+      };
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      /**
+       * Load a widget using an appropriate adapter
+       *
+       * First, get the given widget's specification to validate and instantiate the widget features.
+       * Then, instantiate a widget adapter matching the widget's technology. Using the adapter, create the
+       * widget controller. The adapter is returned and can be used to attach the widget to the DOM, or to
+       * destroy it.
+       *
+       * @param {Object} widgetConfiguration
+       *    a widget instance configuration (as used in page definitions) to instantiate the widget from
+       * @param {Object} [optionalOptions]
+       *    map of additonal options
+       * @param {Function} optionalOptions.onBeforeControllerCreation
+       *    a function to call just before the controller is set up. It receives environment and adapter
+       *    specific injections as arguments
+       *
+       * @return {Promise} a promise for a widget adapter, with an already instantiated controller
+       */
+      function load( widgetConfiguration, optionalOptions ) {
+         var widgetPath = widgetConfiguration.widget;
+         var widgetJsonPath = path.join( paths.WIDGETS, widgetPath, 'widget.json' );
+         var options = object.options( optionalOptions, {
+            onBeforeControllerCreation: function() {}
+         } );
+
+         return fileResourceProvider.provide( widgetJsonPath )
+            .then( function( specification ) {
+               var integration = object.options( specification.integration, DEFAULT_INTEGRATION );
+               var type = integration.type;
+               var technology = integration.technology;
+               // Handle legacy widget code:
+               if( type === TECHNOLOGY_ANGULAR ) {
+                  type = TYPE_WIDGET;
+               }
+               if( type !== TYPE_WIDGET && type !== TYPE_ACTIVITY ) {
+                  throwError( widgetConfiguration, 'unknown integration type ' + type );
+               }
+
+               var throwWidgetError = throwError.bind( null, widgetConfiguration );
+               var features =
+                  featuresProvider.featuresForWidget( specification, widgetConfiguration, throwWidgetError );
+               var anchorElement = document.createElement( 'DIV' );
+               anchorElement.className = camelCaseToDashed( specification.name );
+               anchorElement.id = 'ax' + ID_SEPARATOR + widgetConfiguration.id;
+               var widgetEventBus = createEventBusForWidget( eventBus, specification, widgetConfiguration );
+
+               var adapter = adapters.getFor( technology ).create( {
+                  anchorElement: anchorElement,
+                  context: {
+                     eventBus: widgetEventBus,
+                     features: features,
+                     id: createIdGeneratorForWidget( widgetConfiguration.id ),
+                     widget: {
+                        area: widgetConfiguration.area,
+                        id: widgetConfiguration.id,
+                        path: widgetConfiguration.widget
+                     }
+                  },
+                  specification: specification
+               } );
+               adapter.createController( options );
+
+               return {
+                  id: widgetConfiguration.id,
+                  adapter: adapter,
+                  destroy: function() {
+                     widgetEventBus.release();
+                     adapter.destroy();
+                  },
+                  templatePromise: loadAssets( widgetPath, integration, specification )
+               };
+
+            }, function( err ) {
+               var message = 'Could not load spec for widget [0] from [1]: [2]';
+               log.error( message, widgetPath, widgetJsonPath, err );
+            } );
+      }
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      /**
+       * Locates and loads the widget HTML template for this widget (if any) as well as any CSS stylesheets
+       * used by this widget or its controls.
+       *
+       * @param widgetReferencePath
+       *    The path suffix used to look up the widget, as given in the instance configuration.
+       * @param integration
+       *    Details on the integration type and technology: Activities do not require assets.
+       * @param widgetSpecification
+       *    The widget specification, used to find out if any controls need to be loaded.
+       *
+       * @return {Promise<String>}
+       *    A promise that will be resolved with the contents of any HTML template for this widget, or with
+       *    `null` if there is no template (for example, if this is an activity).
+       */
+      function loadAssets( widgetReferencePath, integration, widgetSpecification ) {
+
+         return integration.type === TYPE_ACTIVITY ? q.when( null ) : resolve().then( function( urls ) {
+            urls.cssFileUrls.forEach( function( url ) { cssLoader.load( url ); } );
+            return urls.templateUrl ? fileResourceProvider.provide( urls.templateUrl ) : null;
+         } );
+
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+         function resolve() {
+            var technicalName = widgetReferencePath.split( '/' ).pop();
+            var widgetPath = path.join( paths.WIDGETS, widgetReferencePath );
+            var htmlFile = technicalName + '.html';
+            var cssFile = path.join( 'css/', technicalName + '.css' );
+
+            var promises = [];
+            promises.push( themeManager.urlProvider(
+               path.join( widgetPath, '[theme]' ),
+               path.join( paths.THEMES, '[theme]', 'widgets', widgetReferencePath )
+            ).provide( [ htmlFile, cssFile ] ) );
+
+            promises = promises.concat( ( widgetSpecification.controls || [] )
+               .map( function( controlReference ) {
+                  // By appending a path now and .json afterwards, trick RequireJS into generating the
+                  // correct descriptor path when loading from a 'package'.
+                  var controlLocation = path.normalize( require.toUrl( path.join( controlReference, 'control' ) ) );
+                  var descriptorUrl = controlLocation + '.json';
+                  return fileResourceProvider.provide( descriptorUrl ).then( function( descriptor ) {
+                     // LaxarJS 1.x style control (name determined from descriptor):
+                     var name = camelCaseToDashed( descriptor.name );
+                     return themeManager.urlProvider(
+                        path.join( controlLocation.replace( /\/control$/, '' ), '[theme]' ),
+                        path.join( paths.THEMES, '[theme]', 'controls', name )
+                     ).provide( [ path.join( 'css/',  name + '.css' ) ] );
+                  },
+                  function() {
+                     // LaxarJS 0.x style controls (no descriptor, uses AMD path as name):
+                     var name = controlReference.split( '/' ).pop();
+                     return themeManager.urlProvider(
+                        path.join( require.toUrl( controlReference ), '[theme]' ),
+                        path.join( paths.THEMES, '[theme]', controlReference )
+                     ).provide( [ path.join( 'css/', name + '.css' ) ] );
+                  } );
+               } ) );
+
+            return q.all( promises )
+               .then( function( results ) {
+                  var widgetUrls = results[ 0 ];
+                  var cssUrls = results.slice( 1 )
+                     .map( function( urls ) { return urls[ 0 ]; } )
+                     .concat( widgetUrls.slice( 1 ) )
+                     .filter( function( url ) { return !!url; } );
+
+                  return {
+                     templateUrl: widgetUrls[ 0 ] || '',
+                     cssFileUrls: cssUrls
+                  };
+               } );
+         }
+      }
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function camelCaseToDashed( str ) {
+      return str.replace( /[A-Z]/g, function( character, offset ) {
+         return ( offset > 0 ? '-' : '' ) + character.toLowerCase();
+      } );
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function throwError( widgetConfiguration, message ) {
+      throw new Error( string.format(
+         'Error loading widget "[widget]" (id: "[id]"): [0]', [ message ], widgetConfiguration
+      ) );
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function createIdGeneratorForWidget( widgetId ) {
+      var charCodeOfA = 'a'.charCodeAt( 0 );
+      function fixLetter( l ) {
+         // We map invalid characters deterministically to valid lower case letters. Thereby a collision of
+         // two ids with different invalid characters at the same positions is less likely to occur.
+         return String.fromCharCode( charCodeOfA + l.charCodeAt( 0 ) % 26 );
+      }
+
+      var prefix = 'ax' + ID_SEPARATOR + widgetId.replace( INVALID_ID_MATCHER, fixLetter ) + ID_SEPARATOR;
+      return function( localId ) {
+         return prefix + ( '' + localId ).replace( INVALID_ID_MATCHER, fixLetter );
+      };
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function createEventBusForWidget( eventBus, widgetSpecification, widgetConfiguration ) {
+
+      var collaboratorId = 'widget.' + widgetSpecification.name + '#' + widgetConfiguration.id;
+
+      function forward( to ) {
+         return function() {
+            return eventBus[ to ].apply( eventBus, arguments );
+         };
+      }
+
+      function augmentOptions( optionalOptions ) {
+         return object.options( optionalOptions, { sender: collaboratorId } );
+      }
+
+      var subscriptions = [];
+      function unsubscribe( subscriber ) {
+         eventBus.unsubscribe( subscriber );
+      }
+
+      return {
+         addInspector: forward( 'addInspector' ),
+         setErrorHandler: forward( 'setErrorHandler' ),
+         setMediator: forward( 'setMediator' ),
+         unsubscribe: unsubscribe,
+         subscribe: function( eventName, subscriber, optionalOptions ) {
+            subscriptions.push( subscriber );
+
+            var options = object.options( optionalOptions, { subscriber: collaboratorId } );
+
+            eventBus.subscribe( eventName, subscriber, options );
+         },
+         publish: function( eventName, optionalEvent, optionalOptions ) {
+            return eventBus.publish( eventName, optionalEvent, augmentOptions( optionalOptions ) );
+         },
+         publishAndGatherReplies: function( eventName, optionalEvent, optionalOptions ) {
+            return eventBus.publishAndGatherReplies( eventName, optionalEvent, augmentOptions( optionalOptions ) );
+         },
+         release: function() {
+            subscriptions.forEach( unsubscribe );
+         }
+      };
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   return {
+      create: create
+   };
+
+} );
+
+/**
+ * Copyright 2014 aixigo AG
+ * Released under the MIT license.
+ * http://laxarjs.org/license
+ */
+/**
+ * Utilities for dealing with functions.
+ *
+ * When requiring `laxar`, it is available as `laxar.fn`.
+ *
+ * @module fn
+ */
+define( 'laxar/lib/utilities/fn',[], function() {
+   'use strict';
+
+   return {
+
+      /**
+       * [Underscore `debounce`](http://underscorejs.org/#debounce), but with LaxarJS offering mocking in
+       * tests. See [http://underscorejs.org/#debounce](http://underscorejs.org/#debounce) for detailed
+       * documentation.
+       *
+       * @param {Function} f
+       *    the function to return a debounced version of
+       * @param {Number} waitMs
+       *    milliseconds to debounce before invoking `f`
+       * @param {Boolean} immediate
+       *    if `true` `f` is invoked prior to start waiting `waitMs` milliseconds. Otherwise `f` is invoked
+       *    after the given debounce duration has passed. Default is `false`
+       *
+       * @return {Function}
+       *    the debounced function
+       */
+      debounce: function( f, waitMs, immediate ) {
+         var timeout, args, context, timestamp, result;
+         return function() {
+            context = this;
+            args = arguments;
+            timestamp = new Date();
+            var later = function() {
+               var last = (new Date()) - timestamp;
+               if( last < waitMs ) {
+                  timeout = setTimeout(later, waitMs - last);
+               }
+               else {
+                  timeout = null;
+                  if( !immediate ) {
+                     result = f.apply(context, args);
+                  }
+               }
+            };
+            var callNow = immediate && !timeout;
+            if( !timeout ) { timeout = setTimeout(later, waitMs); }
+            if( callNow ) { result = f.apply(context, args); }
+            return result;
+         };
+      }
+   };
+
+} );
+
+/**
+ * Copyright 2014 aixigo AG
+ * Released under the MIT license.
+ * http://laxarjs.org/license
+ */
+/**
+ * Provides a convenient api over the browser's `window.localStorage` and `window.sessionStorage` objects. If
+ * a browser doesn't support [web storage](http://www.w3.org/TR/webstorage/), a warning is logged to the
+ * `console` (if available) and a non-persistent in-memory store will be used instead. Note that this can for
+ * example also happen when using Mozilla Firefox with cookies disabled and as such isn't limited to older
+ * browsers.
+ *
+ * Additionally, in contrast to plain *web storage* access, non-string values will be automatically passed
+ * through JSON (de-) serialization on storage or retrieval. All keys will be prepended with a combination of
+ * an arbitrary and a configured namespace to prevent naming clashes with other web applications running on
+ * the same host and port. All {@link StorageApi} accessor methods should then be called without any namespace
+ * since adding and removing it, is done automatically.
+ *
+ * When requiring `laxar`, it is available as `laxar.storage`.
+ *
+ * @module storage
+ */
+define( 'laxar/lib/utilities/storage',[
+   './assert',
+   './configuration'
+], function( assert, configuration ) {
+   'use strict';
+
+   var SESSION = 'sessionStorage';
+   var LOCAL = 'localStorage';
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   /**
+    * @param {Object} backend
+    *    the K/V store, probably only accepting string values
+    * @param {String} namespace
+    *    prefix for all keys for namespacing purposes
+    *
+    * @return {StorageApi}
+    *    a storage wrapper to the given backend with `getItem`, `setItem` and `removeItem` methods
+    *
+    * @private
+    */
+   function createStorage( backend, namespace ) {
+
+      /**
+       * The api returned by one of the `get*Storage` functions of the *storage* module.
+       *
+       * @name StorageApi
+       * @constructor
+       */
+      return {
+         getItem: getItem,
+         setItem: setItem,
+         removeItem: removeItem
+      };
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      /**
+       * Retrieves a `value` by `key` from the store. JSON deserialization will automatically be applied.
+       *
+       * @param {String} key
+       *    the key of the item to retrieve (without namespace prefix)
+       *
+       * @return {*}
+       *    the value or `null` if it doesn't exist in the store
+       *
+       * @memberOf StorageApi
+       */
+      function getItem( key ) {
+         var item = backend.getItem( namespace + '.' + key );
+         return item ? JSON.parse( item ) : item;
+      }
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      /**
+       * Sets a `value` for a `key`. The value should be JSON serializable. An existing value will be
+       * overwritten.
+       *
+       * @param {String} key
+       *    the key of the item to set (without namespace prefix)
+       * @param {*} value
+       *    the new value to set
+       *
+       * @memberOf StorageApi
+       */
+      function setItem( key, value ) {
+         var nsKey = namespace + '.' + key;
+         if( value === undefined ) {
+            backend.removeItem( nsKey );
+         }
+         else {
+            backend.setItem( nsKey, JSON.stringify( value ) );
+         }
+      }
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      /**
+       * Removes the value associated with `key` from the store.
+       *
+       * @param {String} key
+       *    the key of the item to remove (without namespace prefix)
+       *
+       * @memberOf StorageApi
+       */
+      function removeItem( key ) {
+         backend.removeItem( namespace + '.' + key );
+      }
+
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function getOrFakeBackend( webStorageName ) {
+      var store = window[ webStorageName ];
+      if( store.setItem && store.getItem && store.removeItem ) {
+         try {
+            var testKey = 'ax.storage.testItem';
+            // In iOS Safari Private Browsing, this will fail:
+            store.setItem( testKey, 1 );
+            store.removeItem( testKey );
+            return store;
+         }
+         catch( e ) {
+            // setItem failed: must use fake storage
+         }
+      }
+
+      if( window.console ) {
+         var method = 'warn' in window.console ? 'warn' : 'log';
+         window.console[ method ](
+            'window.' + webStorageName + ' not available: Using non-persistent polyfill. \n' +
+            'Try disabling private browsing or enabling cookies.'
+         );
+      }
+
+      var backend = {};
+      return {
+         getItem: function( key ) {
+            return backend[ key ] || null;
+         },
+         setItem: function( key, val ) {
+            backend[ key ] = val;
+         },
+         removeItem: function( key ) {
+            if( key in backend ) {
+               delete backend[ key ];
+            }
+         }
+      };
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function generateUniquePrefix() {
+      var prefix = configuration.get( 'storagePrefix' );
+      if( prefix ) {
+         return prefix;
+      }
+
+      var str = configuration.get( 'name', '' );
+      var res = 0;
+      /* jshint bitwise:false */
+      for( var i = str.length - 1; i > 0; --i ) {
+         res = ((res << 5) - res) + str.charCodeAt( i );
+         res |= 0;
+      }
+      return Math.abs( res );
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   /**
+    * Creates a new storage module. In most cases this module will be called without arguments,
+    * but having the ability to provide them is useful e.g. for mocking purposes within tests.
+    * If the arguments are omitted, an attempt is made to access the native browser WebStorage api.
+    * If that fails, storage is only mocked by an in memory map (thus actually unavailable).
+    *
+    * Developers are free to use polyfills to support cases where local- or session-storage may not be
+    * available. Just make sure to initialize the polyfills before this module.
+    *
+    * @param {Object} [localStorageBackend]
+    *    the backend for local storage, Default is `window.localStorage`
+    * @param {Object} [sessionStorageBackend]
+    *    the backend for session storage, Default is `window.sessionStorage`
+    *
+    * @return {Object}
+    *    a new storage module
+    */
+   function create( localStorageBackend, sessionStorageBackend ) {
+
+      var localBackend = localStorageBackend || getOrFakeBackend( LOCAL );
+      var sessionBackend = sessionStorageBackend || getOrFakeBackend( SESSION );
+      var prefix = 'ax.' + generateUniquePrefix() + '.';
+
+      return {
+
+         /**
+          * Returns a local storage object for a specific local namespace.
+          *
+          * @param {String} namespace
+          *    the namespace to prepend to keys
+          *
+          * @return {StorageApi}
+          *    the local storage object
+          */
+         getLocalStorage: function( namespace ) {
+            assert( namespace ).hasType( String ).isNotNull();
+
+            return createStorage( localBackend, prefix + namespace );
+         },
+
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+         /**
+          * Returns a session storage object for a specific local namespace.
+          *
+          * @param {String} namespace
+          *    the namespace to prepend to keys
+          *
+          * @return {StorageApi}
+          *    the session storage object
+          */
+         getSessionStorage: function( namespace ) {
+            assert( namespace ).hasType( String ).isNotNull();
+
+            return createStorage( sessionBackend, prefix + namespace );
+         },
+
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+         /**
+          * Returns the local storage object for application scoped keys. This is equivalent to
+          * `storage.getLocalStorage( 'app' )`.
+          *
+          * @return {StorageApi}
+          *    the application local storage object
+          */
+         getApplicationLocalStorage: function() {
+            return createStorage( localBackend, prefix + 'app' );
+         },
+
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+         /**
+          * Returns the session storage object for application scoped keys. This is equivalent to
+          * `storage.getSessionStorage( 'app' )`.
+          *
+          * @return {StorageApi}
+          *    the application session storage object
+          */
+         getApplicationSessionStorage: function() {
+            return createStorage( sessionBackend, prefix + 'app' );
+         },
+
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+         create: create
+
+      };
+
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   return create();
+
+} );
+
+/**
+ * Copyright 2014 aixigo AG
+ * Released under the MIT license.
+ * http://laxarjs.org/license
+ */
+define( 'laxar/lib/runtime/runtime',[
+   'angular',
+   '../utilities/path',
+   '../loaders/paths'
+], function( ng, path, paths ) {
+   'use strict';
+
+   var module = ng.module( 'axRuntime', [] );
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   // Patching AngularJS with more aggressive scope destruction and memory leak prevention
+   module.run( [ '$rootScope', '$window', function( $rootScope, $window ) {
+      ng.element( $window ).one( 'unload', function() {
+         while( $rootScope.$$childHead ) {
+            $rootScope.$$childHead.$destroy();
+         }
+         $rootScope.$destroy();
+      } );
+   } ] );
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   // Initialize the theme manager
+   module.run( [ 'axCssLoader', 'axThemeManager', function( CssLoader, themeManager ) {
+      themeManager
+         .urlProvider( path.join( paths.THEMES, '[theme]' ), null, paths.DEFAULT_THEME )
+         .provide( [ 'css/theme.css' ] )
+         .then( function( files ) {
+            CssLoader.load( files[0] );
+         } );
+   } ] );
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   // Initialize i18n for i18n controls in non-i18n widgets
+   module.run( [ '$rootScope', 'axConfiguration', function( $rootScope, configuration ) {
+      $rootScope.i18n = {
+         locale: 'default',
+         tags: configuration.get( 'i18n.locales', { 'default': 'en' } )
+      };
+   } ] );
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   return module;
 
 } );
 
@@ -4483,264 +5496,6 @@ define( 'laxar/lib/runtime/runtime_services',[
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
-define( 'laxar/lib/json/schema',[
-   '../utilities/object'
-], function( object ) {
-   'use strict';
-
-   function transformV3V4Recursively( schema, parentKey, parentSchema, originalParentSchema ) {
-      var resultingSchema = {};
-
-      Object.keys( schema ).forEach( function( key ) {
-
-         var value = schema[ key ];
-
-         switch( key ) {
-            case 'required':
-               if( value !== true ) {
-                  break;
-               }
-
-               if( isNamedProperty( parentKey, originalParentSchema ) && !( 'default' in schema ) ) {
-                  if( !( 'required' in parentSchema ) ) {
-                     parentSchema.required = [];
-                  }
-                  parentSchema.required.push( parentKey );
-               }
-               break;
-
-            case 'items':
-               resultingSchema[ key ] = transformV3V4Recursively( value, key, resultingSchema, schema );
-               break;
-
-            case 'additionalProperties':
-               if( typeof value === 'object' ) {
-                  resultingSchema[ key ] = transformV3V4Recursively( value, key, resultingSchema, schema );
-               }
-               else {
-                  resultingSchema[ key ] = value;
-               }
-               break;
-
-            case 'properties':
-            case 'patternProperties':
-               resultingSchema[ key ] = {};
-               object.forEach( value, function( patternSchema, pattern ) {
-                  resultingSchema[ key ][ pattern ] =
-                     transformV3V4Recursively( patternSchema, pattern, resultingSchema, schema );
-               } );
-               break;
-
-            default:
-               resultingSchema[ key ] = value;
-
-         }
-
-      } );
-
-      // LaxarJS specific: transform "not required" to "allow null"
-      if( isNamedProperty( parentKey, originalParentSchema ) && !schema.required ) {
-         var propertyType = resultingSchema.type;
-         if( typeof propertyType === 'string' && propertyType !== 'null' ) {
-            resultingSchema.type = [ propertyType, 'null' ];
-         }
-         else if( Array.isArray( propertyType ) && propertyType.indexOf( 'null' ) === -1 ) {
-            propertyType.push( 'null' );
-         }
-      }
-
-      return resultingSchema;
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   function prohibitAdditionalPropertiesRecursively( schema ) {
-      if( ( 'properties' in schema || 'patternProperties' in schema ) &&
-         !( 'additionalProperties' in schema ) ) {
-         schema.additionalProperties = false;
-      }
-
-      if( 'properties' in schema ) {
-         Object.keys( schema.properties ).forEach( function( name ) {
-            prohibitAdditionalPropertiesRecursively( schema.properties[ name ] );
-         } );
-      }
-
-      if( 'additionalProperties' in schema && typeof schema.additionalProperties === 'object' ) {
-         prohibitAdditionalPropertiesRecursively( schema.additionalProperties );
-      }
-
-      if( 'patternProperties' in schema ) {
-         Object.keys( schema.patternProperties ).forEach( function( pattern ) {
-            prohibitAdditionalPropertiesRecursively( schema.patternProperties[ pattern ] );
-         } );
-      }
-
-      if( 'items' in schema ) {
-         prohibitAdditionalPropertiesRecursively( schema.items );
-      }
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   function isNamedProperty( key, parentSchema ) {
-      return parentSchema &&
-         schemaAllowsType( parentSchema, 'object' ) &&
-         object.path( parentSchema, 'properties.' + key );
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   function schemaAllowsType( schema, type ) {
-      var schemaType = schema.type;
-      if( typeof schemaType === 'string' ) {
-         return schemaType === type;
-      }
-      if( Array.isArray( schemaType ) ) {
-         return schemaType.indexOf( type ) !== -1;
-      }
-
-      return true;
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   return {
-
-      transformV3ToV4: function( schema ) {
-         return transformV3V4Recursively( schema );
-      },
-
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-      prohibitAdditionalProperties: function( schema ) {
-         prohibitAdditionalPropertiesRecursively( schema );
-      }
-
-   };
-
-} );
-
-/**
- * Copyright 2014 aixigo AG
- * Released under the MIT license.
- * http://laxarjs.org/license
- */
-define( 'laxar/lib/json/validator',[
-   'jjv',
-   'jjve',
-   './schema',
-   '../utilities/object'
-], function( jjv, jjve, schema, objectUtils ) {
-   'use strict';
-
-   var JSON_SCHEMA_V4_URI = 'http://json-schema.org/draft-04/schema#';
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   function transformResult( result, schema, object, env ) {
-      if( !result ) {
-         return {
-            errors: []
-         };
-      }
-
-      var messageGenerator = jjve( env );
-
-      return {
-         errors: messageGenerator( schema, object, result )
-            .map( function( error ) {
-               return objectUtils.options( {
-                  message: error.message + '. Path: "' + error.path + '".'
-               }, error );
-            } )
-      };
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   return {
-
-      /**
-       * Creates and returns a new JSON validator for schema draft version 4. Minimal conversion from v3 to v4
-       * is builtin, but it is strongly advised to create new schemas using the version 4 draft. Version
-       * detection for v4 is realized by checking if the `$schema` property of the root schema equals the
-       * uri `http://json-schema.org/draft-04/schema#`. If the `$schema` property is missing or has a
-       * different value, v3 is assumed.
-       * See https://github.com/json-schema/json-schema/wiki/ChangeLog for differences between v3 and v4.
-       *
-       * @param {Object} jsonSchema
-       *    the JSON schema to use when validating
-       * @param {Object} [options]
-       *    an optional set of options
-       * @param {Boolean} options.prohibitAdditionalProperties
-       *    sets additionalProperties to false if not defined otherwise for the according object schema
-       * @param {Boolean} options.checkRequired
-       *    (jjv option) if `true` it reports missing required properties, otherwise it allows missing
-       *    required properties. Default is `true`
-       * @param {Boolean} options.useDefault
-       *    (jjv option) If true it modifies the validated object to have the default values for missing
-       *    non-required fields. Default is `false`
-       * @param {Boolean} options.useCoerce
-       *    (jjv option) if `true` it enables type coercion where defined. Default is `false`
-       * @param {Boolean} options.removeAdditional
-       *    (jjv option) if `true` it removes all attributes of an object which are not matched by the
-       *    schema's specification. Default is `false`
-       *
-       *
-       * @return {Object}
-       *    a new instance of JsonValidator
-       */
-      create: function( jsonSchema, options ) {
-         var env = jjv();
-         options = objectUtils.options( options, {
-            prohibitAdditionalProperties: false
-         } );
-         env.defaultOptions = objectUtils.options( options, env.defaultOptions );
-
-         if( !( '$schema' in jsonSchema ) || jsonSchema.$schema !== JSON_SCHEMA_V4_URI ) {
-            // While schema draft v4 is directly supported by the underlying validator, we need to transform
-            // older v3 schemas to valid v4 schemas. Furthermore all of our existing schemas are v3 without
-            // version info. Thus, whenever we find a schema without version info or a version info that isn't
-            // v4, we assume a v3 schema and translate it to v4.
-            // Note that only the small subset of v3 features is transformed v4 features that is needed for
-            // legacy schemas.
-            // Using `this` reference for testability / spying
-            jsonSchema = schema.transformV3ToV4( jsonSchema );
-            jsonSchema.$schema = JSON_SCHEMA_V4_URI;
-
-            env.addType( 'any', function( value ) {
-               return true;
-            } );
-         }
-
-         if( options.prohibitAdditionalProperties ) {
-            schema.prohibitAdditionalProperties( jsonSchema );
-         }
-
-         var origValidate = env.validate;
-
-         env.validate = function( object ) {
-            var result = origValidate.call( env, jsonSchema, object );
-            return transformResult( result, jsonSchema, object, env );
-         };
-
-         return env;
-      },
-
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-      JSON_SCHEMA_V4_URI: JSON_SCHEMA_V4_URI
-
-   };
-
-} );
-
-/**
- * Copyright 2014 aixigo AG
- * Released under the MIT license.
- * http://laxarjs.org/license
- */
 define( 'laxar/lib/utilities/timer',[
    './object',
    './storage',
@@ -5414,129 +6169,6 @@ define( 'laxar/lib/runtime/flow',[
 
 } );
 
-/**
- * Copyright 2014 aixigo AG
- * Released under the MIT license.
- * http://laxarjs.org/license
- */
-define( 'laxar/lib/loaders/features_provider',[
-   '../json/validator',
-   '../utilities/object',
-   '../utilities/string'
-], function( jsonValidator, object, string ) {
-   'use strict';
-
-   // JSON schema formats:
-   var TOPIC_IDENTIFIER = '([a-z][+a-zA-Z0-9]*|[A-Z][+A-Z0-9]*)';
-   var SUB_TOPIC_FORMAT = new RegExp( '^' + TOPIC_IDENTIFIER + '$' );
-   var TOPIC_FORMAT = new RegExp( '^(' + TOPIC_IDENTIFIER + '(-' + TOPIC_IDENTIFIER + ')*)$' );
-   var FLAG_TOPIC_FORMAT = new RegExp( '^[!]?(' + TOPIC_IDENTIFIER + '(-' + TOPIC_IDENTIFIER + ')*)$' );
-   // simplified RFC-5646 language-tag matcher with underscore/dash relaxation:
-   // the parts are: language *("-"|"_" script|region|variant) *("-"|"_" extension|privateuse)
-   var LANGUAGE_TAG_FORMAT = /^[a-z]{2,8}([-_][a-z0-9]{2,8})*([-_][a-z0-9][-_][a-z0-9]{2,8})*$/i;
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   function featuresForWidget( widgetSpecification, widgetConfiguration, throwError ) {
-      if( !widgetSpecification.features ) {
-         return {};
-      }
-
-      var featureConfiguration = widgetConfiguration.features || {};
-      var featuresSpec = widgetSpecification.features;
-      if( !( '$schema' in featuresSpec ) ) {
-         // we assume an "old style" feature specification (i.e. first level type specification is omitted)
-         // if no schema version was defined.
-         featuresSpec = {
-            $schema: 'http://json-schema.org/draft-03/schema#',
-            type: 'object',
-            properties: widgetSpecification.features
-         };
-      }
-
-      object.forEach( featuresSpec.properties, function( feature, name ) {
-         // ensure that simple object/array features are at least defined
-         if( name in featureConfiguration ) {
-            return;
-         }
-
-         if( feature.type === 'object' ) {
-            featureConfiguration[ name ] = {};
-         }
-         else if( feature.type === 'array' ) {
-            featureConfiguration[ name ] = [];
-         }
-      } );
-
-      var validator = createFeaturesValidator( featuresSpec );
-      var report = validator.validate( featureConfiguration );
-
-      if( report.errors.length > 0 ) {
-         var message = 'Validation for widget features failed. Errors: ';
-
-         report.errors.forEach( function( error ) {
-            message += '\n - ' + error.message.replace( /\[/g, '\\[' );
-         } );
-
-         throwError( message );
-      }
-
-      return featureConfiguration;
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   function createFeaturesValidator( featuresSpec ) {
-      var validator = jsonValidator.create( featuresSpec, {
-         prohibitAdditionalProperties: true,
-         useDefault: true
-      } );
-
-      // allows 'mySubTopic0815', 'MY_SUB_TOPIC+OK' and variations:
-      validator.addFormat( 'sub-topic', function( subTopic ) {
-         return ( typeof subTopic !== 'string' ) || SUB_TOPIC_FORMAT.test( subTopic );
-      } );
-
-      // allows 'myTopic', 'myTopic-mySubTopic-SUB_0815+OK' and variations:
-      validator.addFormat( 'topic', function( topic ) {
-         return ( typeof topic !== 'string' ) || TOPIC_FORMAT.test( topic );
-      } );
-
-      // allows 'myTopic', '!myTopic-mySubTopic-SUB_0815+OK' and variations:
-      validator.addFormat( 'flag-topic', function( flagTopic ) {
-         return ( typeof flagTopic !== 'string' ) || FLAG_TOPIC_FORMAT.test( flagTopic );
-      } );
-
-      // allows 'de_DE', 'en-x-laxarJS' and such:
-      validator.addFormat( 'language-tag', function( languageTag ) {
-         return ( typeof languageTag !== 'string' ) || LANGUAGE_TAG_FORMAT.test( languageTag );
-      } );
-
-      // checks that object keys have the 'topic' format
-      validator.addFormat( 'topic-map', function( topicMap ) {
-         return ( typeof topicMap !== 'object' ) || Object.keys( topicMap ).every( function( topic ) {
-            return TOPIC_FORMAT.test( topic );
-         } );
-      } );
-
-      // checks that object keys have the 'language-tag' format
-      validator.addFormat( 'localization', function( localization ) {
-         return ( typeof localization !== 'object' ) || Object.keys( localization ).every( function( tag ) {
-            return LANGUAGE_TAG_FORMAT.test( tag );
-         } );
-      } );
-
-      return validator;
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   return {
-      featuresForWidget: featuresForWidget
-   };
-
-} );
-
 
 define("json!laxar/static/schemas/page.json", function(){ return {
    "$schema": "http://json-schema.org/draft-04/schema#",
@@ -6106,608 +6738,6 @@ define( 'laxar/lib/loaders/page_loader',[
          return new PageLoader( q, httpClient, baseUrl, fileResourceProvider );
       }
 
-   };
-
-} );
-
-/**
- * Copyright 2015 aixigo AG
- * Released under the MIT license.
- * http://laxarjs.org/license
- */
-define( 'laxar/lib/widget_adapters/plain_adapter',[], function() {
-   'use strict';
-
-   var widgetModules = {};
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   function bootstrap( modules ) {
-      modules.forEach( function( module ) {
-         widgetModules[ module.name ] = module;
-      } );
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   /**
-    *
-    * @param {Object}      environment
-    * @param {HTMLElement} environment.anchorElement
-    * @param {Object}      environment.context
-    * @param {EventBus}    environment.context.eventBus
-    * @param {Object}      environment.context.features
-    * @param {Function}    environment.context.id
-    * @param {Object}      environment.context.widget
-    * @param {String}      environment.context.widget.area
-    * @param {String}      environment.context.widget.id
-    * @param {String}      environment.context.widget.path
-    * @param {Object}      environment.specification
-    *
-    * @return {Object}
-    */
-   function create( environment ) {
-
-      var exports = {
-         createController: createController,
-         domAttachTo: domAttachTo,
-         domDetach: domDetach,
-         destroy: function() {}
-      };
-
-      var widgetName = environment.specification.name;
-      var moduleName = widgetName.replace( /^./, function( _ ) { return _.toLowerCase(); } );
-      var context = environment.context;
-      var controller = null;
-
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-      function createController() {
-         var module = widgetModules[ moduleName ];
-         var injector = createInjector();
-         var injections = ( module.injections || [] ).map( function( injection ) {
-            return injector.get( injection );
-         } );
-
-         controller = module.create.apply( module, injections );
-      }
-
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-      function domAttachTo( areaElement, htmlTemplate ) {
-         if( htmlTemplate === null ) {
-            return;
-         }
-         environment.anchorElement.innerHTML = htmlTemplate;
-         areaElement.appendChild( environment.anchorElement );
-         controller.renderTo( environment.anchorElement );
-      }
-
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-      function domDetach() {
-         var parent = environment.anchorElement.parentNode;
-         if( parent ) {
-            parent.removeChild( environment.anchorElement );
-         }
-      }
-
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-      function createInjector() {
-         var map = {
-            axContext: context,
-            axEventBus: context.eventBus,
-            axFeatures: context.features || {}
-         };
-
-         /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-         return {
-            get: function( name ) {
-               if( !( name in map ) ) {
-                  throw new Error( 'Unknown dependency "' + name + '".' );
-               }
-               return map[ name ];
-            }
-         };
-      }
-
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-      return exports;
-
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   return {
-      technology: 'plain',
-      bootstrap: bootstrap,
-      create: create
-   };
-
-} );
-
-/**
- * Copyright 2014 aixigo AG
- * Released under the MIT license.
- * http://laxarjs.org/license
- */
-define( 'laxar/lib/widget_adapters/angular_adapter',[
-   'angular',
-   'require',
-   '../utilities/assert',
-   '../logging/log'
-], function( ng, require, assert, log ) {
-   'use strict';
-
-   var $compile;
-   var $controller;
-   var $rootScope;
-
-   var controllerNames = {};
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   function bootstrap( widgetModules ) {
-      var dependencies = ( widgetModules || [] ).map( function( module ) {
-         controllerNames[ module.name ] = capitalize( module.name ) + 'Controller';
-         supportPreviousNaming( module.name );
-         return module.name;
-      } );
-
-      return ng.module( 'axAngularWidgetAdapter', dependencies )
-         .run( [ '$compile', '$controller', '$rootScope', function( _$compile_, _$controller_, _$rootScope_ ) {
-            $controller = _$controller_;
-            $compile = _$compile_;
-            $rootScope = _$rootScope_;
-         } ] );
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   /**
-    *
-    * @param {Object}      environment
-    * @param {HTMLElement} environment.anchorElement
-    * @param {Object}      environment.context
-    * @param {EventBus}    environment.context.eventBus
-    * @param {Object}      environment.context.features
-    * @param {Function}    environment.context.id
-    * @param {Object}      environment.context.widget
-    * @param {String}      environment.context.widget.area
-    * @param {String}      environment.context.widget.id
-    * @param {String}      environment.context.widget.path
-    * @param {Object}      environment.specification
-    *
-    * @return {Object}
-    */
-   function create( environment ) {
-
-      var exports = {
-         createController: createController,
-         domAttachTo: domAttachTo,
-         domDetach: domDetach,
-         destroy: destroy
-      };
-
-      var context = environment.context;
-      var scope_;
-      var injections_;
-
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-      function createController() {
-         var widgetName = environment.specification.name;
-         var moduleName = widgetName.replace( /^./, function( _ ) { return _.toLowerCase(); } );
-         var controllerName = controllerNames[ moduleName ];
-
-         injections_ = {
-            axContext: context,
-            axEventBus: context.eventBus
-         };
-         Object.defineProperty( injections_, '$scope', {
-            get: function() {
-               if( !scope_ ) {
-                  scope_ = $rootScope.$new();
-                  ng.extend( scope_, context );
-               }
-               return scope_;
-            }
-         } );
-
-         $controller( controllerName, injections_ );
-      }
-
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-      /**
-       * Synchronously attach the widget DOM to the given area.
-       *
-       * @param {HTMLElement} areaElement
-       *    The widget area to attach this widget to.
-       * @param {String} templateHtml
-       *
-       */
-      function domAttachTo( areaElement, templateHtml ) {
-         if( templateHtml === null ) {
-            return;
-         }
-
-         var element = ng.element( environment.anchorElement );
-         element.html( templateHtml );
-         areaElement.appendChild( environment.anchorElement );
-         $compile( environment.anchorElement )( injections_.$scope );
-         templateHtml = null;
-      }
-
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-      function domDetach() {
-         var parent = environment.anchorElement.parentNode;
-         if( parent ) {
-            parent.removeChild( environment.anchorElement );
-         }
-      }
-
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-      function destroy() {
-         if( scope_ ) {
-            scope_.$destroy();
-         }
-      }
-
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-      return exports;
-
-   }
-
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   function capitalize( _ ) {
-      return _.replace( /^./, function( _ ) { return _.toUpperCase(); } );
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   function supportPreviousNaming( moduleName ) {
-      if( moduleName.indexOf( '.' ) === -1 ) {
-         return;
-      }
-
-      var lookupName = moduleName.replace( /^.*\.([^.]+)$/, function( $_, $1 ) {
-         return $1.replace( /_(.)/g, function( $_, $1 ) { return $1.toUpperCase(); } );
-      } );
-      controllerNames[ lookupName ] = controllerNames[ moduleName ] = moduleName + '.Controller';
-
-      log.warn( 'Deprecation: AngularJS widget module name "' + moduleName + '" violates naming rules! ' +
-                'Module should be named "' + lookupName + '". ' +
-                'Controller should be named "' + capitalize( lookupName ) + 'Controller".' );
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   return {
-      technology: 'angular',
-      bootstrap: bootstrap,
-      create: create
-   };
-
-} );
-
-/**
- * Copyright 2015 aixigo AG
- * Released under the MIT license.
- * http://laxarjs.org/license
- */
-define( 'laxar/lib/widget_adapters/adapters',[
-   './plain_adapter',
-   './angular_adapter'
-], function( plainAdapter, angularAdapter ) {
-   'use strict';
-
-   var adapters = {};
-   adapters[ plainAdapter.technology ] = plainAdapter;
-   adapters[ angularAdapter.technology ] = angularAdapter;
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   return {
-
-      getFor: function( technology ) {
-         return adapters[ technology ];
-      },
-
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-      addAdapters: function( additionalAdapters ) {
-         additionalAdapters.forEach( function( adapter ) {
-            adapters[ adapter.technology ] = adapter;
-         } );
-      }
-
-   };
-
-} );
-
-/**
- * Copyright 2014 aixigo AG
- * Released under the MIT license.
- * http://laxarjs.org/license
- */
-define( 'laxar/lib/loaders/widget_loader',[
-   '../logging/log',
-   '../utilities/path',
-   '../utilities/assert',
-   '../utilities/object',
-   '../utilities/string',
-   './paths',
-   './features_provider',
-   '../widget_adapters/adapters'
-], function( log, path, assert, object, string, paths, featuresProvider, adapters ) {
-   'use strict';
-
-   var TYPE_WIDGET = 'widget';
-   var TYPE_ACTIVITY = 'activity';
-   var TECHNOLOGY_ANGULAR = 'angular';
-
-   var DEFAULT_INTEGRATION = { type: TYPE_WIDGET, technology: TECHNOLOGY_ANGULAR };
-
-   var ID_SEPARATOR = '-';
-   var INVALID_ID_MATCHER = /[^A-Za-z0-9_\.-]/g;
-
-   /**
-    * @typedef {{then: Function}} Promise
-    *
-    * @param q
-    * @param fileResourceProvider
-    * @param themeManager
-    * @param cssLoader
-    * @param eventBus
-    * @returns {{load: Function}}
-    */
-   function create( q, fileResourceProvider, themeManager, cssLoader, eventBus ) {
-
-      return {
-         load: load
-      };
-
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-      /**
-       * Load a widget using an appropriate adapter
-       *
-       * First, get the given widget's specification to validate and instantiate the widget features.
-       * Then, instantiate a widget adapter matching the widget's technology. Using the adapter, create the
-       * widget controller. The adapter is returned and can be used to attach the widget to the DOM, or to
-       * destroy it.
-       *
-       * @param {Object} widgetConfiguration
-       *    a widget instance configuration (as used in page definitions) to instantiate the widget from
-       *
-       * @return {Promise} a promise for a widget adapter, with an already instantiated controller
-       */
-      function load( widgetConfiguration ) {
-         var widgetPath = widgetConfiguration.widget;
-         var widgetJsonPath = path.join( paths.WIDGETS, widgetPath, 'widget.json' );
-
-         return fileResourceProvider.provide( widgetJsonPath )
-            .then( function( specification ) {
-               var integration = object.options( specification.integration, DEFAULT_INTEGRATION );
-               var type = integration.type;
-               var technology = integration.technology;
-               // Handle legacy widget code:
-               if( type === TECHNOLOGY_ANGULAR ) {
-                  type = TYPE_WIDGET;
-               }
-               if( type !== TYPE_WIDGET && type !== TYPE_ACTIVITY ) {
-                  throwError( widgetConfiguration, 'unknown integration type ' + type );
-               }
-
-               var throwWidgetError = throwError.bind( null, widgetConfiguration );
-               var features =
-                  featuresProvider.featuresForWidget( specification, widgetConfiguration, throwWidgetError );
-               var anchorElement = document.createElement( 'DIV' );
-               anchorElement.className = camelCaseToDashed( specification.name );
-               anchorElement.id = 'ax' + ID_SEPARATOR + widgetConfiguration.id;
-               var widgetEventBus = createEventBusForWidget( eventBus, specification, widgetConfiguration );
-
-               var adapter = adapters.getFor( technology ).create( {
-                  anchorElement: anchorElement,
-                  context: {
-                     eventBus: widgetEventBus,
-                     features: features,
-                     id: createIdGeneratorForWidget( widgetConfiguration.id ),
-                     widget: {
-                        area: widgetConfiguration.area,
-                        id: widgetConfiguration.id,
-                        path: widgetConfiguration.widget
-                     }
-                  },
-                  specification: specification
-               } );
-               adapter.createController();
-
-               return {
-                  id: widgetConfiguration.id,
-                  adapter: adapter,
-                  destroy: function() {
-                     widgetEventBus.release();
-                     adapter.destroy();
-                  },
-                  templatePromise: loadAssets( widgetPath, integration, specification )
-               };
-
-            }, function( err ) {
-               var message = 'Could not load spec for widget [0] from [1]: [2]';
-               log.error( message, widgetPath, widgetJsonPath, err );
-            } );
-      }
-
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-      /**
-       * Locates and loads the widget HTML template for this widget (if any) as well as any CSS stylesheets
-       * used by this widget or its controls.
-       *
-       * @param widgetReferencePath
-       *    The path suffix used to look up the widget, as given in the instance configuration.
-       * @param integration
-       *    Details on the integration type and technology: Activities do not require assets.
-       * @param widgetSpecification
-       *    The widget specification, used to find out if any controls need to be loaded.
-       *
-       * @return {Promise<String>}
-       *    A promise that will be resolved with the contents of any HTML template for this widget, or with
-       *    `null` if there is no template (for example, if this is an activity).
-       */
-      function loadAssets( widgetReferencePath, integration, widgetSpecification ) {
-
-         return integration.type === TYPE_ACTIVITY ? q.when( null ) : resolve().then( function( urls ) {
-            urls.cssFileUrls.forEach( function( url ) { cssLoader.load( url ); } );
-            return urls.templateUrl ? fileResourceProvider.provide( urls.templateUrl ) : null;
-         } );
-
-         /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-         function resolve() {
-            var technicalName = widgetReferencePath.split( '/' ).pop();
-            var widgetPath = path.join( paths.WIDGETS, widgetReferencePath );
-            var htmlFile = technicalName + '.html';
-            var cssFile = path.join( 'css/', technicalName + '.css' );
-
-            var promises = [];
-            promises.push( themeManager.urlProvider(
-               path.join( widgetPath, '[theme]' ),
-               path.join( paths.THEMES, '[theme]', 'widgets', widgetReferencePath )
-            ).provide( [ htmlFile, cssFile ] ) );
-
-            promises = promises.concat( ( widgetSpecification.controls || [] )
-               .map( function( controlReference ) {
-                  // By appending a path now and .json afterwards, trick RequireJS into generating the
-                  // correct descriptor path when loading from a 'package'.
-                  var controlLocation = path.normalize( require.toUrl( path.join( controlReference, 'control' ) ) );
-                  var descriptorUrl = controlLocation + '.json';
-                  return fileResourceProvider.provide( descriptorUrl ).then( function( descriptor ) {
-                     // LaxarJS 1.x style control (name determined from descriptor):
-                     var name = camelCaseToDashed( descriptor.name );
-                     return themeManager.urlProvider(
-                        path.join( controlLocation.replace( /\/control$/, '' ), '[theme]' ),
-                        path.join( paths.THEMES, '[theme]', 'controls', name )
-                     ).provide( [ path.join( 'css/',  name + '.css' ) ] );
-                  },
-                  function() {
-                     // LaxarJS 0.x style controls (no descriptor, uses AMD path as name):
-                     var name = controlReference.split( '/' ).pop();
-                     return themeManager.urlProvider(
-                        path.join( require.toUrl( controlReference ), '[theme]' ),
-                        path.join( paths.THEMES, '[theme]', controlReference )
-                     ).provide( [ path.join( 'css/', name + '.css' ) ] );
-                  } );
-               } ) );
-
-            return q.all( promises )
-               .then( function( results ) {
-                  var widgetUrls = results[ 0 ];
-                  var cssUrls = results.slice( 1 )
-                     .map( function( urls ) { return urls[ 0 ]; } )
-                     .concat( widgetUrls.slice( 1 ) )
-                     .filter( function( url ) { return !!url; } );
-
-                  return {
-                     templateUrl: widgetUrls[ 0 ] || '',
-                     cssFileUrls: cssUrls
-                  };
-               } );
-         }
-      }
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   function camelCaseToDashed( str ) {
-      return str.replace( /[A-Z]/g, function( character, offset ) {
-         return ( offset > 0 ? '-' : '' ) + character.toLowerCase();
-      } );
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   function throwError( widgetConfiguration, message ) {
-      throw new Error( string.format(
-         'Error loading widget "[widget]" (id: "[id]"): [0]', [ message ], widgetConfiguration
-      ) );
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   function createIdGeneratorForWidget( widgetId ) {
-      var charCodeOfA = 'a'.charCodeAt( 0 );
-      function fixLetter( l ) {
-         // We map invalid characters deterministically to valid lower case letters. Thereby a collision of
-         // two ids with different invalid characters at the same positions is less likely to occur.
-         return String.fromCharCode( charCodeOfA + l.charCodeAt( 0 ) % 26 );
-      }
-
-      var prefix = 'ax' + ID_SEPARATOR + widgetId.replace( INVALID_ID_MATCHER, fixLetter ) + ID_SEPARATOR;
-      return function( localId ) {
-         return prefix + ( '' + localId ).replace( INVALID_ID_MATCHER, fixLetter );
-      };
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   function createEventBusForWidget( eventBus, widgetSpecification, widgetConfiguration ) {
-
-      var collaboratorId = 'widget.' + widgetSpecification.name + '#' + widgetConfiguration.id;
-
-      function forward( to ) {
-         return function() {
-            return eventBus[ to ].apply( eventBus, arguments );
-         };
-      }
-
-      function augmentOptions( optionalOptions ) {
-         return object.options( optionalOptions, { sender: collaboratorId } );
-      }
-
-      var subscriptions = [];
-      function unsubscribe( subscriber ) {
-         eventBus.unsubscribe( subscriber );
-      }
-
-      return {
-         addInspector: forward( 'addInspector' ),
-         setErrorHandler: forward( 'setErrorHandler' ),
-         setMediator: forward( 'setMediator' ),
-         unsubscribe: unsubscribe,
-         subscribe: function( eventName, subscriber, optionalOptions ) {
-            subscriptions.push( subscriber );
-
-            var options = object.options( optionalOptions, { subscriber: collaboratorId } );
-
-            eventBus.subscribe( eventName, subscriber, options );
-         },
-         publish: function( eventName, optionalEvent, optionalOptions ) {
-            return eventBus.publish( eventName, optionalEvent, augmentOptions( optionalOptions ) );
-         },
-         publishAndGatherReplies: function( eventName, optionalEvent, optionalOptions ) {
-            return eventBus.publishAndGatherReplies( eventName, optionalEvent, augmentOptions( optionalOptions ) );
-         },
-         release: function() {
-            subscriptions.forEach( unsubscribe );
-         }
-      };
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   return {
-      create: create
    };
 
 } );
@@ -7863,29 +7893,39 @@ define( 'laxar/laxar',[
    'angular',
    './lib/logging/log',
    './lib/directives/directives',
+   './lib/event_bus/event_bus',
+   './lib/file_resource_provider/file_resource_provider',
    './lib/i18n/i18n',
+   './lib/loaders/widget_loader',
    './lib/utilities/assert',
    './lib/utilities/configuration',
    './lib/utilities/fn',
    './lib/utilities/object',
+   './lib/utilities/path',
    './lib/utilities/storage',
    './lib/utilities/string',
    './lib/runtime/runtime',
    './lib/runtime/runtime_dependencies',
+   './lib/runtime/theme_manager',
    './lib/widget_adapters/adapters'
 ], function(
    ng,
    log,
    directives,
+   eventBus,
+   fileResourceProvider,
    i18n,
+   widgetLoader,
    assert,
    configuration,
    fn,
    object,
+   path,
    storage,
    string,
    runtime,
    runtimeDependencies,
+   themeManager,
    adapters
 ) {
    'use strict';
@@ -7980,6 +8020,17 @@ define( 'laxar/laxar',[
       log.addTag( 'INST', instanceId );
    }
 
+   // API to leverage tooling support. For example laxar-testing needs this for widget tests
+   var toolingApi = {
+      eventBus: eventBus,
+      fileResourceProvider: fileResourceProvider,
+      path: path,
+      themeManager: themeManager,
+      widgetAdapters: adapters,
+      widgetLoader: widgetLoader,
+      runtimeDependenciesModule: runtimeDependencies
+   };
+
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    return {
@@ -7992,7 +8043,8 @@ define( 'laxar/laxar',[
       log: log,
       object: object,
       storage: storage,
-      string: string
+      string: string,
+      _tooling: toolingApi
    };
 
 } );

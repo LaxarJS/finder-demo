@@ -10,7 +10,7 @@
    "controls": [
       "laxar-uikit/controls/i18n",
       "finder-box-control",
-      "finder_demo_utilities/finder_demo_utilities"
+      "finder-demo-utilities"
    ],
 
    "features": {

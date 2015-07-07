@@ -23,6 +23,7 @@
       "inject": false,
       "it": false,
       "jasmine": false,
+      "Promise": false,
       "require": false,
       "runs": false,
       "spyOn": false,

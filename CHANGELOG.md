@@ -3,6 +3,13 @@
 ## Last Changes
 
 
+## v1.2.0
+
+- [#3](https://github.com/LaxarJS/finder-demo/issues/3): Fixed resetting state in open street map widget
+- [#5](https://github.com/LaxarJS/finder-demo/issues/5): Fixed search box visibility on small screens
+- [#6](https://github.com/LaxarJS/finder-demo/issues/6): testing: use LaxarJS Testing for first widget tests
+
+
 ## v1.1.0
 
 - [#4](https://github.com/LaxarJS/finder-demo/issues/4): styling: add finder box control

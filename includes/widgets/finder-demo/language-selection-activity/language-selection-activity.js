@@ -11,7 +11,6 @@ define( [
    var injections = [ 'axEventBus' ];
 
    function create( eventBus ) {
-
       // IE < 11 needs `window.navigator.browserLanguage`
       var browserLanguage = ( window.navigator.language || window.navigator.browserLanguage ).split( '-' )[0];
       var defaultLanguage = ax.configuration.get( 'i18n.locales.default', 'en' );

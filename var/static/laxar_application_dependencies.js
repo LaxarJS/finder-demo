@@ -1,7 +1,7 @@
 define( [
    'laxar-uikit/controls/i18n/ax-i18n-control',
    'finder-box-control/finder-box-control',
-   'finder_demo_utilities/finder_demo_utilities',
+   'finder-demo-utilities/finder-demo-utilities',
    'laxar-application/includes/widgets/finder-demo/search-box-widget/search-box-widget',
    'laxar-application/includes/widgets/finder-demo/omdb-search-widget/omdb-search-widget',
    'laxar-application/includes/widgets/finder-demo/wikipedia-search-widget/wikipedia-search-widget',
