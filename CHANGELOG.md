@@ -3,6 +3,8 @@
 ## Last Changes
 
 
+- [#7](https://github.com/LaxarJS/finder-demo/issues/7): Fixed a spelling mistake
+
 ## v1.2.0
 
 - [#3](https://github.com/LaxarJS/finder-demo/issues/3): Fixed resetting state in open street map widget
