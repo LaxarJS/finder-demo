@@ -6,7 +6,7 @@
 define( {
 
    SEARCH_PLACEHOLDER: {
-      de: 'Suche etwas großartiges',
+      de: 'Suche etwas Großartiges',
       en: 'Search for something awesome'
    }
 
