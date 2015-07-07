@@ -48,7 +48,7 @@
 }
 
 @media (max-width: 992px) {
-  .col + .col {
+  .app-content .col + .col {
     margin-top: 2em;
   }
 }

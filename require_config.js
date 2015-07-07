@@ -35,7 +35,7 @@ var require = {
 
       'laxar-application-dependencies': '../var/static/laxar_application_dependencies',
 
-      //'laxar': 'laxar/dist/laxar',
+      'laxar': 'laxar/dist/laxar',
       'laxar/laxar_testing': 'laxar/dist/laxar_testing',
       'laxar-patterns': 'laxar-patterns/dist/laxar-patterns',
       'laxar-uikit': 'laxar-uikit/dist/laxar-uikit',
@@ -43,6 +43,7 @@ var require = {
       'laxar-path-default-theme': 'laxar-uikit/dist/themes/default.theme',
 
       // App specific
+      'finder-box-control': '../includes/controls/finder-demo/finder-box-control',
       'finder-demo-utilities': '../includes/lib/finder-demo-utilities',
       openlayers: 'ol3/build/ol'
    },
@@ -56,11 +57,6 @@ var require = {
          name: 'laxar-application',
          location: '..',
          main: 'init'
-      },
-      {
-         name: 'laxar',
-         location: '../includes/lib/laxar',
-         main: 'laxar'
       },
       {
          name: 'laxar-testing',

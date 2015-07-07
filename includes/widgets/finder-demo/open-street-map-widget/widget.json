@@ -9,6 +9,7 @@
 
    "controls": [
       "laxar-uikit/controls/i18n",
+      "finder-box-control",
       "finder-demo-utilities"
    ],
 

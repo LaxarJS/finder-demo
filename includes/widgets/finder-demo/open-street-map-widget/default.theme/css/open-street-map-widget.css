@@ -1,45 +1,5 @@
-.open-street-map-widget {
-  padding: 1rem;
-  box-shadow: 0 0 0 1px #ddd;
-  border: 10px solid rgba(230, 230, 230, 0.2);
-  background-clip: padding-box;
-  position: relative;
-  background-image: -webkit-linear-gradient(160grad, white 5%, #f0f0f0 50%, transparent 90%), -webkit-linear-gradient(#f8f8f8, #f8f8f8 6rem, #f8f8f8 6rem);
-  background-image: linear-gradient(160grad, white 5%, #f0f0f0 50%, transparent 90%), linear-gradient(#f8f8f8, #f8f8f8 6rem, #f8f8f8 6rem);
-  background-size: 100% 6rem, 100% 100%;
-  background-repeat: no-repeat;
-}
-.open-street-map-widget:before, .open-street-map-widget:after {
-  position: absolute;
-  top: -1px;
-  left: 0;
-  width: 100%;
-  z-index: 5;
-  background-image: -webkit-linear-gradient(left, transparent 5%, #d9d9d9 50%, transparent 95%);
-  background-image: linear-gradient(left, transparent 5%, #d9d9d9 50%, transparent 95%);
-  content: "";
-  display: block;
-  height: 1px;
-}
-.open-street-map-widget:after {
-  background-image: -webkit-linear-gradient(left, transparent 5%, #d9d9d9 50%, transparent 95%);
-  background-image: linear-gradient(left, transparent 5%, #d9d9d9 50%, transparent 95%);
-  top: calc(6rem - 1px);
-}
-.open-street-map-widget .ax-logo {
-  padding-right: 6rem;
-  color: #333;
-  font-family: "Exo 2", Arial, sans-serif;
-  font-weight: 300;
-  font-size: 1.8rem;
-  height: 3rem;
-  line-height: 1.1;
-  margin-top: 0;
-  margin-bottom: 4rem;
+.open-street-map-widget .ax-finder-logo {
   background-image: url("../images/logo.svg");
-  background-repeat: no-repeat;
-  background-size: contain;
-  background-position: center right;
 }
 .open-street-map-widget .ax-alert {
   color: #aaa;
