@@ -55,6 +55,8 @@ define( [
 
       function searchForResults() {
          stateHandler.searchStarted();
+         $scope.model.selectedLocation = null;
+
          $http.get( locationSearchUrl + encodeURIComponent( $scope.resources.search.queryString ) )
             .then( function( response ) {
                var results = response.data;
