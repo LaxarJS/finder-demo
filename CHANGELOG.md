@@ -2,9 +2,7 @@
 
 ## Last Changes
 
-
-## v1.1.0
-
+- [#6](https://github.com/LaxarJS/finder-demo/issues/6): testing: use LaxarJS Testing for first widget tests
 - [#4](https://github.com/LaxarJS/finder-demo/issues/4): styling: add finder box control
 
 
