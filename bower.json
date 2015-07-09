@@ -9,7 +9,7 @@
     "laxar": "^1.1.0-alpha.0",
     "laxar-uikit": "^1.0.0",
     "laxar-patterns": "^1.0.0",
-    "laxar-testing": "./includes/lib/laxar-testing",
+    "laxar-testing": "^0.2.1",
     "ol3": "~3.4.x",
     "require-css": "~0.1.8"
   },
