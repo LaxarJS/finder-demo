@@ -36,7 +36,7 @@ var require = {
       'laxar-application-dependencies': '../var/static/laxar_application_dependencies',
 
       'laxar': 'laxar/dist/laxar',
-      'laxar/laxar_testing': 'laxar/dist/laxar_testing',
+      'laxar-testing': 'laxar-testing/dist/laxar-testing',
       'laxar-patterns': 'laxar-patterns/dist/laxar-patterns',
       'laxar-uikit': 'laxar-uikit/dist/laxar-uikit',
       'laxar-uikit/controls': 'laxar-uikit/dist/controls',
@@ -57,11 +57,6 @@ var require = {
          name: 'laxar-application',
          location: '..',
          main: 'init'
-      },
-      {
-         name: 'laxar-testing',
-         location: '../includes/lib/laxar-testing',
-         main: 'laxar-testing'
       },
       {
          name: 'moment',
