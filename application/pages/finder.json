@@ -6,6 +6,18 @@
       "activities": [
          {
             "widget": "finder-demo/language-selection-activity"
+         },
+         {
+            "widget": "finder-demo/geocoding-activity",
+            "features": {
+               "search": {
+                  "resource": "searchString"
+               },
+               "locations": {
+                  "resource": "availableLocations",
+                  "searching": "geocodingInProgress"
+               }
+            }
          }
       ],
 
@@ -60,6 +72,10 @@
             "features": {
                "search": {
                   "resource": "searchString"
+               },
+               "locations": {
+                  "resource": "availableLocations",
+                  "searchingOn": [ "geocodingInProgress" ]
                }
             },
             "enabled": true
