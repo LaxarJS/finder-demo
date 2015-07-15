@@ -29,6 +29,24 @@
             }
          },
 
+         "locations": {
+            "type": "object",
+            "properties": {
+               "resource": {
+                  "type": "string",
+                  "format": "topic"
+               },
+               "searchingOn": {
+                  "type": "array",
+                  "items": {
+                     "type": "string",
+                     "format": "topic"
+                  },
+                  "description": "One or more flags, indicating that geocoding is still in progress."
+               }
+            }
+         },
+
          "i18n": {
             "type": "object",
             "properties": {

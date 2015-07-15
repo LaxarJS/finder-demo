@@ -35,7 +35,31 @@ For installation instruction take a look at the [LaxarJS documentation](https://
 }
 ```
 Use this configuration on a page to get a OpenStreetMapWidget instance.
-The `searchString` resource is expected to provide searches for locations.
+The `search` resource is expected to provide searches for locations.
+
+Alternatively, this widget may be connected to a *GeocodingActivity*, already providing a list of locations to show a map for.
+Assuming the *GeocodingActivity* publishes its result list as `availableLocations` and its search pending flag as `geocodingInProgress`, the following configuration can be used:
+
+```json
+{
+   "widget": "finder-demo/open-street-map-widget",
+   "features": {
+      "search": {
+         "resource": "searchString"
+      },
+      "locations": {
+         "resource": "availableLocations",
+         "searchingOn": [ "geocodingInProgress" ]
+      }
+   }
+}
+```
+
+Note that the configuration for the `search.resource` feature is still required.
+This is enables the widget to keep track of the result status, i.e. if no search was started or no results were found.
+
+When activating multiple widgets using geocoding the combination with a *GeocodingActivity* is advised.
+It will reduce the number of requests made to the service and provide a consistent list of result locations.
 
 
 ## References
