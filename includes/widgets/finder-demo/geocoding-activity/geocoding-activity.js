@@ -21,6 +21,7 @@ define( [
 
    function create( eventBus, context ) {
 
+      var cache = ax.storage.getLocalStorage( 'geocodingActivity-' + context.widget.id );
       var nextSearchId = 0;
 
       context.resources = {};
@@ -35,10 +36,29 @@ define( [
          publishSearchingFlagState( true );
 
          var currentSearchId = nextSearchId++;
-         window.fetch( locationSearchUrl + encodeURIComponent( context.resources.search.queryString ) )
-            .then( function( response ) {
-               return response.json();
-            } )
+         var url = locationSearchUrl + encodeURIComponent( context.resources.search.queryString );
+         var cachedEntry = cache.getItem( url );
+         var jsonResultPromise;
+
+         if( cachedEntry ) {
+            ax.log.trace(
+               'Fetched location search for "[0]" from cache.',
+               context.resources.search.queryString
+            );
+            jsonResultPromise = Promise.resolve( cachedEntry );
+         }
+         else {
+            jsonResultPromise = window.fetch( url )
+               .then( function( response ) {
+                  return response.json();
+               } )
+               .then( function( parsedJson ) {
+                  cache.setItem( url, parsedJson );
+                  return parsedJson;
+               } );
+         }
+
+         jsonResultPromise
             .then( function( parsedJson ) {
                if( currentSearchId + 1 === nextSearchId ) {
                   locationsPublisher( parsedJson );

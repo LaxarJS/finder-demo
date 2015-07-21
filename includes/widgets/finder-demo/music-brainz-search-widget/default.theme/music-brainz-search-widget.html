@@ -9,6 +9,7 @@
                  data-ng-if="model.results.length > 1"
                  data-ng-model="model.selectedArtist"
                  data-ng-options="artist as artist.name for artist in model.results"></select>
+         <h4 data-ng-if="model.results.length === 1">{{ model.selectedArtist.name }}</h4>
       </div>
       <div class="row">
          <div class="col-md-12">

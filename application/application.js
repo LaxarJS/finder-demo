@@ -11,6 +11,9 @@ window.laxar = ( function() {
 
       theme: 'cube',
       useMergedCss: mode === 'PRODUCTION',
+      logging: {
+         threshold: 'TRACE'
+      },
 
       fileListings: {
          'application': 'var/listing/application_resources.json',

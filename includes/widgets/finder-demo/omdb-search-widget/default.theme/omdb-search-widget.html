@@ -9,6 +9,7 @@
                  data-ng-if="model.results.length > 1"
                  data-ng-model="model.selectedMovie"
                  data-ng-options="movie as movie.Title for movie in model.results"></select>
+         <h4 data-ng-if="model.results.length === 1">{{ model.selectedMovie.Title }}</h4>
       </div>
       <div class="row">
          <div class="col-md-12">

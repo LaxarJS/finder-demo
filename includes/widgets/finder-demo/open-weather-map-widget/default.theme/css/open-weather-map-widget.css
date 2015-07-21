@@ -1,0 +1,121 @@
+@font-face {
+   font-family:'MeteoconsRegular';
+
+   /* IE < 9
+      The two src data are needed to circumvent a bug in IE for the rendering of the text.
+      IE9+ supports the type format *.woff. */
+   src: url('../fonts/meteocons-webfont.eot'); /* IE9 Compat Modes */
+   src: url('../fonts/meteocons-webfont.eot?#iefix') format('embedded-opentype'); /* IE6-IE8 */
+   src: url('../fonts/meteocons-webfont.svg?#svgFontName') format('svg'), /* Windows Chrome */
+   url('../fonts/meteocons-webfont.woff') format('woff'), /* Modern Browsers */
+   url('../fonts/meteocons-webfont.ttf') format('truetype'); /* Safari, Android, iOS */
+
+   /* To avoid a bug in Webkit-Browsers set all font-* properties to normal. */
+   font-weight: normal;
+   font-style: normal;
+   font-variant: normal;
+}
+
+.open-weather-map-widget .ax-finder-logo {
+   background-image: url("../images/logo.png");
+}
+.open-weather-map-widget .ax-alert {
+   color: #aaa;
+   font-family: "Exo 2", Arial, sans-serif;
+   font-weight: 300;
+   font-size: 1.2rem;
+   min-height: 6rem;
+   position: relative;
+}
+.open-weather-map-widget .ax-alert__text {
+   position: absolute;
+   top: 0.6rem;
+   padding-left: 2.5rem;
+}
+.open-weather-map-widget .ax-alert__text.text-danger {
+   color: #d3201d;
+}
+.open-weather-map-widget .ax-alert__icon {
+   font-size: 1.5rem;
+   width: 1.5rem;
+   left: 0;
+   position: absolute;
+}
+.open-weather-map-widget .ax-spinner {
+   color: #03ade0;
+}
+.open-weather-map-widget .spinner:before {
+   content: "";
+   position: absolute;
+   top: 50%;
+   left: 0;
+   width: 1.5rem;
+   height: 1.5rem;
+   margin-top: -0.85rem;
+}
+.open-weather-map-widget .spinner:not(:required):before {
+   content: '';
+   border-radius: 50%;
+   border: 2px solid transparent;
+   border-top-color: #03ade0;
+   border-bottom-color: #03ade0;
+   animation: spinner .8s ease infinite;
+   -webkit-animation: spinner .8s ease infinite;
+}
+
+.open-weather-map-widget .weather-icon:before {
+   font-family: 'MeteoconsRegular';
+   content: attr(data-weather-icon);
+}
+
+.open-weather-map-widget .weather-icon.large {
+   font-size: 3em;
+}
+
+.open-weather-map-widget .weather-chart-wrapper {
+   height: 100%;
+   width: 100%;
+   overflow-x: scroll;
+
+}
+
+.open-weather-map-widget svg .column-border {
+   stroke-width: 1;
+   stroke: #898989;
+}
+
+.open-weather-map-widget svg .day-column-border {
+   stroke-width: 1;
+   stroke: #363636;
+}
+
+.open-weather-map-widget svg .temperature-curve {
+   fill: none;
+   stroke-width: 1.5;
+   stroke: #363636;
+}
+
+.open-weather-map-widget svg  .weather-icon {
+   font-family: 'MeteoconsRegular';
+   font-size: 1.3em;
+   text-anchor: middle;
+}
+
+.open-weather-map-widget svg  .temperature {
+   font-size: 0.9em;
+   text-anchor: middle;
+}
+
+.open-weather-map-widget svg .rain-bar {
+   fill: #006fff;
+   cursor:default;
+}
+
+.open-weather-map-widget svg .rain-bar:hover {
+   fill: #1caeff;
+}
+
+.open-weather-map-widget .weather-chart-wrapper {
+   cursor: move;
+}
+

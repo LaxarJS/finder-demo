@@ -7,9 +7,10 @@
       <div class="row">
          <select title="{{ model.selectedLocation.display_name }}"
                  class="form-control"
-                 data-ng-if="model.results.length > 1"
+                 data-ng-if="resources.locations.length > 1"
                  data-ng-model="model.selectedLocation"
-                 data-ng-options="location as location.display_name for location in model.results"></select>
+                 data-ng-options="location as location.display_name for location in resources.locations"></select>
+         <h4 data-ng-if="model.results.length === 1">{{ model.selectedLocation.display_name }}</h4>
       </div>
       <div class="row">
          <div class="col-md-12"

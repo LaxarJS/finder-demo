@@ -18,10 +18,10 @@
 
          ( laxarSpec.requireConfig = laxarSpec.requireConfig || {} ).baseUrl = require.baseUrl;
 
-         var requirePath = require.baseUrl + s + require.paths.requirejs;
-         var jasminePath = require.baseUrl + s + require.paths.jasmine;
-         var jasmineCorePath = dirname( jasminePath );
+         var jasmineMajorVersion = laxarSpec.jasmineMajorVersion > 1 ? laxarSpec.jasmineMajorVersion : '';
+         var jasminePath = require.baseUrl + s + require.paths[ 'jasmine' + jasmineMajorVersion ];
          var jasmineFavicon = jasminePath.replace( 'lib/jasmine-core', 'images' ) + '_favicon.png';
+         var requirePath = require.baseUrl + s + require.paths.requirejs;
 
          document.writeln( '<link type="text/css" rel="stylesheet" href="' + jasminePath + '.css"></link>' );
          document.writeln( '<link type="image/png" rel="shortcut icon" href="' + jasmineFavicon + '"></link>' );
@@ -33,77 +33,10 @@
 
    <script type="text/javascript">
       require.config( laxarSpec.requireConfig );
-
-      requirejs.onResourceLoad = function (context, map, depMaps) {
-         if (!window.rtree) {
-            window.rtree = {
-               tree: {},
-               map: function() {
-                  for (var key in this.tree) {
-                     if (this.tree.hasOwnProperty(key)) {
-                        var val = this.tree[key];
-                        for (var i =0; i < val.deps.length; ++i) {
-                           var dep = val.deps[i];
-                           val.map[dep] = this.tree[dep];
-                        }
-                     }
-                  }
-               },
-               toUml: function() {
-                  var uml = [];
-
-                  for (var key in this.tree) {
-                     if (this.tree.hasOwnProperty(key)) {
-                        var val = this.tree[key];
-                        for (var i = 0; i < val.deps.length; ++i) {
-                           uml.push("[" + key + "]->[" + val.deps[i] + "]");
-                        }
-                     }
-                  }
-
-                  return uml.join("\n");
-               }
-            };
-         }
-
-         var tree = window.rtree.tree;
-
-         function Node() {
-            this.deps = [];
-            this.map = {};
-         }
-
-         if (!tree[map.name]) {
-            tree[map.name] = new Node();
-         }
-
-         // For a full dependency tree
-         if (depMaps) {
-            for (var i = 0; i < depMaps.length; ++i) {
-               tree[map.name].deps.push(depMaps[i].name);
-            }
-         }
-
-         // For a simple dependency tree
-
-         //    if (map.parentMap && map.parentMap.name) {
-         //        if (!tree[map.parentMap.name]) {
-         //            tree[map.parentMap.name] = new Node();
-         //        }
-         //
-         //        if (map.parentMap.name !== map.name) {
-         //            tree[map.parentMap.name].deps.push(map.name);
-         //        }
-         //    }
-
-      };
-
-
-
       require( [
-         'laxar-testing'
-      ], function( testing ) {
-         testing.runSpec( laxarSpec );
+         laxarSpec.testRunner || 'laxar/laxar_testing'
+      ], function( runner ) {
+         ( runner.testing || runner ).runSpec( laxarSpec );
       } );
    </script>
 

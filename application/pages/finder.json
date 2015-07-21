@@ -68,6 +68,19 @@
       ],
       "content2a": [
          {
+            "widget": "finder-demo/open-weather-map-widget",
+            "features": {
+               "search": {
+                  "resource": "searchString"
+               },
+               "locations": {
+                  "resource": "availableLocations",
+                  "searchingOn": [ "geocodingInProgress" ]
+               }
+            },
+            "enabled": true
+         },
+         {
             "widget": "finder-demo/open-street-map-widget",
             "features": {
                "search": {

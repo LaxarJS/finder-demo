@@ -1,0 +1,100 @@
+<div data-finder-box
+     data-ng-switch="functions.state()">
+
+   <h3 class="ax-function-point ax-finder-logo">Open Weather Map</h3>
+
+   <div data-ng-switch-when="SELECTED">
+      <div class="row">
+         <select title="{{ model.selectedLocation.display_name }}"
+                 class="form-control"
+                 data-ng-if="resources.locations.length > 1"
+                 data-ng-model="model.selectedLocation"
+                 data-ng-options="location as location.display_name for location in resources.locations"></select>
+         <h4 data-ng-if="model.results.length === 1">{{ model.selectedLocation.display_name }}</h4>
+      </div>
+      <div class="row">
+         <div class="col-md-12" data-ng-init="activeTab = 'forecast'">
+            <ul class="nav nav-tabs">
+               <li role="presentation"
+                   data-ng-class="{ active: activeTab === 'current'}"
+                   data-ng-click="activeTab = 'current'"
+                  ><a href="#">{{ messages.CURRENT_WEATHER | axLocalize:i18n }}</a></li>
+               <li role="presentation"
+                   data-ng-class="{ active: activeTab === 'forecast'}"
+                   data-ng-click="activeTab = 'forecast'"
+                  ><a href="#">{{ messages.FIVE_DAY_FORECAST | axLocalize:i18n }}</a></li>
+            </ul>
+            <div data-ng-if="activeTab === 'current'">
+               <h4>{{ messages.CURRENT_WEATHER | axLocalize:i18n }}</h4>
+               <span class="weather-icon large"
+                     data-weather-icon="{{iconCodesToLetters[model.currentWeather.weather[0].icon]}}"
+                  >{{model.currentWeather.main.temp}}°C, {{model.currentWeather.weather[0].description}}</span>
+
+               <table>
+                  <tr>
+                     <td>{{ messages.DATA_MAXIMUM_TEMPERATURE | axLocalize:i18n }}</td>
+                     <td>{{model.currentWeather.main.temp_max}} °C</td>
+                  </tr>
+                  <tr>
+                     <td>{{ messages.DATA_MINIMUM_TEMPERATURE | axLocalize:i18n }}</td>
+                     <td>{{model.currentWeather.main.temp_min}} °C</td>
+                  </tr>
+                  <tr>
+                     <td>{{ messages.DATA_HUMIDITY | axLocalize:i18n }}</td>
+                     <td>{{model.currentWeather.main.humidity}} %</td>
+                  </tr>
+                  <tr>
+                     <td>{{ messages.DATA_PRESSURE | axLocalize:i18n }}</td>
+                     <td>{{model.currentWeather.main.pressure}} hPa</td>
+                  </tr>
+                  <tr>
+                     <td>{{ messages.DATA_WIND_SPEED | axLocalize:i18n }}</td>
+                     <td>{{model.currentWeather.wind.speed}} m/s</td>
+                  </tr>
+                  <tr>
+                     <td>{{ messages.DATA_WIND_DIRECTION | axLocalize:i18n }}</td>
+                     <td>{{model.currentWeather.wind.deg}} °</td>
+                  </tr>
+                  <tr>
+                     <td>{{ messages.DATA_WIND_CLOUDINESS | axLocalize:i18n }}</td>
+                     <td>{{model.currentWeather.clouds.all}} %</td>
+                  </tr>
+               </table>
+            </div>
+            <div data-ng-if="activeTab === 'forecast'">
+               <h4>{{ messages.FIVE_DAY_FORECAST | axLocalize:i18n }}</h4>
+
+               <div class="weather-chart-wrapper"
+                    data-open-weather-map-widget-scroll-area
+                  >
+                  <svg xmlns="http://www.w3.org/2000/svg"
+                       height="400"
+                       data-open-weather-map-widget-weather-chart="model.forecastWeather.list"
+                       data-open-weather-map-widget-weather-chart-icon-codes="iconCodesToLetters">
+                  </svg>
+               </div>
+
+            </div>
+         </div>
+      </div>
+   </div>
+
+   <div class="ax-alert" data-ng-switch-when="SEARCHING">
+      <p class="ax-alert__text ax-spinner" >
+         <i class="spinner"></i>{{ messages.SEARCHING | axLocalize:i18n }}
+      </p>
+   </div>
+
+   <div class="ax-alert" data-ng-switch-when="IDLE">
+      <p class="ax-alert__text" >
+         <i class="fa fa-search ax-alert__icon"></i>{{ messages.NO_SEARCH_STARTED | axLocalize:i18n }}
+      </p>
+   </div>
+
+   <div class="ax-alert" data-ng-switch-when="NO_RESULTS">
+      <p class="ax-alert__text text-danger" >
+         <i class="fa fa-exclamation-triangle ax-alert__icon"></i>{{ messages.NO_RESULTS | axLocalize:i18n }}
+      </p>
+   </div>
+
+</div>
