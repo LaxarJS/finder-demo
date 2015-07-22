@@ -13,16 +13,16 @@
          <h4 data-ng-if="model.results.length === 1">{{ model.selectedLocation.display_name }}</h4>
       </div>
       <div class="row">
-         <div class="col-md-12" data-ng-init="activeTab = 'forecast'">
+         <div class="col-md-12" data-ng-init="activeTab = 'current'">
             <ul class="nav nav-tabs">
                <li role="presentation"
                    data-ng-class="{ active: activeTab === 'current'}"
                    data-ng-click="activeTab = 'current'"
-                  ><a href="#">{{ messages.CURRENT_WEATHER | axLocalize:i18n }}</a></li>
+                  ><a href="javascript:void(0);">{{ messages.CURRENT_WEATHER | axLocalize:i18n }}</a></li>
                <li role="presentation"
                    data-ng-class="{ active: activeTab === 'forecast'}"
                    data-ng-click="activeTab = 'forecast'"
-                  ><a href="#">{{ messages.FIVE_DAY_FORECAST | axLocalize:i18n }}</a></li>
+                  ><a href="javascript:void(0);">{{ messages.FIVE_DAY_FORECAST | axLocalize:i18n }}</a></li>
             </ul>
             <div data-ng-if="activeTab === 'current'">
                <h4>{{ messages.CURRENT_WEATHER | axLocalize:i18n }}</h4>
