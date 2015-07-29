@@ -101,8 +101,11 @@ $abp-font-path: "../fonts" !default;
 
 
    .table {
-      width: 50%;
-      max-width: 50%;
+      @media (min-width: $screen-xs-min) {
+         width: auto;
+         max-width: 50%;
+         // float: right;
+      }
       // color: red;
       // background-color: deeppink;
 
@@ -114,7 +117,13 @@ $abp-font-path: "../fonts" !default;
       }
 
       td {
-         vertical-align: baseline;
+         vertical-align: bottom;
+         line-height: 1;
+      }
+
+      td:first-child {
+         color: #999;
+         text-align: right;
       }
 
       td:last-child {
@@ -129,12 +138,23 @@ $abp-font-path: "../fonts" !default;
    }
 
    .abp-short-overview {
+      @media (min-width: $screen-xs-min) {
+         position: absolute;
+         top: 6.4rem;
+         right: 2rem;
+      }
+      @media (min-width: $screen-xs-max) and (max-width: $screen-sm-max) {
+         right: 25rem;
+      }
+      @media (min-width: $screen-md-min) {
+         right: 2rem;
+      }
+
       display: flex;
       flex-direction: column;
       align-items: flex-end;
-      position: absolute;
-      top: 3.21428rem;
-      right: 2rem;
+
+      margin-bottom: 2rem;
 
       .abp-weather-icon {
          font-size: 3rem;
@@ -178,7 +198,7 @@ $abp-font-path: "../fonts" !default;
       font-weight: 200;
       font-size: 1.2rem;
       margin-top: -0.2em;
-      margin-bottom: -0.1em;
+      margin-bottom: 0.0em;
       text-anchor: middle;
    }
 
@@ -191,6 +211,7 @@ $abp-font-path: "../fonts" !default;
 
    .abp-description {
       @extend %abp-font-family;
+      color: #999;
       font-size: 1rem;
       font-weight: 500;
    }
