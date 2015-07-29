@@ -15,10 +15,7 @@
 
    "resources": {
       "watch": [
-         "widget.json",
-         "*.js",
-         "*.theme/*.html",
-         "*.theme/css/*.css"
+         "*.js"
       ]
    },
 

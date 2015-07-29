@@ -4,12 +4,14 @@
    <h3 class="ax-finder-logo">Open Media Database</h3>
    <div data-ng-switch-when="SELECTED">
       <div class="row">
-         <select title="{{ model.selectedMovie.Title }}"
-                 class="form-control"
-                 data-ng-if="model.results.length > 1"
-                 data-ng-model="model.selectedMovie"
-                 data-ng-options="movie as movie.Title for movie in model.results"></select>
-         <h4 data-ng-if="model.results.length === 1">{{ model.selectedMovie.Title }}</h4>
+         <div class="col-md-12">
+            <select title="{{ model.selectedMovie.Title }}"
+                    class="form-control"
+                    data-ng-if="model.results.length > 1"
+                    data-ng-model="model.selectedMovie"
+                    data-ng-options="movie as movie.Title for movie in model.results"></select>
+            <h4 data-ng-if="model.results.length === 1">{{ model.selectedMovie.Title }}</h4>
+         </div>
       </div>
       <div class="row">
          <div class="col-md-12">

@@ -2,17 +2,19 @@
 
 @import "variables_all";
 
+$abp-font-path: "../fonts" !default;
+
 @font-face {
    font-family:'MeteoconsRegular';
 
    /* IE < 9
       The two src data are needed to circumvent a bug in IE for the rendering of the text.
       IE9+ supports the type format *.woff. */
-   src: url('../fonts/meteocons-webfont.eot'); /* IE9 Compat Modes */
-   src: url('../fonts/meteocons-webfont.eot?#iefix') format('embedded-opentype'); /* IE6-IE8 */
-   src: url('../fonts/meteocons-webfont.svg?#svgFontName') format('svg'), /* Windows Chrome */
-   url('../fonts/meteocons-webfont.woff') format('woff'), /* Modern Browsers */
-   url('../fonts/meteocons-webfont.ttf') format('truetype'); /* Safari, Android, iOS */
+   src: url('#{$abp-font-path}/meteocons-webfont.eot'); /* IE9 Compat Modes */
+   src: url('#{$abp-font-path}/meteocons-webfont.eot?#iefix') format('embedded-opentype'); /* IE6-IE8 */
+   src: url('#{$abp-font-path}/meteocons-webfont.svg?#svgFontName') format('svg'), /* Windows Chrome */
+   url('#{$abp-font-path}/meteocons-webfont.woff') format('woff'), /* Modern Browsers */
+   url('#{$abp-font-path}/meteocons-webfont.ttf') format('truetype'); /* Safari, Android, iOS */
 
    /* To avoid a bug in Webkit-Browsers set all font-* properties to normal. */
    font-weight: normal;
@@ -25,6 +27,11 @@
    .ax-finder-logo {
       background-image: url( "../images/logo.png" );
    }
+
+//
+// Alert
+// -----------------------------------------------------------------------------------------------------------
+
 
    .ax-alert {
       color: #aaa;
@@ -76,13 +83,154 @@
       -webkit-animation: spinner .8s ease infinite;
    }
 
-   .weather-icon:before {
+//
+// Name der Sub-Sektion
+// -----------------------------------------------------------------------------------------------------------
+
+   .abp-tab-content {
+      background-color: white;
+      padding: 1rem;
+      border-bottom: 1px solid #ddd;
+   }
+
+
+//
+// Current
+// -----------------------------------------------------------------------------------------------------------
+
+
+
+   .table {
+      width: 50%;
+      max-width: 50%;
+      // color: red;
+      // background-color: deeppink;
+
+      font-family: "Exo 2", sans-serif;
+      font-weight: 500;
+
+      tr:first-child > td {
+         border-top-color: transparent;
+      }
+
+      td {
+         vertical-align: baseline;
+      }
+
+      td:last-child {
+         font-size: 1.4rem;
+         font-weight: 300;
+      }
+   }
+
+   %abp-font-family {
+      font-family: "Exo 2", sans-serif;
+      line-height: 1;
+   }
+
+   .abp-short-overview {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      position: absolute;
+      top: 3.21428rem;
+      right: 2rem;
+
+      .abp-weather-icon {
+         font-size: 3rem;
+      }
+
+      .abp-temperature {
+         font-size: 5rem;
+      }
+   }
+
+   .abp-day-name {
+      @extend %abp-font-family;
+      fill: #999;
+      font-size: 1.3rem;
+      font-weight: 300;
+   }
+
+   .abp-day-time {
+      @extend %abp-font-family;
+      fill: #999;
+      font-weight: 200;
+      font-size: 1rem;
+      display: inline-block;
+      padding-bottom: 1em;
+   }
+
+   .abp-weather-icon {
+      font-size: 1.3rem;
+      line-height: 1;
       font-family: 'MeteoconsRegular';
-      content: attr(data-weather-icon);
+      text-anchor: middle;
+
+      &:before {
+         content: attr(data-weather-icon);
+      }
    }
 
-   .weather-icon.large:before {
-      font-size: 3em;
+   .abp-temperature {
+      @extend %abp-font-family;
+      fill: #333;
+      font-weight: 200;
+      font-size: 1.2rem;
+      margin-top: -0.2em;
+      margin-bottom: -0.1em;
+      text-anchor: middle;
    }
 
+   .abp-unit {
+      @extend %abp-font-family;
+      font-size: 0.6em;
+      font-weight: 300;
+      padding-left: 0.1em;
+   }
+
+   .abp-description {
+      @extend %abp-font-family;
+      font-size: 1rem;
+      font-weight: 500;
+   }
+
+   //
+   // Forecast
+   // -----------------------------------------------------------------------------------------------------------
+
+   .weather-chart-wrapper {
+      height: 100%;
+      width: 100%;
+      overflow-x: scroll;
+      cursor: move;
+   }
+
+   .abp-column-border {
+      stroke-width: 1;
+      stroke: #ccc;
+      shape-rendering: crispEdges;
+      // opacity: 0.5;
+   }
+
+   .abp-day-column-border {
+      stroke-width: 1;
+      stroke: #aaa;
+      shape-rendering: crispEdges;
+   }
+
+   .abp-temperature-curve {
+      fill: none;
+      stroke-width: 1.5;
+      stroke: #555;
+   }
+
+   .abp-rain-bar {
+      fill: lighten( $brand-primary, 20% );
+      cursor: default;
+   }
+
+   .abp-rain-bar:hover {
+      fill: $brand-primary;
+   }
 }

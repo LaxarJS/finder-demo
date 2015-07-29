@@ -4,12 +4,14 @@
    <h3 class="ax-function-point ax-finder-logo">Music Brainz</h3>
    <div data-ng-switch-when="SELECTED">
       <div class="row">
-         <select title="{{ model.selectedArtist.name }}"
-                 class="form-control"
-                 data-ng-if="model.results.length > 1"
-                 data-ng-model="model.selectedArtist"
-                 data-ng-options="artist as artist.name for artist in model.results"></select>
-         <h4 data-ng-if="model.results.length === 1">{{ model.selectedArtist.name }}</h4>
+         <div class="col-md-12">
+            <select title="{{ model.selectedArtist.name }}"
+                    class="form-control"
+                    data-ng-if="model.results.length > 1"
+                    data-ng-model="model.selectedArtist"
+                    data-ng-options="artist as artist.name for artist in model.results"></select>
+            <h4 data-ng-if="model.results.length === 1">{{ model.selectedArtist.name }}</h4>
+         </div>
       </div>
       <div class="row">
          <div class="col-md-12">

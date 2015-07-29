@@ -8,12 +8,6 @@
 
 .wikipedia-search-widget {
 
-   [data-finder-box] {
-      @media (max-width: $screen-md-min) {
-         border-top-right-radius: 2.5em;
-      }
-   }
-
    .ax-finder-logo {
       background-image: url( "../images/logo.png" );
    }

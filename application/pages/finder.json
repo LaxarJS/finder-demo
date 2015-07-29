@@ -79,7 +79,9 @@
                }
             },
             "enabled": true
-         },
+         }
+      ],
+      "content2b": [
          {
             "widget": "finder-demo/open-street-map-widget",
             "features": {

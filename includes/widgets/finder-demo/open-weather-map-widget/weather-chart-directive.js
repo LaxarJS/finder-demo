@@ -47,7 +47,7 @@ define( [
 
             // some hardcoded constants
             var timePeriodWidth = 50;
-            var borderMargin = 20;
+            var borderMargin = 0;
             var innerTopOffset = 100;
             var rainBarWidth = 20;
 
@@ -60,6 +60,9 @@ define( [
             // A group to add some margins for the complete chart contents
             var contentBox = svg.append( 'svg:g' )
                .attr( 'transform', translate( borderMargin, borderMargin ) );
+
+            var lineBox = contentBox.append( 'svg:g' )
+               .attr( 'class', 'lines' );
 
             // The box where all curves and bars are rendered
             var dataBox = contentBox.append( 'svg:g' )
@@ -86,7 +89,7 @@ define( [
                svg.attr( 'width', svgWidth );
 
                // Render vertical rulers between two 3-hour periods
-               var lineColumnBorder = contentBox.selectAll( 'line.column-border' )
+               var lineColumnBorder = lineBox.selectAll( 'line.abp-column-border' )
                   // Add a dummy entry to draw the last vertical line
                   .data( weatherData.concat( { momentDate: { hour: function() { return 0; } } } ) );
 
@@ -95,13 +98,13 @@ define( [
                   .attr( 'x2', lineX )
                   .attr( 'y1', newDaySwitch.bind( null, 0, 50 ) )
                   .attr( 'y2', contentBoxHeight )
-                  .attr( 'class', newDaySwitch.bind( null, 'day-column-border column-border', 'column-border' ) );
+                  .attr( 'class', newDaySwitch.bind( null, 'abp-day-column-border abp-column-border', 'abp-column-border' ) );
                lineColumnBorder.exit().remove();
 
                // Render the day name every time a new day starts
                var groupDayName = contentBox.selectAll( 'g.day-name' ).data( days );
                groupDayName.enter().append( 'svg:g' )
-                  .attr( 'class', 'day-name' )
+                  .attr( 'class', 'abp-day-name' )
                   .attr( 'transform', function( day ) {
                      return translate( day.x, 20 );
                   } )
@@ -111,9 +114,10 @@ define( [
 
                renderColumnHeaders( weatherData );
 
+               renderRainBarChart( weatherData );
+
                renderTemperatureLine( weatherData );
 
-               renderRainBarChart( weatherData );
             }
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -130,11 +134,11 @@ define( [
                   } )
                   .each( 'end', function( entry ) {
                      var groupTopData = d3.select( this );
-                     groupTopData.select( 'text.day-time' )
+                     groupTopData.select( 'text.abp-day-time' )
                         .text( propertyAccessor( 'shortFormattedTime' ) );
-                     groupTopData.select( 'text.weather-icon' )
+                     groupTopData.select( 'text.abp-weather-icon' )
                         .text( scope.iconCodes[ entry.weather[ 0 ].icon ] );
-                     groupTopData.select( 'text.temperature' )
+                     groupTopData.select( 'text.abp-temperature' )
                         .text( Math.round( entry.main.temp ) + ' °C' );
                   } )
                   .transition()
@@ -146,26 +150,26 @@ define( [
                var groupTopDataElement = groupTopData.enter().append( 'svg:g' )
                   .attr( 'class', 'top-data' )
                   .attr( 'transform', function( entry, index ) {
-                     return 'translate(' + entryX( entry, index ) + ',50)';
+                     return 'translate(' + entryX( entry, index ) + ',40)';
                   } );
 
                groupTopDataElement
                   .append( 'svg:text' )
-                  .attr( 'class', 'day-time' )
+                  .attr( 'class', 'abp-day-time' )
                   .attr( 'text-anchor', 'middle' )
                   .text( propertyAccessor( 'shortFormattedTime' ) );
                groupTopDataElement
                   .append( 'svg:text' )
-                  .attr( 'class', 'weather-icon' )
+                  .attr( 'class', 'abp-weather-icon' )
                   .attr( 'text-anchor', 'middle' )
-                  .attr( 'dy', '1.2em' )
+                  .attr( 'dy', '1.6em' )
                   .text( function( entry ) {
                      return scope.iconCodes[ entry.weather[ 0 ].icon ];
                   } );
                groupTopDataElement
                   .append( 'svg:text' )
-                  .attr( 'class', 'temperature' )
-                  .attr( 'dy', '3em' )
+                  .attr( 'class', 'abp-temperature' )
+                  .attr( 'dy', '3.1em' )
                   .text( function( entry ) {
                      return Math.round( entry.main.temp ) + ' °C';
                   } );
@@ -201,7 +205,7 @@ define( [
 
                // ENTER
                temperaturePath.enter().append( 'svg:path' )
-                  .attr( 'class', 'temperature-curve' )
+                  .attr( 'class', 'abp-temperature-curve' )
                   .attr( 'd', temperatureLine );
 
                // EXIT
@@ -216,7 +220,7 @@ define( [
                   .range( [ contentBoxHeight - innerTopOffset, (contentBoxHeight - innerTopOffset) / 2 ] )
                   .domain( [ 0, d3.max( weatherData, rain ) ] );
 
-               var rectRainBar = dataBox.selectAll( 'rect.rain-bar' ).data( weatherData );
+               var rectRainBar = dataBox.selectAll( 'rect.abp-rain-bar' ).data( weatherData );
 
                // UPDATE
                rectRainBar
@@ -236,7 +240,7 @@ define( [
 
                // ENTER
                rectRainBar.enter().append( 'svg:rect' )
-                  .attr( 'class', 'rain-bar' )
+                  .attr( 'class', 'abp-rain-bar' )
                   .attr( 'x', function( entry, index ) {
                      return entryX( entry, index ) - rainBarWidth / 2;
                   } )

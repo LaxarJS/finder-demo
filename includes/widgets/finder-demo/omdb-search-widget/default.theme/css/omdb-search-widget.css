@@ -1,8 +1,3 @@
-@media (min-width: 992px) {
-  .omdb-search-widget [data-finder-box] {
-    border-top-right-radius: 2.5em;
-  }
-}
 .omdb-search-widget .ax-finder-logo {
   background-image: url("../images/logo.png");
 }
