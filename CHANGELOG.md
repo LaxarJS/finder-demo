@@ -2,6 +2,7 @@
 
 ## Last Changes
 
+- [#10](https://github.com/LaxarJS/finder-demo/issues/10): Implemented open weather widget. Finished styling
 - [#9](https://github.com/LaxarJS/finder-demo/issues/9): Added GeocodingActivity
 - [#8](https://github.com/LaxarJS/finder-demo/issues/8): Updated grunt-laxar to most recent version
 - [#7](https://github.com/LaxarJS/finder-demo/issues/7): Fixed a spelling mistake
