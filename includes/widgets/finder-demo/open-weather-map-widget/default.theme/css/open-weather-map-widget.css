@@ -162,6 +162,9 @@
   margin-bottom: 0.0em;
   text-anchor: middle;
 }
+.open-weather-map-widget .abp-temperature > tspan {
+    font-size: 0.7em;
+}
 .open-weather-map-widget .abp-unit {
   font-size: 0.6em;
   font-weight: 300;
@@ -182,6 +185,13 @@
   stroke-width: 1;
   stroke: #ccc;
   shape-rendering: crispEdges;
+}
+.open-weather-map-widget .abp-column-background {
+  fill: none;
+  pointer-events: all;
+}
+.open-weather-map-widget .abp-column-background:hover {
+  fill: #eee;
 }
 .open-weather-map-widget .abp-day-column-border {
   stroke-width: 1;

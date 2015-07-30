@@ -200,6 +200,12 @@ $abp-font-path: "../fonts" !default;
       margin-top: -0.2em;
       margin-bottom: 0.0em;
       text-anchor: middle;
+
+      // AWI starts here
+      > tspan {
+         font-size: 0.7em;
+      }
+      // AWI ends here
    }
 
    .abp-unit {
@@ -233,6 +239,17 @@ $abp-font-path: "../fonts" !default;
       shape-rendering: crispEdges;
       // opacity: 0.5;
    }
+
+   // AWI starts here
+   .abp-column-background {
+      fill: none;
+      pointer-events: all;
+   }
+
+   .abp-column-background:hover {
+      fill: #eee;
+   }
+   // AWI ends here
 
    .abp-day-column-border {
       stroke-width: 1;

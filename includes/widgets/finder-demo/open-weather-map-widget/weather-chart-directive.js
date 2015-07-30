@@ -61,8 +61,8 @@ define( [
             var contentBox = svg.append( 'svg:g' )
                .attr( 'transform', translate( borderMargin, borderMargin ) );
 
-            var lineBox = contentBox.append( 'svg:g' )
-               .attr( 'class', 'lines' );
+            var columnBox = contentBox.append( 'svg:g' )
+               .attr( 'class', 'columns' );
 
             // The box where all curves and bars are rendered
             var dataBox = contentBox.append( 'svg:g' )
@@ -88,8 +88,20 @@ define( [
 
                svg.attr( 'width', svgWidth );
 
+
+               var rectColumnBackground = columnBox.selectAll( 'rect.abp-column-background' )
+                  .data( weatherData );
+
+               rectColumnBackground.enter().append( 'svg:rect' )
+                  .attr( 'x', lineX )
+                  .attr( 'y', 50 )
+                  .attr( 'width', timePeriodWidth )
+                  .attr( 'height', contentBoxHeight - 50 )
+                  .attr( 'class', 'abp-column-background' );
+               rectColumnBackground.exit().remove();
+
                // Render vertical rulers between two 3-hour periods
-               var lineColumnBorder = lineBox.selectAll( 'line.abp-column-border' )
+               var lineColumnBorder = columnBox.selectAll( 'line.abp-column-border' )
                   // Add a dummy entry to draw the last vertical line
                   .data( weatherData.concat( { momentDate: { hour: function() { return 0; } } } ) );
 
@@ -102,7 +114,7 @@ define( [
                lineColumnBorder.exit().remove();
 
                // Render the day name every time a new day starts
-               var groupDayName = contentBox.selectAll( 'g.day-name' ).data( days );
+               var groupDayName = contentBox.selectAll( 'g.abp-day-name' ).data( days );
                groupDayName.enter().append( 'svg:g' )
                   .attr( 'class', 'abp-day-name' )
                   .attr( 'transform', function( day ) {
@@ -139,7 +151,7 @@ define( [
                      groupTopData.select( 'text.abp-weather-icon' )
                         .text( scope.iconCodes[ entry.weather[ 0 ].icon ] );
                      groupTopData.select( 'text.abp-temperature' )
-                        .text( Math.round( entry.main.temp ) + ' °C' );
+                        .html( Math.round( entry.main.temp ) + ' <tspan>°C</tspan>' );
                   } )
                   .transition()
                   .duration( 250 )
@@ -170,8 +182,8 @@ define( [
                   .append( 'svg:text' )
                   .attr( 'class', 'abp-temperature' )
                   .attr( 'dy', '3.1em' )
-                  .text( function( entry ) {
-                     return Math.round( entry.main.temp ) + ' °C';
+                  .html( function( entry ) {
+                     return Math.round( entry.main.temp ) + ' <tspan>°C</tspan>';
                   } );
 
                // EXIT
@@ -195,7 +207,7 @@ define( [
                      .y( function( entry ) { return temperatureY( entry.main.temp ); } );
                } )();
 
-               var temperaturePath = dataBox.selectAll( 'path.temperature-curve' ).data( [ weatherData ] );
+               var temperaturePath = dataBox.selectAll( 'path.abp-temperature-curve' ).data( [ weatherData ] );
 
                // UPDATE
                temperaturePath
@@ -215,10 +227,11 @@ define( [
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
             function renderRainBarChart( weatherData ) {
+               var dataBoxHeight = contentBoxHeight - innerTopOffset;
                var rain = propertyAccessor( 'rain.3h', 0 );
-               var rainY = d3.scale.linear()
-                  .range( [ contentBoxHeight - innerTopOffset, (contentBoxHeight - innerTopOffset) / 2 ] )
-                  .domain( [ 0, d3.max( weatherData, rain ) ] );
+               var rainY = d3.scale.log()
+                  .range( [ dataBoxHeight, dataBoxHeight / 2 ] )
+                  .domain( [ 1, d3.max( weatherData, rain ) + 1 ] );
 
                var rectRainBar = dataBox.selectAll( 'rect.abp-rain-bar' ).data( weatherData );
 
@@ -227,12 +240,19 @@ define( [
                   .transition()
                   .duration( 500 )
                   .attr( 'y', function( entry ) {
-                     return rainY( rain( entry ) );
+                     return rainY( rain( entry ) + 1 );
                   } )
                   .attr( 'height', function( entry ) {
-                     return (contentBoxHeight - innerTopOffset) - rainY( rain( entry ) );
+                     return dataBoxHeight - rainY( rain( entry ) + 1 );
                   } )
                   .attr( 'title', function( entry ) {
+                     return formatString( messages.RAIN_IN_3_HOURS, {
+                        amount: formatDecimal( rain( entry ) )
+                     } );
+                  } )
+                  // necessary to update the title value cached by bootstrap tooltip
+                  // see: http://stackoverflow.com/a/9875490/773339
+                  .attr( 'data-original-title',  function( entry ) {
                      return formatString( messages.RAIN_IN_3_HOURS, {
                         amount: formatDecimal( rain( entry ) )
                      } );
@@ -246,10 +266,10 @@ define( [
                   } )
                   .attr( 'width', rainBarWidth )
                   .attr( 'y', function( entry ) {
-                     return rainY( rain( entry ) );
+                     return rainY( rain( entry ) + 1 );
                   } )
                   .attr( 'height', function( entry ) {
-                     return (contentBoxHeight - innerTopOffset) - rainY( rain( entry ) );
+                     return dataBoxHeight - rainY( rain( entry ) + 1 );
                   } )
                   .attr( 'title', function( entry ) {
                      return formatString( messages.RAIN_IN_3_HOURS, {

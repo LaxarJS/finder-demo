@@ -27,6 +27,7 @@ define( [
 
             var svg = ng.element( element[ 0 ].querySelector( 'svg' ) );
             svg.on( events.start, function( mdEvent ) {
+               mdEvent.preventDefault();
 
                var doc = ng.element( document );
                var xStart = mdEvent.pageX;
@@ -34,6 +35,8 @@ define( [
                var maxScroll = element.prop( 'scrollWidth' ) - element[ 0 ].clientWidth;
 
                doc.on( events.move, function( mmEvent ) {
+                  mmEvent.preventDefault();
+
                   var xCurrent = mmEvent.pageX;
                   var xDistance = xStart - xCurrent;
 
@@ -48,7 +51,7 @@ define( [
                   element.prop( 'scrollLeft', newLeft );
                } );
 
-               doc.one( events.stop, function() {
+               doc.one( events.stop + ' focusout', function() {
                   doc.off( events.move );
                } );
             } );
