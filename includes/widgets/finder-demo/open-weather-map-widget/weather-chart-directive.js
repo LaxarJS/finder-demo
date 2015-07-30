@@ -174,14 +174,14 @@ define( [
                   .append( 'svg:text' )
                   .attr( 'class', 'abp-weather-icon' )
                   .attr( 'text-anchor', 'middle' )
-                  .attr( 'dy', '1.6em' )
+                  .attr( 'dy', '2em' )
                   .text( function( entry ) {
                      return scope.iconCodes[ entry.weather[ 0 ].icon ];
                   } );
                groupTopDataElement
                   .append( 'svg:text' )
                   .attr( 'class', 'abp-temperature' )
-                  .attr( 'dy', '3.1em' )
+                  .attr( 'dy', '3.4em' )
                   .html( function( entry ) {
                      return Math.round( entry.main.temp ) + ' <tspan>°C</tspan>';
                   } );

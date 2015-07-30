@@ -98,8 +98,6 @@ $abp-font-path: "../fonts" !default;
 // Current
 // -----------------------------------------------------------------------------------------------------------
 
-
-
    .table {
       @media (min-width: $screen-xs-min) {
          width: auto;
@@ -141,10 +139,10 @@ $abp-font-path: "../fonts" !default;
       @media (min-width: $screen-xs-min) {
          position: absolute;
          top: 6.4rem;
-         right: 2rem;
       }
-      @media (min-width: $screen-xs-max) and (max-width: $screen-sm-max) {
-         right: 25rem;
+      @media (min-width: $screen-xs-min) and (max-width: $screen-sm-max) {
+         left: 25rem;
+         width: 20%;
       }
       @media (min-width: $screen-md-min) {
          right: 2rem;
@@ -182,8 +180,9 @@ $abp-font-path: "../fonts" !default;
    }
 
    .abp-weather-icon {
-      font-size: 1.3rem;
+      font-size: 1.5rem;
       line-height: 1;
+      fill: #555;
       font-family: 'MeteoconsRegular';
       text-anchor: middle;
 
@@ -195,17 +194,15 @@ $abp-font-path: "../fonts" !default;
    .abp-temperature {
       @extend %abp-font-family;
       fill: #333;
-      font-weight: 200;
-      font-size: 1.2rem;
+      font-weight: 300;
+      font-size: 1.3rem;
       margin-top: -0.2em;
       margin-bottom: 0.0em;
       text-anchor: middle;
 
-      // AWI starts here
       > tspan {
-         font-size: 0.7em;
+         font-size: 0.6em;
       }
-      // AWI ends here
    }
 
    .abp-unit {
@@ -220,6 +217,7 @@ $abp-font-path: "../fonts" !default;
       color: #999;
       font-size: 1rem;
       font-weight: 500;
+      text-align: right;
    }
 
    //
@@ -240,16 +238,13 @@ $abp-font-path: "../fonts" !default;
       // opacity: 0.5;
    }
 
-   // AWI starts here
    .abp-column-background {
       fill: none;
       pointer-events: all;
+      &:hover {
+         fill: #ddd;
+      }
    }
-
-   .abp-column-background:hover {
-      fill: #eee;
-   }
-   // AWI ends here
 
    .abp-day-column-border {
       stroke-width: 1;
@@ -264,11 +259,11 @@ $abp-font-path: "../fonts" !default;
    }
 
    .abp-rain-bar {
-      fill: lighten( $brand-primary, 20% );
+      fill: lighten( saturate( $brand-primary, 20% ), 20% );
       cursor: default;
    }
 
    .abp-rain-bar:hover {
-      fill: $brand-primary;
+      fill: saturate( $brand-primary, 20% );
    }
 }
