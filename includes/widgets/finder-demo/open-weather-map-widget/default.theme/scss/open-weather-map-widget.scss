@@ -3,6 +3,7 @@
 @import "variables_all";
 
 $abp-font-path: "../fonts" !default;
+$abp-image-path: "../images" !default;
 
 @font-face {
    font-family:'MeteoconsRegular';
@@ -25,7 +26,7 @@ $abp-font-path: "../fonts" !default;
 .open-weather-map-widget {
 
    .ax-finder-logo {
-      background-image: url( "../images/logo.png" );
+      background-image: url( "#{$abp-image-path}/logo.png" );
    }
 
 //
