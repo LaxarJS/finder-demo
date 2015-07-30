@@ -1,6 +1,6 @@
 {
    "name": "finder-demo",
-   "version": "1.2.1",
+   "version": "1.3.1",
    "description": "The Almighty Finder of Things.",
    "license": "MIT",
    "scripts": {
@@ -11,15 +11,7 @@
       "optimize": "grunt optimize"
    },
    "devDependencies": {
-      "bower": "~1.3.2",
       "grunt": "~0.4.4",
-      "grunt-cli": "~0.1.13",
-      "grunt-contrib-compass": "~0.7.2",
-      "grunt-contrib-compress": "~0.7.0",
-      "grunt-contrib-concat": "~0.5.1",
-      "grunt-contrib-cssmin": "~0.12.2",
-      "grunt-contrib-watch": "~0.6.1",
-      "grunt-laxar": "~1.1.0-alpha.0",
-      "load-grunt-tasks": "~3.2.0"
+      "grunt-laxar": "~1.1.0-alpha.3"
    }
 }

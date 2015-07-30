@@ -1,0 +1,487 @@
+{
+   "flows": [
+      {
+         "path": "application/flow/flow.json",
+         "resources": {
+            "watch": [
+               "."
+            ],
+            "embed": [
+               "."
+            ],
+            "list": []
+         },
+         "references": {
+            "file": "application/flow/flow.json"
+         }
+      }
+   ],
+   "themes": [
+      {
+         "path": "bower_components/laxar-uikit/dist/themes/default.theme",
+         "name": "default.theme",
+         "resources": {
+            "watch": [
+               "css/theme.css"
+            ],
+            "list": [
+               "css/theme.css"
+            ],
+            "embed": []
+         }
+      },
+      {
+         "path": "includes/themes/cube.theme",
+         "name": "cube.theme",
+         "resources": {
+            "watch": [
+               "css/theme.css"
+            ],
+            "list": [
+               "css/theme.css"
+            ],
+            "embed": []
+         }
+      }
+   ],
+   "pages": [
+      {
+         "path": "application/pages/finder.json",
+         "resources": {
+            "watch": [
+               "."
+            ],
+            "embed": [
+               "."
+            ],
+            "list": []
+         },
+         "references": {
+            "file": "finder"
+         },
+         "pages": [],
+         "widgets": [
+            "finder-demo/language-selection-activity",
+            "finder-demo/geocoding-activity",
+            "finder-demo/search-box-widget",
+            "finder-demo/omdb-search-widget",
+            "finder-demo/wikipedia-search-widget",
+            "finder-demo/music-brainz-search-widget",
+            "finder-demo/open-weather-map-widget",
+            "finder-demo/open-street-map-widget"
+         ]
+      }
+   ],
+   "layouts": [
+      {
+         "resources": {
+            "list": [
+               "/application/layouts/application/default.theme/css/application.css",
+               "/application/layouts/application/default.theme/application.html",
+               "/application/layouts/application/cube.theme/css/application.css",
+               "/application/layouts/application/cube.theme/application.html",
+               "/includes/themes/cube.theme/layouts/application/css/application.css",
+               "/includes/themes/cube.theme/layouts/application/application.html"
+            ],
+            "watch": [
+               "/application/layouts/application/default.theme/css/application.css",
+               "/application/layouts/application/default.theme/application.html",
+               "/application/layouts/application/cube.theme/css/application.css",
+               "/application/layouts/application/cube.theme/application.html",
+               "/includes/themes/cube.theme/layouts/application/css/application.css",
+               "/includes/themes/cube.theme/layouts/application/application.html"
+            ],
+            "embed": [
+               "/application/layouts/application/default.theme/application.html",
+               "/application/layouts/application/cube.theme/application.html",
+               "/includes/themes/cube.theme/layouts/application/application.html"
+            ]
+         },
+         "references": {
+            "file": {
+               "reference": "application"
+            }
+         }
+      }
+   ],
+   "widgets": [
+      {
+         "path": "includes/widgets/finder-demo/geocoding-activity",
+         "integration": {
+            "technology": "plain",
+            "type": "widget"
+         },
+         "resources": {
+            "watch": [
+               "widget.json",
+               "*.theme/geocoding-activity.html",
+               "*.theme/css/geocoding-activity.css",
+               "geocoding-activity.js",
+               "/includes/themes/cube.theme/widgets/finder-demo/geocoding-activity/css/geocoding-activity.css",
+               "/includes/themes/cube.theme/widgets/finder-demo/geocoding-activity/geocoding-activity.html"
+            ],
+            "embed": [
+               "widget.json",
+               "*.theme/geocoding-activity.html",
+               "/includes/themes/cube.theme/widgets/finder-demo/geocoding-activity/geocoding-activity.html"
+            ],
+            "list": [
+               "*.theme/css/geocoding-activity.css",
+               "/includes/themes/cube.theme/widgets/finder-demo/geocoding-activity/css/geocoding-activity.css"
+            ]
+         },
+         "references": {
+            "file": {
+               "reference": "finder-demo/geocoding-activity"
+            },
+            "amd": {
+               "module": "laxar-application/includes/widgets/finder-demo/geocoding-activity/geocoding-activity"
+            }
+         },
+         "controls": []
+      },
+      {
+         "path": "includes/widgets/finder-demo/language-selection-activity",
+         "integration": {
+            "technology": "plain",
+            "type": "activity"
+         },
+         "resources": {
+            "watch": [
+               "widget.json",
+               "language-selection-activity.js",
+               "/includes/themes/cube.theme/widgets/finder-demo/language-selection-activity/css/language-selection-activity.css",
+               "/includes/themes/cube.theme/widgets/finder-demo/language-selection-activity/language-selection-activity.html"
+            ],
+            "embed": [
+               "widget.json",
+               "/includes/themes/cube.theme/widgets/finder-demo/language-selection-activity/language-selection-activity.html"
+            ],
+            "list": [
+               "/includes/themes/cube.theme/widgets/finder-demo/language-selection-activity/css/language-selection-activity.css"
+            ]
+         },
+         "references": {
+            "file": {
+               "reference": "finder-demo/language-selection-activity"
+            },
+            "amd": {
+               "module": "laxar-application/includes/widgets/finder-demo/language-selection-activity/language-selection-activity"
+            }
+         },
+         "controls": []
+      },
+      {
+         "path": "includes/widgets/finder-demo/music-brainz-search-widget",
+         "integration": {
+            "technology": "angular",
+            "type": "widget"
+         },
+         "resources": {
+            "watch": [
+               "widget.json",
+               "*.theme/music-brainz-search-widget.html",
+               "*.theme/css/music-brainz-search-widget.css",
+               "music-brainz-search-widget.js",
+               "/includes/themes/cube.theme/widgets/finder-demo/music-brainz-search-widget/css/music-brainz-search-widget.css",
+               "/includes/themes/cube.theme/widgets/finder-demo/music-brainz-search-widget/music-brainz-search-widget.html"
+            ],
+            "embed": [
+               "widget.json",
+               "*.theme/music-brainz-search-widget.html",
+               "/includes/themes/cube.theme/widgets/finder-demo/music-brainz-search-widget/music-brainz-search-widget.html"
+            ],
+            "list": [
+               "*.theme/css/music-brainz-search-widget.css",
+               "/includes/themes/cube.theme/widgets/finder-demo/music-brainz-search-widget/css/music-brainz-search-widget.css"
+            ]
+         },
+         "references": {
+            "file": {
+               "reference": "finder-demo/music-brainz-search-widget"
+            },
+            "amd": {
+               "module": "laxar-application/includes/widgets/finder-demo/music-brainz-search-widget/music-brainz-search-widget"
+            }
+         },
+         "controls": [
+            "laxar-uikit/controls/i18n",
+            "finder-box-control",
+            "finder-demo-utilities"
+         ]
+      },
+      {
+         "path": "includes/widgets/finder-demo/omdb-search-widget",
+         "integration": {
+            "technology": "angular",
+            "type": "widget"
+         },
+         "resources": {
+            "watch": [
+               "widget.json",
+               "*.theme/omdb-search-widget.html",
+               "*.theme/css/omdb-search-widget.css",
+               "omdb-search-widget.js",
+               "/includes/themes/cube.theme/widgets/finder-demo/omdb-search-widget/css/omdb-search-widget.css",
+               "/includes/themes/cube.theme/widgets/finder-demo/omdb-search-widget/omdb-search-widget.html"
+            ],
+            "embed": [
+               "widget.json",
+               "*.theme/omdb-search-widget.html",
+               "/includes/themes/cube.theme/widgets/finder-demo/omdb-search-widget/omdb-search-widget.html"
+            ],
+            "list": [
+               "*.theme/css/omdb-search-widget.css",
+               "/includes/themes/cube.theme/widgets/finder-demo/omdb-search-widget/css/omdb-search-widget.css"
+            ]
+         },
+         "references": {
+            "file": {
+               "reference": "finder-demo/omdb-search-widget"
+            },
+            "amd": {
+               "module": "laxar-application/includes/widgets/finder-demo/omdb-search-widget/omdb-search-widget"
+            }
+         },
+         "controls": [
+            "laxar-uikit/controls/i18n",
+            "finder-box-control",
+            "finder-demo-utilities"
+         ]
+      },
+      {
+         "path": "includes/widgets/finder-demo/open-street-map-widget",
+         "integration": {
+            "technology": "angular",
+            "type": "widget"
+         },
+         "resources": {
+            "watch": [
+               "widget.json",
+               "*.theme/open-street-map-widget.html",
+               "*.theme/css/open-street-map-widget.css",
+               "open-street-map-widget.js",
+               "/includes/themes/cube.theme/widgets/finder-demo/open-street-map-widget/css/open-street-map-widget.css",
+               "/includes/themes/cube.theme/widgets/finder-demo/open-street-map-widget/open-street-map-widget.html"
+            ],
+            "embed": [
+               "widget.json",
+               "*.theme/open-street-map-widget.html",
+               "/includes/themes/cube.theme/widgets/finder-demo/open-street-map-widget/open-street-map-widget.html"
+            ],
+            "list": [
+               "*.theme/css/open-street-map-widget.css",
+               "/includes/themes/cube.theme/widgets/finder-demo/open-street-map-widget/css/open-street-map-widget.css"
+            ]
+         },
+         "references": {
+            "file": {
+               "reference": "finder-demo/open-street-map-widget"
+            },
+            "amd": {
+               "module": "laxar-application/includes/widgets/finder-demo/open-street-map-widget/open-street-map-widget"
+            }
+         },
+         "controls": [
+            "laxar-uikit/controls/i18n",
+            "finder-box-control",
+            "finder-demo-utilities"
+         ]
+      },
+      {
+         "path": "includes/widgets/finder-demo/open-weather-map-widget",
+         "integration": {
+            "technology": "angular",
+            "type": "widget"
+         },
+         "resources": {
+            "watch": [
+               "*.js",
+               "/includes/themes/cube.theme/widgets/finder-demo/open-weather-map-widget/css/open-weather-map-widget.css",
+               "/includes/themes/cube.theme/widgets/finder-demo/open-weather-map-widget/open-weather-map-widget.html"
+            ],
+            "embed": [
+               "widget.json",
+               "*.theme/open-weather-map-widget.html",
+               "/includes/themes/cube.theme/widgets/finder-demo/open-weather-map-widget/open-weather-map-widget.html"
+            ],
+            "list": [
+               "*.theme/css/open-weather-map-widget.css",
+               "/includes/themes/cube.theme/widgets/finder-demo/open-weather-map-widget/css/open-weather-map-widget.css"
+            ]
+         },
+         "references": {
+            "file": {
+               "reference": "finder-demo/open-weather-map-widget"
+            },
+            "amd": {
+               "module": "laxar-application/includes/widgets/finder-demo/open-weather-map-widget/open-weather-map-widget"
+            }
+         },
+         "controls": [
+            "laxar-uikit/controls/i18n",
+            "finder-box-control",
+            "finder-demo-utilities"
+         ]
+      },
+      {
+         "path": "includes/widgets/finder-demo/search-box-widget",
+         "integration": {
+            "technology": "angular",
+            "type": "widget"
+         },
+         "resources": {
+            "watch": [
+               "widget.json",
+               "*.theme/search-box-widget.html",
+               "*.theme/css/search-box-widget.css",
+               "search-box-widget.js",
+               "/includes/themes/cube.theme/widgets/finder-demo/search-box-widget/css/search-box-widget.css",
+               "/includes/themes/cube.theme/widgets/finder-demo/search-box-widget/search-box-widget.html"
+            ],
+            "embed": [
+               "widget.json",
+               "*.theme/search-box-widget.html",
+               "/includes/themes/cube.theme/widgets/finder-demo/search-box-widget/search-box-widget.html"
+            ],
+            "list": [
+               "*.theme/css/search-box-widget.css",
+               "/includes/themes/cube.theme/widgets/finder-demo/search-box-widget/css/search-box-widget.css"
+            ]
+         },
+         "references": {
+            "file": {
+               "reference": "finder-demo/search-box-widget"
+            },
+            "amd": {
+               "module": "laxar-application/includes/widgets/finder-demo/search-box-widget/search-box-widget"
+            }
+         },
+         "controls": [
+            "laxar-uikit/controls/i18n"
+         ]
+      },
+      {
+         "path": "includes/widgets/finder-demo/wikipedia-search-widget",
+         "integration": {
+            "technology": "angular",
+            "type": "widget"
+         },
+         "resources": {
+            "watch": [
+               "widget.json",
+               "*.theme/wikipedia-search-widget.html",
+               "*.theme/css/wikipedia-search-widget.css",
+               "wikipedia-search-widget.js",
+               "/includes/themes/cube.theme/widgets/finder-demo/wikipedia-search-widget/css/wikipedia-search-widget.css",
+               "/includes/themes/cube.theme/widgets/finder-demo/wikipedia-search-widget/wikipedia-search-widget.html"
+            ],
+            "embed": [
+               "widget.json",
+               "*.theme/wikipedia-search-widget.html",
+               "/includes/themes/cube.theme/widgets/finder-demo/wikipedia-search-widget/wikipedia-search-widget.html"
+            ],
+            "list": [
+               "*.theme/css/wikipedia-search-widget.css",
+               "/includes/themes/cube.theme/widgets/finder-demo/wikipedia-search-widget/css/wikipedia-search-widget.css"
+            ]
+         },
+         "references": {
+            "file": {
+               "reference": "finder-demo/wikipedia-search-widget"
+            },
+            "amd": {
+               "module": "laxar-application/includes/widgets/finder-demo/wikipedia-search-widget/wikipedia-search-widget"
+            }
+         },
+         "controls": [
+            "laxar-uikit/controls/i18n",
+            "finder-box-control",
+            "finder-demo-utilities"
+         ]
+      }
+   ],
+   "controls": [
+      {
+         "path": "bower_components/laxar-uikit/dist/controls/i18n",
+         "integration": {
+            "technology": "angular",
+            "type": "control"
+         },
+         "resources": {
+            "watch": [
+               "*.theme/css/ax-i18n-control.css",
+               "ax-i18n-control.js",
+               "includes/themes/cube.theme/controls/laxar-uikit/controls/i18n/css/ax-i18n-control.css"
+            ],
+            "embed": [
+               "control.json"
+            ],
+            "list": [
+               "*.theme/css/ax-i18n-control.css",
+               "includes/themes/cube.theme/controls/laxar-uikit/controls/i18n/css/ax-i18n-control.css"
+            ]
+         },
+         "references": {
+            "amd": {
+               "reference": "laxar-uikit/controls/i18n",
+               "module": "laxar-uikit/controls/i18n/ax-i18n-control"
+            }
+         }
+      },
+      {
+         "path": "includes/controls/finder-demo/finder-box-control",
+         "integration": {
+            "technology": "angular",
+            "type": "control"
+         },
+         "resources": {
+            "watch": [
+               "*.theme/css/finder-box-control.css",
+               "finder-box-control.js",
+               "includes/themes/cube.theme/controls/finder-box-control/css/finder-box-control.css"
+            ],
+            "embed": [
+               "control.json"
+            ],
+            "list": [
+               "*.theme/css/finder-box-control.css",
+               "includes/themes/cube.theme/controls/finder-box-control/css/finder-box-control.css"
+            ]
+         },
+         "references": {
+            "amd": {
+               "reference": "finder-box-control",
+               "module": "finder-box-control/finder-box-control"
+            }
+         }
+      },
+      {
+         "path": "includes/lib/finder-demo-utilities",
+         "integration": {
+            "technology": "angular",
+            "type": "control"
+         },
+         "resources": {
+            "watch": [
+               "*.theme/css/finder-demo-utilities.css",
+               "finder-demo-utilities.js",
+               "includes/themes/cube.theme/controls/finder-demo-utilities/css/finder-demo-utilities.css"
+            ],
+            "embed": [
+               "control.json"
+            ],
+            "list": [
+               "*.theme/css/finder-demo-utilities.css",
+               "includes/themes/cube.theme/controls/finder-demo-utilities/css/finder-demo-utilities.css"
+            ]
+         },
+         "references": {
+            "amd": {
+               "reference": "finder-demo-utilities",
+               "module": "finder-demo-utilities/finder-demo-utilities"
+            }
+         }
+      }
+   ]
+}

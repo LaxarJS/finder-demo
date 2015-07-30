@@ -17,7 +17,7 @@ define( [
    /**
     * Uses:
     * - OpenLayers 3 for Map: http://openlayers.org/en/v3.4.0/apidoc/ol.html
-    * - nominatim for Geocoding: http://wiki.openstreetmap.org/wiki/Nominatim
+    * - nominatim for Geocoding: http://wiki.openstreetmap.org/wiki/Nominatim (without feature locations)
     *
     * @type {string}
     */
@@ -37,8 +37,24 @@ define( [
          selectedLocation: null
       };
 
-      patterns.resources.handlerFor( $scope )
-         .registerResourceFromFeature( 'search', { onUpdateReplace: searchForResults } );
+      if( $scope.features.locations.resource ) {
+         patterns.resources.handlerFor( $scope )
+            .registerResourceFromFeature( 'search' )
+            .registerResourceFromFeature( 'locations', { onUpdateReplace: selectLocation } );
+
+         if( $scope.features.locations.searchingOn ) {
+            patterns.flags.handlerFor( $scope )
+               .registerFlagFromFeature( 'locations.searchingOn', {
+                  onChange: function( searching ) {
+                     stateHandler[ searching ? 'searchStarted' : 'searchFinished' ]();
+                  }
+               } );
+         }
+      }
+      else {
+         patterns.resources.handlerFor( $scope )
+            .registerResourceFromFeature( 'search', { onUpdateReplace: searchForResults } );
+      }
 
       var stateHandler =
          finderDemoUtils.stateWatcherFor( $scope, 'model.selectedLocation', 'resources.search.queryString' );
@@ -59,16 +75,22 @@ define( [
 
          $http.get( locationSearchUrl + encodeURIComponent( $scope.resources.search.queryString ) )
             .then( function( response ) {
-               var results = response.data;
-               $scope.model.results = results;
-
-               if( results && results.length > 0 ) {
-                  $scope.model.selectedLocation = results[ 0 ];
-               }
+               $scope.resources.locations = response.data;
+               selectLocation();
             }, function( err ) {
                ax.log.error( err );
             } )
-            .finally( stateHandler.searchFinished );
+            .then( stateHandler.searchFinished );
+      }
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      function selectLocation() {
+         $scope.model.selectedLocation = null;
+         var locations = $scope.resources.locations;
+         if( locations && locations.length > 0 ) {
+            $scope.model.selectedLocation = locations[ 0 ];
+         }
       }
    }
 

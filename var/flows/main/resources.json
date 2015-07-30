@@ -1,0 +1,138 @@
+{
+   "application": {
+      "flow": {
+         "flow.json": "{\"places\":{\"entry\":{\"redirectTo\":\"finder\"},\"finder/:query\":{\"page\":\"finder\"}}}"
+      },
+      "layouts": {
+         "application": {
+            "default.theme": {
+               "application.html": "<div class=\"container\"> <header class=\"app-header\"> <div class=\"row\"> <div class=\"col col-md-4 hidden-sm hidden-xs\"> <a href=\"http://laxarjs.org/\" class=\"app-logo\" title=\"Go back to LaxarJS.org\"></a> </div> <div class=\"col col-md-4 col-sm-6 col-xs-12\" data-ax-widget-area=\"searchBox\"></div> <div class=\"col col-md-4 col-sm-6 hidden-xs\"><h1><a href=\"#/finder\">Finder<span>Demo</span></a></h1></div> </div> </header> <div class=\"app-content-wrapper\"> <div class=\"app-content\"> <div class=\"row app-equal-col-height\"> <div class=\"col col-md-4\" data-ax-widget-area=\"content1a\"></div> <div class=\"col col-md-4\" data-ax-widget-area=\"content1b\"></div> <div class=\"col col-md-4\" data-ax-widget-area=\"content1c\"></div> </div> <div class=\"row app-equal-col-height\"> <div class=\"col col-md-6\" data-ax-widget-area=\"content2a\"></div> <div class=\"col col-md-6\" data-ax-widget-area=\"content2b\"></div> </div> </div> <footer class=\"app-footer row\"> <div class=\"col col-md-8\"> <span class=\"app-laxarjs\"><a href=\"http://laxarjs.org/\" title=\"Go back to LaxarJS.org\"><b>LaxarJS</b></a></span>, code licensed under the <a href=\"http://laxarjs.org/license\" title=\"Show the MIT license\"><b>MIT License</b></a>. Documentation licensed under <a href=\"http://creativecommons.org/licenses/by/3.0/\" title=\"Show the creative commons\"><b>CC BY 3.0</b></a>. </div> <div class=\"col col-md-4 app-version\"> <span>FinderDemo <sup>1.3.1</sup></span> <a href=\"https://github.com/LaxarJS/finder-demo\"><i class=\"fa fa-github\"></i> <b>GitHub</b></a> </div> </footer> </div> </div> ",
+               "css": {
+                  "application.css": 1
+               }
+            }
+         }
+      },
+      "pages": {
+         "finder.json": "{\"layout\":\"application\",\"areas\":{\"activities\":[{\"widget\":\"finder-demo/language-selection-activity\"},{\"widget\":\"finder-demo/geocoding-activity\",\"features\":{\"search\":{\"resource\":\"searchString\"},\"locations\":{\"resource\":\"availableLocations\",\"searching\":\"geocodingInProgress\"}}}],\"searchBox\":[{\"widget\":\"finder-demo/search-box-widget\",\"features\":{\"search\":{\"resource\":\"searchString\"}}}],\"content1c\":[{\"widget\":\"finder-demo/omdb-search-widget\",\"features\":{\"search\":{\"resource\":\"searchString\"}},\"enabled\":true}],\"content1a\":[{\"widget\":\"finder-demo/wikipedia-search-widget\",\"features\":{\"search\":{\"resource\":\"searchString\"}},\"enabled\":true}],\"content1b\":[{\"widget\":\"finder-demo/music-brainz-search-widget\",\"features\":{\"search\":{\"resource\":\"searchString\"}},\"enabled\":true}],\"content2a\":[{\"widget\":\"finder-demo/open-weather-map-widget\",\"features\":{\"search\":{\"resource\":\"searchString\"},\"locations\":{\"resource\":\"availableLocations\",\"searchingOn\":[\"geocodingInProgress\"]}},\"enabled\":true}],\"content2b\":[{\"widget\":\"finder-demo/open-street-map-widget\",\"features\":{\"search\":{\"resource\":\"searchString\"},\"locations\":{\"resource\":\"availableLocations\",\"searchingOn\":[\"geocodingInProgress\"]}},\"enabled\":true}]}}"
+      }
+   },
+   "bower_components": {
+      "laxar-uikit": {
+         "dist": {
+            "controls": {
+               "i18n": {
+                  "control.json": "{\"name\":\"ax-i18n-control\",\"integration\":{\"technology\":\"angular\"}}"
+               }
+            },
+            "themes": {
+               "default.theme": {
+                  "css": {
+                     "theme.css": 1
+                  }
+               }
+            }
+         }
+      }
+   },
+   "includes": {
+      "controls": {
+         "finder-demo": {
+            "finder-box-control": {
+               "control.json": "{\"name\":\"finder-box-control\",\"integration\":{\"technology\":\"angular\"}}",
+               "cube.theme": {
+                  "css": {
+                     "finder-box-control.css": 1
+                  }
+               },
+               "default.theme": {
+                  "css": {
+                     "finder-box-control.css": 1
+                  }
+               }
+            }
+         }
+      },
+      "lib": {
+         "finder-demo-utilities": {
+            "control.json": "{\"name\":\"finder-demo-utilities\",\"integration\":{\"technology\":\"angular\"}}"
+         }
+      },
+      "themes": {
+         "cube.theme": {
+            "css": {
+               "theme.css": 1
+            }
+         }
+      },
+      "widgets": {
+         "finder-demo": {
+            "geocoding-activity": {
+               "widget.json": "{\"name\":\"GeocodingActivity\",\"description\":\"Requests coordinates for a search term.\",\"integration\":{\"technology\":\"plain\",\"type\":\"widget\"},\"features\":{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"type\":\"object\",\"properties\":{\"search\":{\"type\":\"object\",\"required\":[\"resource\"],\"properties\":{\"resource\":{\"type\":\"string\",\"format\":\"topic\"}}},\"locations\":{\"type\":\"object\",\"required\":[\"resource\"],\"properties\":{\"resource\":{\"type\":\"string\",\"format\":\"topic\"},\"searching\":{\"type\":\"string\",\"format\":\"topic\",\"description\":\"Flag, indicating that geocoding using the search term is still in progress.\"}}}}}}"
+            },
+            "language-selection-activity": {
+               "widget.json": "{\"name\":\"LanguageSelectionActivity\",\"description\":\"This activity selects the language for the default locale depending on the browser language.\",\"integration\":{\"technology\":\"plain\",\"type\":\"activity\"},\"features\":{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"type\":\"object\",\"properties\":{}}}"
+            },
+            "music-brainz-search-widget": {
+               "default.theme": {
+                  "css": {
+                     "music-brainz-search-widget.css": 1
+                  },
+                  "music-brainz-search-widget.html": "<div data-finder-box data-ng-switch=\"functions.state()\"> <h3 class=\"ax-function-point ax-finder-logo\">Music Brainz</h3> <div data-ng-switch-when=\"SELECTED\"> <div class=\"row\"> <div class=\"col-md-12\"> <select title=\"{{ model.selectedArtist.name }}\" class=\"form-control\" data-ng-if=\"model.results.length > 1\" data-ng-model=\"model.selectedArtist\" data-ng-options=\"artist as artist.name for artist in model.results\"></select> <h4 data-ng-if=\"model.results.length === 1\">{{ model.selectedArtist.name }}</h4> </div> </div> <div class=\"row\"> <div class=\"col-md-12\"> <div class=\"ax-cover-image-wrapper\"> <div data-ng-repeat=\"releaseGroup in model.selectedArtistReleases track by releaseGroup.id\" class=\"ax-invisible\" data-music-brainz-search-widget-cover-visibility > <img class=\"ax-cover-image\" data-ng-src=\"{{ functions.imageSourceForReleaseGroupCover( releaseGroup ) }}\" alt=\"{{ releaseGroup.title }}\" title=\"{{ releaseGroup.title }}\" > </div> </div> </div> </div> <div class=\"row\"> <div class=\"col-md-12\"> <table class=\"table\"> <tbody> <tr> <td>{{ messages.ACTIVE_SINCE | axLocalize:i18n }}:</td> <td>{{ model.selectedArtistActiveSince }}</td> </tr> <tr> <td>{{ messages.ACTIVE_UNTIL | axLocalize:i18n }}:</td> <td data-ng-if=\"model.selectedArtist.lifeSpanEnd == 'true'\">{{ messages.NOT_ACTIVE_ANYMORE | axLocalize:i18n }}</td> <td data-ng-if=\"model.selectedArtist.lifeSpanEnd == 'false'\">{{ messages.STILL_ACTIVE | axLocalize:i18n }}</td> </tr> <tr> <td>{{ messages.AREA | axLocalize:i18n }}:</td> <td>{{ model.selectedArtist.areaName }}</td> </tr> </tbody> </table> </div> </div> <h5>{{ messages.RECORD_RELEASES | axLocalize:i18n }}:</h5> <ol> <li data-ng-repeat=\"release in model.selectedArtistReleases\">{{ release.title }} ({{ release.firstReleaseYear }})</li> </ol> <a data-ng-href=\"{{ model.musicBrainzPrefix }}{{ model.selectedArtist.id | urlEncode }}\" target=\"_blank\" ><i class=\"fa fa-external-link\"></i> {{ messages.EXTERNAL_LINK | axLocalize:i18n }}</a> </div> <div class=\"ax-alert\" data-ng-switch-when=\"SEARCHING\"> <p class=\"ax-alert__text ax-spinner\" > <i class=\"spinner\"></i>{{ messages.SEARCHING | axLocalize:i18n }} </p> </div> <div class=\"ax-alert\" data-ng-switch-when=\"IDLE\"> <p class=\"ax-alert__text\" > <i class=\"fa fa-search ax-alert__icon\"></i>{{ messages.NO_SEARCH_STARTED | axLocalize:i18n }} </p> </div> <div class=\"ax-alert\" data-ng-switch-when=\"NO_RESULTS\"> <p class=\"ax-alert__text text-danger\" > <i class=\"fa fa-exclamation-triangle ax-alert__icon\"></i>{{ messages.NO_RESULTS | axLocalize:i18n }} </p> </div> </div>"
+               },
+               "widget.json": "{\"name\":\"MusicBrainzSearchWidget\",\"description\":\"A widget displaying results found on musicbrainz.org.\",\"integration\":{\"technology\":\"angular\",\"type\":\"widget\"},\"controls\":[\"laxar-uikit/controls/i18n\",\"finder-box-control\",\"finder-demo-utilities\"],\"features\":{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"type\":\"object\",\"properties\":{\"search\":{\"type\":\"object\",\"required\":[\"resource\"],\"properties\":{\"resource\":{\"type\":\"string\",\"format\":\"topic\"}}},\"i18n\":{\"type\":\"object\",\"properties\":{\"locale\":{\"type\":\"string\",\"default\":\"default\"}}}}}}"
+            },
+            "omdb-search-widget": {
+               "default.theme": {
+                  "css": {
+                     "omdb-search-widget.css": 1
+                  },
+                  "omdb-search-widget.html": "<div data-finder-box data-ng-switch=\"functions.state()\"> <h3 class=\"ax-finder-logo\">Open Media Database</h3> <div data-ng-switch-when=\"SELECTED\"> <div class=\"row\"> <div class=\"col-md-12\"> <select title=\"{{ model.selectedMovie.Title }}\" class=\"form-control\" data-ng-if=\"model.results.length > 1\" data-ng-model=\"model.selectedMovie\" data-ng-options=\"movie as movie.Title for movie in model.results\"></select> <h4 data-ng-if=\"model.results.length === 1\">{{ model.selectedMovie.Title }}</h4> </div> </div> <div class=\"row\"> <div class=\"col-md-12\"> <a target=\"_blank\" data-ng-if=\"model.selectedMovieDetails.Poster && model.selectedMovieDetails.Poster != 'N/A'\" data-ng-href=\"{{ model.selectedMovieDetails.Poster }}\" ><img class=\"ax-result-image\" data-ng-src=\"{{ model.selectedMovieDetails.Poster }}\"> </a> <p data-ng-bind=\"model.selectedMovieDetails.Plot\"></p> </div> </div> <div class=\"row\"> <div class=\"col-md-12\"> <table class=\"table\"> <tbody> <tr data-ng-repeat=\"detail in model.details\"> <td>{{ messages[ detail.label ] | axLocalize:i18n }}:</td> <td>{{ model.selectedMovieDetails[ detail.key ] }}</td> </tr> </tbody> </table> </div> </div> <a data-ng-href=\"{{ model.imdbPrefix }}{{ model.selectedMovie.imdbID | urlEncode }}\" target=\"_blank\" ><i class=\"fa fa-external-link\"></i> {{ messages.EXTERNAL_LINK | axLocalize:i18n }}</a> </div> <div class=\"ax-alert\" data-ng-switch-when=\"SEARCHING\"> <p class=\"ax-alert__text ax-spinner\" > <i class=\"spinner\"></i>{{ messages.SEARCHING | axLocalize:i18n }} </p> </div> <div class=\"ax-alert\" data-ng-switch-when=\"IDLE\"> <p class=\"ax-alert__text\" > <i class=\"fa fa-search ax-alert__icon\"></i>{{ messages.NO_SEARCH_STARTED | axLocalize:i18n }} </p> </div> <div class=\"ax-alert\" data-ng-switch-when=\"NO_RESULTS\"> <p class=\"ax-alert__text text-danger\" > <i class=\"fa fa-exclamation-triangle ax-alert__icon\"></i>{{ messages.NO_RESULTS | axLocalize:i18n }} </p> </div> </div>"
+               },
+               "widget.json": "{\"name\":\"OmdbSearchWidget\",\"description\":\"A widget displaying results found on omdb.org.\",\"integration\":{\"technology\":\"angular\",\"type\":\"widget\"},\"controls\":[\"laxar-uikit/controls/i18n\",\"finder-box-control\",\"finder-demo-utilities\"],\"features\":{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"type\":\"object\",\"properties\":{\"search\":{\"type\":\"object\",\"required\":[\"resource\"],\"properties\":{\"resource\":{\"type\":\"string\",\"format\":\"topic\"}}},\"i18n\":{\"type\":\"object\",\"properties\":{\"locale\":{\"type\":\"string\",\"default\":\"default\"}}}}}}"
+            },
+            "open-street-map-widget": {
+               "default.theme": {
+                  "css": {
+                     "open-street-map-widget.css": 1
+                  },
+                  "open-street-map-widget.html": "<div data-finder-box data-ng-switch=\"functions.state()\"> <h3 class=\"ax-function-point ax-finder-logo\">Open Street Map</h3> <div data-ng-switch-when=\"SELECTED\"> <div class=\"row\"> <div class=\"col-md-12\"> <select title=\"{{ model.selectedLocation.display_name }}\" class=\"form-control\" data-ng-if=\"resources.locations.length > 1\" data-ng-model=\"model.selectedLocation\" data-ng-options=\"location as location.display_name for location in resources.locations\"></select> <h4 data-ng-if=\"model.results.length === 1\">{{ model.selectedLocation.display_name }}</h4> </div> </div> <div class=\"row\"> <div class=\"col-md-12\" data-open-street-map-widget-map=\"model.selectedLocation\"></div> </div> </div> <div class=\"ax-alert\" data-ng-switch-when=\"SEARCHING\"> <p class=\"ax-alert__text ax-spinner\" > <i class=\"spinner\"></i>{{ messages.SEARCHING | axLocalize:i18n }} </p> </div> <div class=\"ax-alert\" data-ng-switch-when=\"IDLE\"> <p class=\"ax-alert__text\" > <i class=\"fa fa-search ax-alert__icon\"></i>{{ messages.NO_SEARCH_STARTED | axLocalize:i18n }} </p> </div> <div class=\"ax-alert\" data-ng-switch-when=\"NO_RESULTS\"> <p class=\"ax-alert__text text-danger\" > <i class=\"fa fa-exclamation-triangle ax-alert__icon\"></i>{{ messages.NO_RESULTS | axLocalize:i18n }} </p> </div> </div>"
+               },
+               "widget.json": "{\"name\":\"OpenStreetMapWidget\",\"description\":\"A widget displaying a map using location searching and maps from openstreetmap.org.\",\"integration\":{\"technology\":\"angular\",\"type\":\"widget\"},\"controls\":[\"laxar-uikit/controls/i18n\",\"finder-box-control\",\"finder-demo-utilities\"],\"features\":{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"type\":\"object\",\"properties\":{\"search\":{\"type\":\"object\",\"required\":[\"resource\"],\"properties\":{\"resource\":{\"type\":\"string\",\"format\":\"topic\"}}},\"locations\":{\"type\":\"object\",\"properties\":{\"resource\":{\"type\":\"string\",\"format\":\"topic\"},\"searchingOn\":{\"type\":\"array\",\"items\":{\"type\":\"string\",\"format\":\"topic\"},\"description\":\"One or more flags, indicating that geocoding is still in progress.\"}}},\"i18n\":{\"type\":\"object\",\"properties\":{\"locale\":{\"type\":\"string\",\"default\":\"default\"}}}}}}"
+            },
+            "open-weather-map-widget": {
+               "cube.theme": {
+                  "css": {
+                     "open-weather-map-widget.css": 1
+                  }
+               },
+               "default.theme": {
+                  "css": {
+                     "open-weather-map-widget.css": 1
+                  },
+                  "open-weather-map-widget.html": "<div data-finder-box data-ng-switch=\"functions.state()\"> <h3 class=\"ax-function-point ax-finder-logo\">Open Weather Map</h3> <div data-ng-switch-when=\"SELECTED\"> <div class=\"row\"> <div class=\"col-md-12\"> <select title=\"{{ model.selectedLocation.display_name }}\" class=\"form-control\" data-ng-if=\"resources.locations.length > 1\" data-ng-model=\"model.selectedLocation\" data-ng-options=\"location as location.display_name for location in resources.locations\"></select> <h4 data-ng-if=\"model.results.length === 1\">{{ model.selectedLocation.display_name }}</h4> </div> </div> <div class=\"row\"> <div class=\"col-md-12\" data-ng-init=\"activeTab = 'current'\"> <ul class=\"nav nav-tabs\"> <li role=\"presentation\" data-ng-class=\"{ active: activeTab === 'current'}\" data-ng-click=\"activeTab = 'current'\" ><a href=\"javascript:void(0);\">{{ messages.CURRENT_WEATHER | axLocalize:i18n }}</a></li> <li role=\"presentation\" data-ng-class=\"{ active: activeTab === 'forecast'}\" data-ng-click=\"activeTab = 'forecast'\" ><a href=\"javascript:void(0);\">{{ messages.FIVE_DAY_FORECAST | axLocalize:i18n }}</a></li> </ul> <div class=\"abp-tab-content\" data-ng-if=\"activeTab === 'current'\"> <div class=\"abp-short-overview\"> <span class=\"abp-weather-icon\" data-weather-icon=\"{{iconCodesToLetters[model.currentWeather.weather[0].icon]}}\"></span> <span class=\"abp-temperature\">{{model.currentWeather.main.temp | number:0}}<span class=\"abp-unit\">°C</span></span> <span class=\"abp-description\">{{model.currentWeather.weather[0].description}}</span> </div> <h3>Details</h3> <table class=\"table abp-details\"> <tr> <td>{{ messages.DATA_MAXIMUM_TEMPERATURE | axLocalize:i18n }}</td> <td>{{model.currentWeather.main.temp_max | number:0}}<span class=\"abp-unit\">°C</span></td> </tr> <tr> <td>{{ messages.DATA_MINIMUM_TEMPERATURE | axLocalize:i18n }}</td> <td>{{model.currentWeather.main.temp_min | number:0}}<span class=\"abp-unit\">°C</span></td> </tr> <tr> <td>{{ messages.DATA_HUMIDITY | axLocalize:i18n }}</td> <td>{{model.currentWeather.main.humidity}}<span class=\"abp-unit\">%</span></td> </tr> <tr> <td>{{ messages.DATA_PRESSURE | axLocalize:i18n }}</td> <td>{{model.currentWeather.main.pressure}}<span class=\"abp-unit\">hPa</span></td> </tr> <tr> <td>{{ messages.DATA_WIND_SPEED | axLocalize:i18n }}</td> <td>{{model.currentWeather.wind.speed}}<span class=\"abp-unit\">m/s</span></td> </tr> <tr> <td>{{ messages.DATA_WIND_DIRECTION | axLocalize:i18n }}</td> <td>{{model.currentWeather.wind.deg}}°</td> </tr> <tr> <td>{{ messages.DATA_WIND_CLOUDINESS | axLocalize:i18n }}</td> <td>{{model.currentWeather.clouds.all}}<span class=\"abp-unit\">%</span></td> </tr> </table> </div> <div class=\"abp-tab-content\" data-ng-if=\"activeTab === 'forecast'\"> <div class=\"weather-chart-wrapper\" data-open-weather-map-widget-scroll-area > <svg xmlns=\"http://www.w3.org/2000/svg\" height=\"300\" data-open-weather-map-widget-weather-chart=\"model.forecastWeather.list\" data-open-weather-map-widget-weather-chart-icon-codes=\"iconCodesToLetters\"> </svg> </div> </div> </div> </div> </div> <div class=\"ax-alert\" data-ng-switch-when=\"SEARCHING\"> <p class=\"ax-alert__text ax-spinner\" > <i class=\"spinner\"></i>{{ messages.SEARCHING | axLocalize:i18n }} </p> </div> <div class=\"ax-alert\" data-ng-switch-when=\"IDLE\"> <p class=\"ax-alert__text\" > <i class=\"fa fa-search ax-alert__icon\"></i>{{ messages.NO_SEARCH_STARTED | axLocalize:i18n }} </p> </div> <div class=\"ax-alert\" data-ng-switch-when=\"NO_RESULTS\"> <p class=\"ax-alert__text text-danger\" > <i class=\"fa fa-exclamation-triangle ax-alert__icon\"></i>{{ messages.NO_RESULTS | axLocalize:i18n }} </p> </div> </div>"
+               },
+               "widget.json": "{\"name\":\"OpenWeatherMapWidget\",\"description\":\"A widget displaying weather info for the given location.\",\"integration\":{\"technology\":\"angular\",\"type\":\"widget\"},\"controls\":[\"laxar-uikit/controls/i18n\",\"finder-box-control\",\"finder-demo-utilities\"],\"resources\":{\"watch\":[\"*.js\"]},\"features\":{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"type\":\"object\",\"properties\":{\"search\":{\"type\":\"object\",\"required\":[\"resource\"],\"properties\":{\"resource\":{\"type\":\"string\",\"format\":\"topic\"}}},\"locations\":{\"type\":\"object\",\"properties\":{\"resource\":{\"type\":\"string\",\"format\":\"topic\"},\"searchingOn\":{\"type\":\"array\",\"items\":{\"type\":\"string\",\"format\":\"topic\"},\"description\":\"One or more flags, indicating that geocoding is still in progress.\"}}},\"i18n\":{\"type\":\"object\",\"properties\":{\"locale\":{\"type\":\"string\",\"default\":\"default\"}}}}}}"
+            },
+            "search-box-widget": {
+               "default.theme": {
+                  "css": {
+                     "search-box-widget.css": 1
+                  },
+                  "search-box-widget.html": "<form data-ng-submit=\"functions.startSearch()\"> <div class=\"form-group\"> <div class=\"input-group\"> <input class=\"form-control\" type=\"text\" placeholder=\"{{ messages.SEARCH_PLACEHOLDER | axLocalize:i18n }}\" data-ng-model=\"model.queryString\" data-ng-model-options=\"{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }\" ><span class=\"input-group-btn\"> <button class=\"btn btn-default\" type=\"submit\" ><i class=\"fa fa-search\"></i></button> </span> </div> </div> </form>"
+               },
+               "widget.json": "{\"name\":\"SearchBoxWidget\",\"description\":\"Simple Box for entering search words.\",\"integration\":{\"technology\":\"angular\",\"type\":\"widget\"},\"controls\":[\"laxar-uikit/controls/i18n\"],\"features\":{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"type\":\"object\",\"required\":[\"search\"],\"properties\":{\"search\":{\"type\":\"object\",\"required\":[\"resource\"],\"properties\":{\"resource\":{\"type\":\"string\",\"format\":\"topic\"}}},\"i18n\":{\"type\":\"object\",\"properties\":{\"locale\":{\"type\":\"string\",\"default\":\"default\"}}}}}}"
+            },
+            "wikipedia-search-widget": {
+               "default.theme": {
+                  "css": {
+                     "wikipedia-search-widget.css": 1
+                  },
+                  "wikipedia-search-widget.html": "<div data-finder-box data-ng-switch=\"functions.state()\"> <h3 class=\"ax-function-point ax-finder-logo\">Wikipedia</h3> <div data-ng-switch-when=\"SELECTED\"> <div class=\"row\"> <div class=\"col-md-12\"> <select title=\"{{ model.selectedArticle.title }}\" class=\"form-control\" data-ng-if=\"model.results.length > 1\" data-ng-model=\"model.selectedArticle\" data-ng-options=\"article as article.title for article in model.results\"></select> <h4 data-ng-if=\"model.results.length === 1\">{{ model.selectedArticle.title }}</h4> </div> </div> <div class=\"row\"> <div class=\"col-md-12\"> <a target=\"_blank\" data-ng-if=\"model.selectedArticleImage\" data-ng-href=\"{{ model.selectedArticleImage }}\" ><img class=\"ax-result-image\" data-ng-src=\"{{ model.selectedArticleImage }}\"> </a> <p data-ng-bind-html=\"model.selectedArticleExtract\"></p> </div> </div> <a data-ng-href=\"{{ functions.wikiLink( model.selectedArticle ) }}\" target=\"_blank\" ><i class=\"fa fa-external-link\"></i> {{ messages.EXTERNAL_LINK | axLocalize:i18n }}</a> </div> <div class=\"ax-alert\" data-ng-switch-when=\"SEARCHING\"> <p class=\"ax-alert__text ax-spinner\" > <i class=\"spinner\"></i>{{ messages.SEARCHING | axLocalize:i18n }} </p> </div> <div class=\"ax-alert\" data-ng-switch-when=\"IDLE\"> <p class=\"ax-alert__text\" > <i class=\"fa fa-search ax-alert__icon\"></i>{{ messages.NO_SEARCH_STARTED | axLocalize:i18n }} </p> </div> <div class=\"ax-alert\" data-ng-switch-when=\"NO_RESULTS\"> <p class=\"ax-alert__text text-danger\" > <i class=\"fa fa-exclamation-triangle ax-alert__icon\"></i>{{ messages.NO_RESULTS | axLocalize:i18n }} </p> </div> </div> "
+               },
+               "widget.json": "{\"name\":\"WikipediaSearchWidget\",\"description\":\"A widget displaying results found on wikipedia.\",\"integration\":{\"technology\":\"angular\",\"type\":\"widget\"},\"controls\":[\"laxar-uikit/controls/i18n\",\"finder-box-control\",\"finder-demo-utilities\"],\"features\":{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"type\":\"object\",\"required\":[\"search\"],\"properties\":{\"search\":{\"type\":\"object\",\"required\":[\"resource\"],\"properties\":{\"resource\":{\"type\":\"string\",\"format\":\"topic\"}}},\"i18n\":{\"type\":\"object\",\"properties\":{\"locale\":{\"type\":\"string\",\"default\":\"default\"}}}}}}"
+            }
+         }
+      }
+   }
+}

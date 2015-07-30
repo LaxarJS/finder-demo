@@ -6,6 +6,18 @@
       "activities": [
          {
             "widget": "finder-demo/language-selection-activity"
+         },
+         {
+            "widget": "finder-demo/geocoding-activity",
+            "features": {
+               "search": {
+                  "resource": "searchString"
+               },
+               "locations": {
+                  "resource": "availableLocations",
+                  "searching": "geocodingInProgress"
+               }
+            }
          }
       ],
 
@@ -56,10 +68,29 @@
       ],
       "content2a": [
          {
+            "widget": "finder-demo/open-weather-map-widget",
+            "features": {
+               "search": {
+                  "resource": "searchString"
+               },
+               "locations": {
+                  "resource": "availableLocations",
+                  "searchingOn": [ "geocodingInProgress" ]
+               }
+            },
+            "enabled": true
+         }
+      ],
+      "content2b": [
+         {
             "widget": "finder-demo/open-street-map-widget",
             "features": {
                "search": {
                   "resource": "searchString"
+               },
+               "locations": {
+                  "resource": "availableLocations",
+                  "searchingOn": [ "geocodingInProgress" ]
                }
             },
             "enabled": true

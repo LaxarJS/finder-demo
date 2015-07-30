@@ -1,0 +1,44 @@
+{
+   "name": "GeocodingActivity",
+   "description": "Requests coordinates for a search term.",
+
+   "integration": {
+      "technology": "plain",
+      "type": "widget"
+   },
+
+   "features": {
+      "$schema": "http://json-schema.org/draft-04/schema#",
+      "type": "object",
+      "properties": {
+
+         "search": {
+            "type": "object",
+            "required": [ "resource" ],
+            "properties": {
+               "resource": {
+                  "type": "string",
+                  "format": "topic"
+               }
+            }
+         },
+
+         "locations": {
+            "type": "object",
+            "required": [ "resource" ],
+            "properties": {
+               "resource": {
+                  "type": "string",
+                  "format": "topic"
+               },
+               "searching": {
+                  "type": "string",
+                  "format": "topic",
+                  "description": "Flag, indicating that geocoding using the search term is still in progress."
+               }
+            }
+         }
+
+      }
+   }
+}

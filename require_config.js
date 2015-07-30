@@ -12,8 +12,7 @@ var require = {
       jjve: 'jjve/jjve',
 
       // LaxarJS Testing:
-      jasmine: 'jasmine/lib/jasmine-core/jasmine',
-      'promise-polyfill': 'promise-polyfill/Promise',
+      jasmine2: 'jasmine/lib/jasmine-core/jasmine',
 
       // LaxarJS Core Legacy:
       text: 'requirejs-plugins/lib/text',
@@ -36,7 +35,7 @@ var require = {
       'laxar-application-dependencies': '../var/static/laxar_application_dependencies',
 
       'laxar': 'laxar/dist/laxar',
-      'laxar/laxar_testing': 'laxar/dist/laxar_testing',
+      'laxar-testing': 'laxar-testing/dist/laxar-testing',
       'laxar-patterns': 'laxar-patterns/dist/laxar-patterns',
       'laxar-uikit': 'laxar-uikit/dist/laxar-uikit',
       'laxar-uikit/controls': 'laxar-uikit/dist/controls',
@@ -45,7 +44,10 @@ var require = {
       // App specific
       'finder-box-control': '../includes/controls/finder-demo/finder-box-control',
       'finder-demo-utilities': '../includes/lib/finder-demo-utilities',
-      openlayers: 'ol3/build/ol'
+      openlayers: 'ol3/build/ol',
+      'promise-polyfill': 'promise-polyfill/Promise', // heads up: this is also LaxarJS Testing dep
+      fetch: 'fetch/fetch',
+      d3: 'd3/d3'
    },
    map: {
       '*': {
@@ -57,11 +59,6 @@ var require = {
          name: 'laxar-application',
          location: '..',
          main: 'init'
-      },
-      {
-         name: 'laxar-testing',
-         location: '../includes/lib/laxar-testing',
-         main: 'laxar-testing'
       },
       {
          name: 'moment',
@@ -100,7 +97,7 @@ var require = {
             return angular;
          }
       },
-      'bootstrap': {
+      'bootstrap/tooltip': {
          deps: [ 'jquery' ]
       },
       'json-patch': {

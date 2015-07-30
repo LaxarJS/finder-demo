@@ -10,14 +10,17 @@ window.laxar = ( function() {
       description: 'The Almighty Finder of Things.',
 
       theme: 'cube',
-      useMergedCss: mode === 'RELEASE',
+      useMergedCss: mode === 'PRODUCTION',
+      logging: {
+         threshold: 'TRACE'
+      },
 
       fileListings: {
          'application': 'var/listing/application_resources.json',
          'bower_components': 'var/listing/bower_components_resources.json',
          'includes': 'var/listing/includes_resources.json'
       },
-      useEmbeddedFileListings: mode === 'RELEASE',
+      useEmbeddedFileListings: mode === 'PRODUCTION',
 
       i18n: {
          locales: {
@@ -25,7 +28,7 @@ window.laxar = ( function() {
          }
       },
 
-      eventBusTimeoutMs: (mode === 'RELEASE' ? 120 : 10) * 1000
+      eventBusTimeoutMs: (mode === 'PRODUCTION' ? 120 : 10) * 1000
 
    };
 

@@ -5036,7 +5036,8 @@ define( 'laxar/lib/loaders/widget_loader',[
                anchorElement.id = 'ax' + ID_SEPARATOR + widgetConfiguration.id;
                var widgetEventBus = createEventBusForWidget( eventBus, specification, widgetConfiguration );
 
-               var adapter = adapters.getFor( technology ).create( {
+               var adapterFactory = adapters.getFor( technology );
+               var adapter = adapterFactory.create( {
                   anchorElement: anchorElement,
                   context: {
                      eventBus: widgetEventBus,
@@ -5059,6 +5060,7 @@ define( 'laxar/lib/loaders/widget_loader',[
                      widgetEventBus.release();
                      adapter.destroy();
                   },
+                  applyViewChanges: adapterFactory.applyViewChanges || null,
                   templatePromise: loadAssets( widgetPath, integration, specification )
                };
 
@@ -5900,73 +5902,93 @@ define( 'laxar/lib/runtime/runtime_services',[
     * @name axHeartbeat
     * @injection
     */
-   module.factory( 'axHeartbeat', [ '$window', '$rootScope', function( $window, $rootScope ) {
-      var nextQueue = [];
-      var beatRequested = false;
+   module.factory( 'axHeartbeat', [
+      '$window', '$rootScope', 'axPageService',
+      function( $window, $rootScope, pageService ) {
+         var nextQueue = [];
+         var beatRequested = false;
 
-      /**
-       * Schedules a function for the next heartbeat. If no heartbeat was triggered yet, it will be requested
-       * now.
-       *
-       * @param {Function} func
-       *    a function to schedule for the next tick
-       *
-       * @memberOf axHeartbeat
-       */
-      function onNext( func ) {
-         if( !beatRequested ) {
-            beatRequested = true;
-            $window.setTimeout( function() {
-               while( beforeQueue.length ) { beforeQueue.shift()(); }
-               // The outer loop handles events published from apply-callbacks (watchers, promises).
-               do {
-                  while( nextQueue.length ) { nextQueue.shift()(); }
-                  $rootScope.$apply();
-               }
-               while( nextQueue.length );
-               while( afterQueue.length ) { afterQueue.shift()(); }
-               beatRequested = false;
-            }, 0 );
+         var rootScopeDigested = false;
+         $rootScope.$watch( function() {
+            rootScopeDigested = true;
+         } );
+
+         /**
+          * Schedules a function for the next heartbeat. If no heartbeat was triggered yet, it will be
+          * requested now.
+          *
+          * @param {Function} func
+          *    a function to schedule for the next tick
+          *
+          * @memberOf axHeartbeat
+          */
+         function onNext( func ) {
+            if( !beatRequested ) {
+               beatRequested = true;
+               $window.setTimeout( function() {
+                  while( beforeQueue.length ) { beforeQueue.shift()(); }
+                  // The outer loop handles events published from apply-callbacks (watchers, promises).
+                  do {
+                     while( nextQueue.length ) { nextQueue.shift()(); }
+
+                     rootScopeDigested = false;
+                     var pageController = pageService.controller();
+                     if( pageController ) {
+                        pageController.applyViewChanges();
+                     }
+                     // Since LaxarJS itself still heavily depends on AngularJS and its digest cycle concept,
+                     // we need to make sure that a digest cycle is triggered, even if there is no widget
+                     // based on angular technology requesting it. This can be removed as soon as
+                     // https://github.com/LaxarJS/laxar/issues/216 is fixed
+                     if( !rootScopeDigested ) {
+                        $rootScope.$apply();
+                     }
+                  }
+                  while( nextQueue.length );
+                  while( afterQueue.length ) { afterQueue.shift()(); }
+                  beatRequested = false;
+               }, 0 );
+            }
+            nextQueue.push( func );
          }
-         nextQueue.push( func );
+
+         var beforeQueue = [];
+
+         /**
+          * Schedules a function to be called before the next heartbeat occurs. Note that `func` may never be
+          * called, if there is no next heartbeat.
+          *
+          * @param {Function} func
+          *    a function to call before the next heartbeat
+          *
+          * @memberOf axHeartbeat
+          */
+         function onBeforeNext( func ) {
+            beforeQueue.push( func );
+         }
+
+         var afterQueue = [];
+
+         /**
+          * Schedules a function to be called after the next heartbeat occured. Note that `func` may never be
+          * called, if there is no next heartbeat.
+          *
+          * @param {Function} func
+          *    a function to call after the next heartbeat
+          *
+          * @memberOf axHeartbeat
+          */
+         function onAfterNext( func ) {
+            afterQueue.push( func );
+         }
+
+         return {
+            onBeforeNext: onBeforeNext,
+            onNext: onNext,
+            onAfterNext: onAfterNext
+         };
       }
-
-      var beforeQueue = [];
-
-      /**
-       * Schedules a function to be called before the next heartbeat occurs. Note that `func` may never be
-       * called, if there is no next heartbeat.
-       *
-       * @param {Function} func
-       *    a function to call before the next heartbeat
-       *
-       * @memberOf axHeartbeat
-       */
-      function onBeforeNext( func ) {
-         beforeQueue.push( func );
-      }
-
-      var afterQueue = [];
-
-      /**
-       * Schedules a function to be called after the next heartbeat occured. Note that `func` may never be
-       * called, if there is no next heartbeat.
-       *
-       * @param {Function} func
-       *    a function to call after the next heartbeat
-       *
-       * @memberOf axHeartbeat
-       */
-      function onAfterNext( func ) {
-         afterQueue.push( func );
-      }
-
-      return {
-         onBeforeNext: onBeforeNext,
-         onNext: onNext,
-         onAfterNext: onAfterNext
-      };
-   } ] );
+   ] );
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -7295,6 +7317,10 @@ define("json!laxar/static/schemas/page.json", function(){ return {
                         "type": "string",
                         "description": "Path to the composition that should be included."
                      },
+                     "layout": {
+                        "type": "string",
+                        "description": "Path to the layout that should be inserted."
+                     },
                      "id": {
                         "type": "string",
                         "pattern": "^[a-z][a-zA-Z0-9_]*$",
@@ -7835,6 +7861,88 @@ define( 'laxar/lib/loaders/page_loader',[
 } );
 
 /**
+ * Copyright 2015 aixigo AG
+ * Released under the MIT license.
+ * http://laxarjs.org/license
+ */
+define( 'laxar/lib/runtime/layout_widget_adapter',[
+   'angular'
+], function( ng ) {
+   'use strict';
+
+   var $compile;
+   var $rootScope;
+   var module = ng.module( 'axLayoutWidgetAdapter', [] )
+      .run( [ '$compile', '$rootScope', function( _$compile_, _$rootScope_ ) {
+         $compile = _$compile_;
+         $rootScope = _$rootScope_;
+      } ] );
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function create( layout, widget ) {
+
+      var exports = {
+         createController: createController,
+         domAttachTo: domAttachTo,
+         domDetach: domDetach,
+         destroy: destroy
+      };
+      var layoutElement;
+      var scope;
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      function createController() {
+         // noop
+      }
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      function domAttachTo( areaElement, htmlTemplate ) {
+         scope = $rootScope.$new();
+         scope.widget = widget;
+
+         var layoutNode = document.createElement( 'div' );
+         layoutNode.id = widget.id;
+         layoutNode.className = layout.className;
+         layoutNode.innerHTML = htmlTemplate;
+
+         layoutElement = $compile( layoutNode )( scope );
+         areaElement.appendChild( layoutNode );
+      }
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      function domDetach() {
+         layoutElement.remove();
+      }
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      function destroy() {
+         if( scope ){
+            scope.$destroy();
+         }
+         scope = null;
+      }
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      return exports;
+
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   return {
+      create: create,
+      name: module.name
+   };
+
+} );
+
+/**
  * Copyright 2014 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
@@ -8274,13 +8382,14 @@ define( 'laxar/lib/runtime/page',[
    '../loaders/page_loader',
    '../loaders/widget_loader',
    '../loaders/paths',
+   './layout_widget_adapter',
    './area_helper',
    './locale_event_manager',
    './visibility_event_manager'
-], function( ng, assert, layoutModule, pageLoader, widgetLoader, paths, createAreaHelper, createLocaleEventManager, createVisibilityEventManager ) {
+], function( ng, assert, layoutModule, pageLoader, widgetLoader, paths, layoutWidgetAdapter, createAreaHelper, createLocaleEventManager, createVisibilityEventManager ) {
    'use strict';
 
-   var module = ng.module( 'axPage', [ layoutModule.name ] );
+   var module = ng.module( 'axPage', [ layoutModule.name, layoutWidgetAdapter.name ] );
 
    /** Delay between sending didLifeCycle and attaching widget templates. */
    var WIDGET_ATTACH_DELAY_MS = 5;
@@ -8325,6 +8434,7 @@ define( 'laxar/lib/runtime/page',[
 
          var areaHelper_;
          var widgetAdapters_ = [];
+         var viewChangeApplyFunctions_ = [];
 
          var theme = themeManager.getTheme();
          var localeManager = createLocaleEventManager( $q, eventBus, configuration );
@@ -8390,9 +8500,21 @@ define( 'laxar/lib/runtime/page',[
                   localeManager.subscribe();
                   // instantiate controllers
                   var widgets = widgetsForPage( page );
-                  return $q.all( widgets.map( widgetLoader_.load ) );
+                  return $q.all( widgets.map( function( widget ) {
+                        if( 'layout' in widget ) {
+                           return createLayoutWidgetAdapter( widget );
+                        }
+
+                        return widgetLoader_.load( widget );
+                     } ) );
                } )
                .then( function( widgetAdapters ) {
+                  widgetAdapters.forEach( function( adapter ) {
+                     if( typeof adapter.applyViewChanges === 'function' &&
+                         viewChangeApplyFunctions_.indexOf( adapter.applyViewChanges ) === -1 ) {
+                        viewChangeApplyFunctions_.push( adapter.applyViewChanges );
+                     }
+                  } );
                   widgetAdapters_ = widgetAdapters;
                } )
                .then( localeManager.initialize )
@@ -8429,6 +8551,7 @@ define( 'laxar/lib/runtime/page',[
                      adapterRef.destroy();
                   } );
                   widgetAdapters_ = [];
+                  viewChangeApplyFunctions_ = [];
                } );
          }
 
@@ -8440,6 +8563,35 @@ define( 'laxar/lib/runtime/page',[
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
+         function createLayoutWidgetAdapter( widget ) {
+            return layoutLoader.load( widget.layout )
+               .then( function( layout ) {
+                  var adapter = layoutWidgetAdapter.create( layout, {
+                     area: widget.area,
+                     id: widget.id,
+                     path: widget.layout
+                  } );
+
+                  return {
+                     id: widget.id,
+                     adapter: adapter,
+                     destroy: adapter.destroy,
+                     templatePromise: $q.when( layout.htmlContent )
+                  };
+               } );
+         }
+
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+         function applyViewChanges() {
+            viewChangeApplyFunctions_.forEach( function( applyFunction ) {
+               applyFunction();
+            } );
+         }
+
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+         this.applyViewChanges = applyViewChanges;
          this.setupPage = setupPage;
          this.tearDownPage = tearDownPage;
          this.registerLayoutRenderer = registerLayoutRenderer;
