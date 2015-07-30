@@ -2,6 +2,8 @@
 
 ## Last Changes
 
+- [#11](https://github.com/LaxarJS/finder-demo/issues/11): Removed unnecessary resolutions
+
 
 ## v1.3.0
 
