@@ -19,7 +19,7 @@
       tests: [
          'search-box-widget.spec'
       ],
-      requireConfig: {
-      }
+      jasmineMajorVersion: 2,
+      testRunner: 'laxar-testing'
    };
 } )( this );

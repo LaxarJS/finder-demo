@@ -17,7 +17,7 @@ define( [
    /**
     * Uses:
     * - OpenLayers 3 for Map: http://openlayers.org/en/v3.4.0/apidoc/ol.html
-    * - nominatim for Geocoding: http://wiki.openstreetmap.org/wiki/Nominatim
+    * - nominatim for Geocoding: http://wiki.openstreetmap.org/wiki/Nominatim (without feature locations)
     *
     * @type {string}
     */

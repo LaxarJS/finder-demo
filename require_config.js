@@ -12,8 +12,7 @@ var require = {
       jjve: 'jjve/jjve',
 
       // LaxarJS Testing:
-      jasmine: 'jasmine/lib/jasmine-core/jasmine',
-
+      jasmine2: 'jasmine/lib/jasmine-core/jasmine',
 
       // LaxarJS Core Legacy:
       text: 'requirejs-plugins/lib/text',
@@ -47,7 +46,8 @@ var require = {
       'finder-demo-utilities': '../includes/lib/finder-demo-utilities',
       openlayers: 'ol3/build/ol',
       'promise-polyfill': 'promise-polyfill/Promise', // heads up: this is also LaxarJS Testing dep
-      fetch: 'fetch/fetch'
+      fetch: 'fetch/fetch',
+      d3: 'd3/d3'
    },
    map: {
       '*': {
@@ -97,7 +97,7 @@ var require = {
             return angular;
          }
       },
-      'bootstrap': {
+      'bootstrap/tooltip': {
          deps: [ 'jquery' ]
       },
       'json-patch': {

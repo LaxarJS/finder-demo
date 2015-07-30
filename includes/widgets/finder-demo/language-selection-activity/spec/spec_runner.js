@@ -18,6 +18,8 @@
       title: 'LanguageSelectionActivity Specification',
       tests: [
          'language-selection-activity.spec'
-      ]
+      ],
+      jasmineMajorVersion: 2,
+      testRunner: 'laxar-testing'
    };
 } )( this );

@@ -5,11 +5,14 @@
 
    <div data-ng-switch-when="SELECTED">
       <div class="row">
-         <select title="{{ model.selectedArticle.title }}"
-           class="form-control"
-           data-ng-if="model.results.length > 1"
-           data-ng-model="model.selectedArticle"
-           data-ng-options="article as article.title for article in model.results"></select>
+         <div class="col-md-12">
+            <select title="{{ model.selectedArticle.title }}"
+              class="form-control"
+              data-ng-if="model.results.length > 1"
+              data-ng-model="model.selectedArticle"
+              data-ng-options="article as article.title for article in model.results"></select>
+            <h4 data-ng-if="model.results.length === 1">{{ model.selectedArticle.title }}</h4>
+         </div>
       </div>
       <div class="row">
          <div class="col-md-12">
