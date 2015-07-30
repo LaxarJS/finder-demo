@@ -14,11 +14,11 @@
   font-style: normal;
   font-variant: normal;
 }
-/* line 27, ../../default.theme/scss/open-weather-map-widget.scss */
+/* line 28, ../../default.theme/scss/open-weather-map-widget.scss */
 .open-weather-map-widget .ax-finder-logo {
-  background-image: url("../images/logo.png");
+  background-image: url("../../default.theme/images/logo.png");
 }
-/* line 36, ../../default.theme/scss/open-weather-map-widget.scss */
+/* line 37, ../../default.theme/scss/open-weather-map-widget.scss */
 .open-weather-map-widget .ax-alert {
   color: #aaa;
   font-family: "Exo 2", Arial, sans-serif;
@@ -27,28 +27,28 @@
   min-height: 6rem;
   position: relative;
 }
-/* line 45, ../../default.theme/scss/open-weather-map-widget.scss */
+/* line 46, ../../default.theme/scss/open-weather-map-widget.scss */
 .open-weather-map-widget .ax-alert__text {
   position: absolute;
   top: 0.6rem;
   padding-left: 2.5rem;
 }
-/* line 50, ../../default.theme/scss/open-weather-map-widget.scss */
+/* line 51, ../../default.theme/scss/open-weather-map-widget.scss */
 .open-weather-map-widget .ax-alert__text.text-danger {
   color: #d3201d;
 }
-/* line 55, ../../default.theme/scss/open-weather-map-widget.scss */
+/* line 56, ../../default.theme/scss/open-weather-map-widget.scss */
 .open-weather-map-widget .ax-alert__icon {
   font-size: 1.5rem;
   width: 1.5rem;
   left: 0;
   position: absolute;
 }
-/* line 62, ../../default.theme/scss/open-weather-map-widget.scss */
+/* line 63, ../../default.theme/scss/open-weather-map-widget.scss */
 .open-weather-map-widget .ax-spinner {
   color: #03ade0;
 }
-/* line 66, ../../default.theme/scss/open-weather-map-widget.scss */
+/* line 67, ../../default.theme/scss/open-weather-map-widget.scss */
 .open-weather-map-widget .spinner:before {
   content: "";
   position: absolute;
@@ -58,7 +58,7 @@
   height: 1.5rem;
   margin-top: -0.85rem;
 }
-/* line 76, ../../default.theme/scss/open-weather-map-widget.scss */
+/* line 77, ../../default.theme/scss/open-weather-map-widget.scss */
 .open-weather-map-widget .spinner:not(:required):before {
   content: '';
   border-radius: 50%;
@@ -68,100 +68,104 @@
   animation: spinner .8s ease infinite;
   -webkit-animation: spinner .8s ease infinite;
 }
-/* line 90, ../../default.theme/scss/open-weather-map-widget.scss */
+/* line 91, ../../default.theme/scss/open-weather-map-widget.scss */
 .open-weather-map-widget .abp-tab-content {
   background-color: white;
   padding: 1rem;
   border-bottom: 1px solid #ddd;
 }
-/* line 101, ../../default.theme/scss/open-weather-map-widget.scss */
+/* line 102, ../../default.theme/scss/open-weather-map-widget.scss */
 .open-weather-map-widget .table {
   font-family: "Exo 2", sans-serif;
   font-weight: 500;
 }
 @media (min-width: 480px) {
-  /* line 101, ../../default.theme/scss/open-weather-map-widget.scss */
+  /* line 102, ../../default.theme/scss/open-weather-map-widget.scss */
   .open-weather-map-widget .table {
     width: auto;
     max-width: 50%;
   }
 }
-/* line 113, ../../default.theme/scss/open-weather-map-widget.scss */
+/* line 114, ../../default.theme/scss/open-weather-map-widget.scss */
 .open-weather-map-widget .table tr:first-child > td {
   border-top-color: transparent;
 }
-/* line 117, ../../default.theme/scss/open-weather-map-widget.scss */
+/* line 118, ../../default.theme/scss/open-weather-map-widget.scss */
 .open-weather-map-widget .table td {
   vertical-align: bottom;
   line-height: 1;
 }
-/* line 122, ../../default.theme/scss/open-weather-map-widget.scss */
+/* line 123, ../../default.theme/scss/open-weather-map-widget.scss */
 .open-weather-map-widget .table td:first-child {
   color: #999;
   text-align: right;
 }
-/* line 127, ../../default.theme/scss/open-weather-map-widget.scss */
+/* line 128, ../../default.theme/scss/open-weather-map-widget.scss */
 .open-weather-map-widget .table td:last-child {
   font-size: 1.4rem;
   font-weight: 300;
 }
-/* line 133, ../../default.theme/scss/open-weather-map-widget.scss */
+/* line 134, ../../default.theme/scss/open-weather-map-widget.scss */
 .open-weather-map-widget .abp-day-name, .open-weather-map-widget .abp-day-time, .open-weather-map-widget .abp-temperature, .open-weather-map-widget .abp-unit, .open-weather-map-widget .abp-description {
   font-family: "Exo 2", sans-serif;
   line-height: 1;
 }
-/* line 138, ../../default.theme/scss/open-weather-map-widget.scss */
+/* line 139, ../../default.theme/scss/open-weather-map-widget.scss */
 .open-weather-map-widget .abp-short-overview {
   display: -webkit-box;
   display: -webkit-flex;
+  display: -moz-box;
   display: -ms-flexbox;
   display: flex;
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
   -webkit-flex-direction: column;
+     -moz-box-orient: vertical;
+     -moz-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
   -webkit-box-align: end;
   -webkit-align-items: flex-end;
+     -moz-box-align: end;
       -ms-flex-align: end;
           align-items: flex-end;
   margin-bottom: 2rem;
 }
 @media (min-width: 480px) {
-  /* line 138, ../../default.theme/scss/open-weather-map-widget.scss */
+  /* line 139, ../../default.theme/scss/open-weather-map-widget.scss */
   .open-weather-map-widget .abp-short-overview {
     position: absolute;
     top: 6.4rem;
   }
 }
 @media (min-width: 480px) and (max-width: 991px) {
-  /* line 138, ../../default.theme/scss/open-weather-map-widget.scss */
+  /* line 139, ../../default.theme/scss/open-weather-map-widget.scss */
   .open-weather-map-widget .abp-short-overview {
     left: 25rem;
     width: 20%;
   }
 }
 @media (min-width: 992px) {
-  /* line 138, ../../default.theme/scss/open-weather-map-widget.scss */
+  /* line 139, ../../default.theme/scss/open-weather-map-widget.scss */
   .open-weather-map-widget .abp-short-overview {
     right: 2rem;
   }
 }
-/* line 157, ../../default.theme/scss/open-weather-map-widget.scss */
+/* line 158, ../../default.theme/scss/open-weather-map-widget.scss */
 .open-weather-map-widget .abp-short-overview .abp-weather-icon {
   font-size: 3rem;
 }
-/* line 161, ../../default.theme/scss/open-weather-map-widget.scss */
+/* line 162, ../../default.theme/scss/open-weather-map-widget.scss */
 .open-weather-map-widget .abp-short-overview .abp-temperature {
   font-size: 5rem;
 }
-/* line 166, ../../default.theme/scss/open-weather-map-widget.scss */
+/* line 167, ../../default.theme/scss/open-weather-map-widget.scss */
 .open-weather-map-widget .abp-day-name {
   fill: #999;
   font-size: 1.3rem;
   font-weight: 300;
 }
-/* line 173, ../../default.theme/scss/open-weather-map-widget.scss */
+/* line 174, ../../default.theme/scss/open-weather-map-widget.scss */
 .open-weather-map-widget .abp-day-time {
   fill: #999;
   font-weight: 200;
@@ -169,7 +173,7 @@
   display: inline-block;
   padding-bottom: 1em;
 }
-/* line 182, ../../default.theme/scss/open-weather-map-widget.scss */
+/* line 183, ../../default.theme/scss/open-weather-map-widget.scss */
 .open-weather-map-widget .abp-weather-icon {
   font-size: 1.5rem;
   line-height: 1;
@@ -177,11 +181,11 @@
   font-family: 'MeteoconsRegular';
   text-anchor: middle;
 }
-/* line 189, ../../default.theme/scss/open-weather-map-widget.scss */
+/* line 190, ../../default.theme/scss/open-weather-map-widget.scss */
 .open-weather-map-widget .abp-weather-icon:before {
   content: attr(data-weather-icon);
 }
-/* line 194, ../../default.theme/scss/open-weather-map-widget.scss */
+/* line 195, ../../default.theme/scss/open-weather-map-widget.scss */
 .open-weather-map-widget .abp-temperature {
   fill: #333;
   font-weight: 300;
@@ -190,63 +194,63 @@
   margin-bottom: 0.0em;
   text-anchor: middle;
 }
-/* line 203, ../../default.theme/scss/open-weather-map-widget.scss */
+/* line 204, ../../default.theme/scss/open-weather-map-widget.scss */
 .open-weather-map-widget .abp-temperature > tspan {
   font-size: 0.6em;
 }
-/* line 208, ../../default.theme/scss/open-weather-map-widget.scss */
+/* line 209, ../../default.theme/scss/open-weather-map-widget.scss */
 .open-weather-map-widget .abp-unit {
   font-size: 0.6em;
   font-weight: 300;
   padding-left: 0.2em;
 }
-/* line 215, ../../default.theme/scss/open-weather-map-widget.scss */
+/* line 216, ../../default.theme/scss/open-weather-map-widget.scss */
 .open-weather-map-widget .abp-description {
   color: #999;
   font-size: 1rem;
   font-weight: 500;
   text-align: right;
 }
-/* line 227, ../../default.theme/scss/open-weather-map-widget.scss */
+/* line 228, ../../default.theme/scss/open-weather-map-widget.scss */
 .open-weather-map-widget .weather-chart-wrapper {
   height: 100%;
   width: 100%;
   overflow-x: scroll;
   cursor: move;
 }
-/* line 234, ../../default.theme/scss/open-weather-map-widget.scss */
+/* line 235, ../../default.theme/scss/open-weather-map-widget.scss */
 .open-weather-map-widget .abp-column-border {
   stroke-width: 1;
   stroke: #ccc;
   shape-rendering: crispEdges;
 }
-/* line 241, ../../default.theme/scss/open-weather-map-widget.scss */
+/* line 242, ../../default.theme/scss/open-weather-map-widget.scss */
 .open-weather-map-widget .abp-column-background {
   fill: none;
   pointer-events: all;
 }
-/* line 244, ../../default.theme/scss/open-weather-map-widget.scss */
+/* line 245, ../../default.theme/scss/open-weather-map-widget.scss */
 .open-weather-map-widget .abp-column-background:hover {
   fill: #ddd;
 }
-/* line 249, ../../default.theme/scss/open-weather-map-widget.scss */
+/* line 250, ../../default.theme/scss/open-weather-map-widget.scss */
 .open-weather-map-widget .abp-day-column-border {
   stroke-width: 1;
   stroke: #aaa;
   shape-rendering: crispEdges;
 }
-/* line 255, ../../default.theme/scss/open-weather-map-widget.scss */
+/* line 256, ../../default.theme/scss/open-weather-map-widget.scss */
 .open-weather-map-widget .abp-temperature-curve {
   fill: none;
   stroke-width: 1.5;
   stroke: #555;
 }
-/* line 261, ../../default.theme/scss/open-weather-map-widget.scss */
+/* line 262, ../../default.theme/scss/open-weather-map-widget.scss */
 .open-weather-map-widget .abp-rain-bar {
   fill: #84bdee;
   cursor: default;
 }
-/* line 266, ../../default.theme/scss/open-weather-map-widget.scss */
+/* line 267, ../../default.theme/scss/open-weather-map-widget.scss */
 .open-weather-map-widget .abp-rain-bar:hover {
   fill: #2a8de2;
 }
