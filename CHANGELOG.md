@@ -2,6 +2,9 @@
 
 ## Last Changes
 
+
+## v1.3.2
+
 - [#12](https://github.com/LaxarJS/finder-demo/issues/12): styling: fixed logo image url
 
 
