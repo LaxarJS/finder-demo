@@ -2,6 +2,9 @@
 
 ## Last Changes
 
+
+## v1.4.1
+
 - [#14](https://github.com/LaxarJS/finder-demo/issues/14): fixed jasmine2 paths in spec-runners and require_config
 
 
