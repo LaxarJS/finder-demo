@@ -11,8 +11,8 @@ var require = {
       jjv: 'jjv/lib/jjv',
       jjve: 'jjve/jjve',
 
-      // LaxarJS Testing:
-      jasmine2: 'jasmine/lib/jasmine-core/jasmine',
+      // LaxarJS Mocks:
+      jasmine2: 'jasmine2/lib/jasmine-core/jasmine',
 
       // LaxarJS Core Legacy:
       text: 'requirejs-plugins/lib/text',
@@ -45,9 +45,10 @@ var require = {
       'finder-box-control': '../includes/controls/finder-demo/finder-box-control',
       'finder-demo-utilities': '../includes/lib/finder-demo-utilities',
       openlayers: 'ol3/build/ol',
-      'promise-polyfill': 'promise-polyfill/Promise', // heads up: this is also LaxarJS Testing dep
       fetch: 'fetch/fetch',
-      d3: 'd3/d3'
+      d3: 'd3/d3',
+      // Heads-up: this is a dep of the finder-demo, and of LaxarJS Mocks
+      'promise-polyfill': 'promise-polyfill/Promise'
    },
    map: {
       '*': {
