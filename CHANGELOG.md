@@ -2,6 +2,7 @@
 
 ## Last Changes
 
+- [#13](https://github.com/LaxarJS/finder-demo/issues/13): upgraded to laxar v1.1.0-alpha.9, laxar-mocks v0.4.0
 - [#12](https://github.com/LaxarJS/finder-demo/issues/12): Fixed logo image url
 
 

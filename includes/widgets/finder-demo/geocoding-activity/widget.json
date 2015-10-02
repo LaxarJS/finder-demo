@@ -1,5 +1,5 @@
 {
-   "name": "GeocodingActivity",
+   "name": "geocoding-activity",
    "description": "Requests coordinates for a search term.",
 
    "integration": {
