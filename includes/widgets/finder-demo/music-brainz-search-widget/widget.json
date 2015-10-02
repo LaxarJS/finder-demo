@@ -1,5 +1,5 @@
 {
-   "name": "MusicBrainzSearchWidget",
+   "name": "music-brainz-search-widget",
    "description": "A widget displaying results found on musicbrainz.org.",
 
    "integration": {

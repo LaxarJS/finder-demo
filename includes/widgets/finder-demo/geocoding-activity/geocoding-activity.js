@@ -94,7 +94,7 @@ define( [
    return {
       injections: injections,
       create: create,
-      name: 'geocodingActivity'
+      name: 'geocoding-activity'
    };
 
 } );
