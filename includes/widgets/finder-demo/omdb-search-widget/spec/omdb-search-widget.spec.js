@@ -9,7 +9,7 @@ define( [
 ], function( descriptor, axMocks, ngMocks ) {
    'use strict';
 
-   describe( 'A OmdbSearchWidget', function() {
+   describe( 'An omdb-search-widget', function() {
 
       var url = 'http://www.omdbapi.com/?y=&plot=short&r=json&s=';
       var detailsUrl = 'http://www.omdbapi.com/?tomatoes=true&plot=full&r=json&i=';
