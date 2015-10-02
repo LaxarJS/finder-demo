@@ -5,7 +5,7 @@
 ( function( global ) {
    'use strict';
    global.laxarSpec = {
-      title: 'OmdbSearchWidget Specification',
+      title: 'omdb-search-widget Specification',
       tests: [
          'omdb-search-widget.spec'
       ],
