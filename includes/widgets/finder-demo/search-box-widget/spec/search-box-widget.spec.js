@@ -1,22 +1,11 @@
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (C) 2015
-//    by aixigo AG, Aachen, Germany.
-//
-//  All rights reserved. This material is confidential and proprietary to AIXIGO AG and no part of this
-//  material should be reproduced, published in any form by any means, electronic or mechanical including
-//  photocopy or any information storage or retrieval system nor should the material be disclosed to third
-//  parties without the express written authorization of AIXIGO AG.
-//
-//  aixigo AG
-//  http://www.aixigo.de
-//  Aachen, Germany
-//
+/**
+ * Copyright 2015 aixigo AG
+ * Released under the MIT license.
+ */
 define( [
    'json!../widget.json',
-   'laxar-testing',
-   //'angular-mocks'
-], function( descriptor, testing, ngMocks ) {
+   'laxar-mocks'
+], function( descriptor, axMocks ) {
    'use strict';
 
    describe( 'A SearchBoxWidget', function() {
@@ -24,31 +13,31 @@ define( [
       var searchTermInput;
       var searchButton;
 
-      beforeEach( testing.createSetupForWidget( descriptor, {
+      beforeEach( axMocks.createSetupForWidget( descriptor, {
          knownMissingResources: [ 'ax-i18n-control.css' ]
       } ) );
       beforeEach( function() {
-         testing.widget.configure( {
+         axMocks.widget.configure( {
             search: {
                resource: 'query'
             }
          } );
       } );
-      beforeEach( testing.widget.load );
+      beforeEach( axMocks.widget.load );
       beforeEach( function() {
-         var widgetDom = testing.widget.render();
+         var widgetDom = axMocks.widget.render();
          searchTermInput = widgetDom.querySelector( '[data-ng-model="model.queryString"]' );
          searchButton = widgetDom.querySelector( 'button[type="submit"]' );
       } );
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-      afterEach( testing.tearDown );
+      afterEach( axMocks.tearDown );
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
       it( 'subscribes to didNavigate requests', function() {
-         expect( testing.widget.axEventBus.subscribe )
+         expect( axMocks.widget.axEventBus.subscribe )
             .toHaveBeenCalledWith( 'didNavigate', jasmine.any( Function ) );
       } );
 
@@ -57,18 +46,18 @@ define( [
       describe( 'when the didNavigate event occurs with query parameter', function() {
 
          beforeEach( function() {
-            testing.eventBus.publish( 'didNavigate', {
+            axMocks.eventBus.publish( 'didNavigate', {
                data: {
                   query: 'Aachen'
                }
             } );
-            testing.eventBus.flush();
+            axMocks.eventBus.flush();
          } );
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
          it( 'the parameter value is directly published as search term', function() {
-            expect( testing.widget.axEventBus.publish )
+            expect( axMocks.widget.axEventBus.publish )
                .toHaveBeenCalledWith( 'didReplace.query', {
                   resource: 'query',
                   data: {
@@ -84,16 +73,16 @@ define( [
       describe( 'when the didNavigate event occurs without query parameter', function() {
 
          beforeEach( function() {
-            testing.eventBus.publish( 'didNavigate', {
+            axMocks.eventBus.publish( 'didNavigate', {
                data: {}
             } );
-            testing.eventBus.flush();
+            axMocks.eventBus.flush();
          } );
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
          it( 'no search term is published', function() {
-            expect( testing.widget.axEventBus.publish )
+            expect( axMocks.widget.axEventBus.publish )
                .not.toHaveBeenCalledWith( 'didReplace.query', jasmine.any( Object ), jasmine.any( Object ) );
          } );
 
@@ -112,7 +101,7 @@ define( [
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
          it( 'the entered query string is published as search term', function() {
-            expect( testing.widget.axEventBus.publish )
+            expect( axMocks.widget.axEventBus.publish )
                .toHaveBeenCalledWith( 'didReplace.query', {
                   resource: 'query',
                   data: {

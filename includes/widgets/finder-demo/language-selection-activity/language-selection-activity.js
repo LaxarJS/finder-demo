@@ -31,7 +31,7 @@ define( [
    return {
       injections: injections,
       create: create,
-      name: 'languageSelectionActivity'
+      name: 'language-selection-activity'
    };
 
 } );

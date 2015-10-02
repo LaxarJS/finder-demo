@@ -35,7 +35,7 @@ var require = {
       'laxar-application-dependencies': '../var/static/laxar_application_dependencies',
 
       'laxar': 'laxar/dist/laxar',
-      'laxar-testing': 'laxar-testing/dist/laxar-testing',
+      'laxar-mocks': 'laxar-mocks/dist/laxar-mocks',
       'laxar-patterns': 'laxar-patterns/dist/laxar-patterns',
       'laxar-uikit': 'laxar-uikit/dist/laxar-uikit',
       'laxar-uikit/controls': 'laxar-uikit/dist/controls',

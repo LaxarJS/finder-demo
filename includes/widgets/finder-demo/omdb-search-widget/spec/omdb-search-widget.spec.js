@@ -1,22 +1,12 @@
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (C) 2015
-//    by aixigo AG, Aachen, Germany.
-//
-//  All rights reserved. This material is confidential and proprietary to AIXIGO AG and no part of this
-//  material should be reproduced, published in any form by any means, electronic or mechanical including
-//  photocopy or any information storage or retrieval system nor should the material be disclosed to third
-//  parties without the express written authorization of AIXIGO AG.
-//
-//  aixigo AG
-//  http://www.aixigo.de
-//  Aachen, Germany
-//
+/**
+ * Copyright 2015 aixigo AG
+ * Released under the MIT license.
+ */
 define( [
    'json!../widget.json',
-   'laxar-testing',
+   'laxar-mocks',
    'angular-mocks'
-], function( descriptor, testing, ngMocks ) {
+], function( descriptor, axMocks, ngMocks ) {
    'use strict';
 
    describe( 'A OmdbSearchWidget', function() {
@@ -26,31 +16,31 @@ define( [
       var $httpBackend;
       var widgetDom;
 
-      beforeEach( testing.createSetupForWidget( descriptor, {
+      beforeEach( axMocks.createSetupForWidget( descriptor, {
          knownMissingResources: [ 'ax-i18n-control.css', 'finder-demo-utilities.css' ]
       } ) );
       beforeEach( function() {
-         testing.widget.configure( 'search.resource', 'search' );
+         axMocks.widget.configure( 'search.resource', 'search' );
       } );
-      beforeEach( testing.widget.load );
+      beforeEach( axMocks.widget.load );
       beforeEach( function() {
-         widgetDom = testing.widget.render();
+         widgetDom = axMocks.widget.render();
 
          ngMocks.inject( function( $injector ) {
             $httpBackend = $injector.get( '$httpBackend' );
          } );
 
-         testing.triggerStartupEvents();
+         axMocks.triggerStartupEvents();
       } );
 
       ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-      afterEach( testing.tearDown );
+      afterEach( axMocks.tearDown );
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
       it( 'subscribes to didReplace events for the search resource', function() {
-         expect( testing.widget.axEventBus.subscribe )
+         expect( axMocks.widget.axEventBus.subscribe )
             .toHaveBeenCalledWith( 'didReplace.search', jasmine.any( Function ) );
       } );
 
@@ -234,11 +224,11 @@ define( [
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
       function simulateSearchFor( searchTerm ) {
-         testing.eventBus.publish( 'didReplace.search', {
+         axMocks.eventBus.publish( 'didReplace.search', {
             resource: 'search',
             data: { queryString: searchTerm }
          } );
-         testing.eventBus.flush();
+         axMocks.eventBus.flush();
       }
 
    } );

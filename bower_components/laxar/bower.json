@@ -1,6 +1,6 @@
 {
    "name": "laxar",
-   "version": "1.1.0-alpha.2",
+   "version": "1.1.0-alpha.9",
    "description": "Building large applications is hard, so don't do that!",
    "main": "dist/laxar.js",
    "authors": [],
@@ -24,6 +24,6 @@
       "requirejs-plugins": "1.0.x"
    },
    "devDependencies": {
-      "laxar": "LaxarJS/laxar#^1.1.0-alpha.2"
+      "laxar": "LaxarJS/laxar#1.1.0-alpha.9"
    }
 }

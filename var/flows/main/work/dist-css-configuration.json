@@ -43,7 +43,8 @@
             "flow": {
                "target": "main",
                "src": "application/flow/flow.json"
-            }
+            },
+            "testDirectory": "var/tests"
          }
       }
    }

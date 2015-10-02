@@ -12,7 +12,9 @@
             "list": []
          },
          "references": {
-            "file": "application/flow/flow.json"
+            "local": {
+               "self": "application/flow/flow.json"
+            }
          }
       }
    ],
@@ -28,6 +30,11 @@
                "css/theme.css"
             ],
             "embed": []
+         },
+         "references": {
+            "local": {
+               "self": "default.theme"
+            }
          }
       },
       {
@@ -41,6 +48,11 @@
                "css/theme.css"
             ],
             "embed": []
+         },
+         "references": {
+            "local": {
+               "self": "cube.theme"
+            }
          }
       }
    ],
@@ -57,7 +69,9 @@
             "list": []
          },
          "references": {
-            "file": "finder"
+            "local": {
+               "self": "finder"
+            }
          },
          "pages": [],
          "widgets": [
@@ -76,30 +90,27 @@
       {
          "resources": {
             "list": [
-               "/application/layouts/application/default.theme/css/application.css",
-               "/application/layouts/application/default.theme/application.html",
-               "/application/layouts/application/cube.theme/css/application.css",
-               "/application/layouts/application/cube.theme/application.html",
                "/includes/themes/cube.theme/layouts/application/css/application.css",
-               "/includes/themes/cube.theme/layouts/application/application.html"
+               "/application/layouts/application/cube.theme/css/application.css",
+               "/application/layouts/application/default.theme/css/application.css"
             ],
             "watch": [
-               "/application/layouts/application/default.theme/css/application.css",
-               "/application/layouts/application/default.theme/application.html",
-               "/application/layouts/application/cube.theme/css/application.css",
-               "/application/layouts/application/cube.theme/application.html",
                "/includes/themes/cube.theme/layouts/application/css/application.css",
-               "/includes/themes/cube.theme/layouts/application/application.html"
+               "/application/layouts/application/cube.theme/css/application.css",
+               "/application/layouts/application/default.theme/css/application.css",
+               "/includes/themes/cube.theme/layouts/application/application.html",
+               "/application/layouts/application/cube.theme/application.html",
+               "/application/layouts/application/default.theme/application.html"
             ],
             "embed": [
-               "/application/layouts/application/default.theme/application.html",
+               "/includes/themes/cube.theme/layouts/application/application.html",
                "/application/layouts/application/cube.theme/application.html",
-               "/includes/themes/cube.theme/layouts/application/application.html"
+               "/application/layouts/application/default.theme/application.html"
             ]
          },
          "references": {
-            "file": {
-               "reference": "application"
+            "local": {
+               "self": "application"
             }
          }
       }
@@ -113,32 +124,37 @@
          },
          "resources": {
             "watch": [
+               "/includes/themes/cube.theme/widgets/finder-demo/geocoding-activity/geocoding-activity.html",
+               "/includes/themes/cube.theme/widgets/finder-demo/geocoding-activity/css/geocoding-activity.css",
                "widget.json",
                "*.theme/geocoding-activity.html",
                "*.theme/css/geocoding-activity.css",
-               "geocoding-activity.js",
-               "/includes/themes/cube.theme/widgets/finder-demo/geocoding-activity/css/geocoding-activity.css",
-               "/includes/themes/cube.theme/widgets/finder-demo/geocoding-activity/geocoding-activity.html"
+               "geocoding-activity.js"
             ],
             "embed": [
+               "/includes/themes/cube.theme/widgets/finder-demo/geocoding-activity/geocoding-activity.html",
                "widget.json",
-               "*.theme/geocoding-activity.html",
-               "/includes/themes/cube.theme/widgets/finder-demo/geocoding-activity/geocoding-activity.html"
+               "*.theme/geocoding-activity.html"
             ],
             "list": [
-               "*.theme/css/geocoding-activity.css",
-               "/includes/themes/cube.theme/widgets/finder-demo/geocoding-activity/css/geocoding-activity.css"
+               "/includes/themes/cube.theme/widgets/finder-demo/geocoding-activity/css/geocoding-activity.css",
+               "*.theme/css/geocoding-activity.css"
             ]
          },
          "references": {
-            "file": {
-               "reference": "finder-demo/geocoding-activity"
+            "local": {
+               "self": "finder-demo/geocoding-activity"
             },
             "amd": {
+               "self": "../includes/widgets/finder-demo/geocoding-activity",
                "module": "laxar-application/includes/widgets/finder-demo/geocoding-activity/geocoding-activity"
             }
          },
-         "controls": []
+         "controls": [],
+         "referencedAs": {
+            "byUser": "finder-demo/geocoding-activity",
+            "derivedReference": "finder-demo/geocoding-activity"
+         }
       },
       {
          "path": "includes/widgets/finder-demo/language-selection-activity",
@@ -149,27 +165,27 @@
          "resources": {
             "watch": [
                "widget.json",
-               "language-selection-activity.js",
-               "/includes/themes/cube.theme/widgets/finder-demo/language-selection-activity/css/language-selection-activity.css",
-               "/includes/themes/cube.theme/widgets/finder-demo/language-selection-activity/language-selection-activity.html"
+               "language-selection-activity.js"
             ],
             "embed": [
-               "widget.json",
-               "/includes/themes/cube.theme/widgets/finder-demo/language-selection-activity/language-selection-activity.html"
+               "widget.json"
             ],
-            "list": [
-               "/includes/themes/cube.theme/widgets/finder-demo/language-selection-activity/css/language-selection-activity.css"
-            ]
+            "list": []
          },
          "references": {
-            "file": {
-               "reference": "finder-demo/language-selection-activity"
+            "local": {
+               "self": "finder-demo/language-selection-activity"
             },
             "amd": {
+               "self": "../includes/widgets/finder-demo/language-selection-activity",
                "module": "laxar-application/includes/widgets/finder-demo/language-selection-activity/language-selection-activity"
             }
          },
-         "controls": []
+         "controls": [],
+         "referencedAs": {
+            "byUser": "finder-demo/language-selection-activity",
+            "derivedReference": "finder-demo/language-selection-activity"
+         }
       },
       {
          "path": "includes/widgets/finder-demo/music-brainz-search-widget",
@@ -179,28 +195,29 @@
          },
          "resources": {
             "watch": [
+               "/includes/themes/cube.theme/widgets/finder-demo/music-brainz-search-widget/music-brainz-search-widget.html",
+               "/includes/themes/cube.theme/widgets/finder-demo/music-brainz-search-widget/css/music-brainz-search-widget.css",
                "widget.json",
                "*.theme/music-brainz-search-widget.html",
                "*.theme/css/music-brainz-search-widget.css",
-               "music-brainz-search-widget.js",
-               "/includes/themes/cube.theme/widgets/finder-demo/music-brainz-search-widget/css/music-brainz-search-widget.css",
-               "/includes/themes/cube.theme/widgets/finder-demo/music-brainz-search-widget/music-brainz-search-widget.html"
+               "music-brainz-search-widget.js"
             ],
             "embed": [
+               "/includes/themes/cube.theme/widgets/finder-demo/music-brainz-search-widget/music-brainz-search-widget.html",
                "widget.json",
-               "*.theme/music-brainz-search-widget.html",
-               "/includes/themes/cube.theme/widgets/finder-demo/music-brainz-search-widget/music-brainz-search-widget.html"
+               "*.theme/music-brainz-search-widget.html"
             ],
             "list": [
-               "*.theme/css/music-brainz-search-widget.css",
-               "/includes/themes/cube.theme/widgets/finder-demo/music-brainz-search-widget/css/music-brainz-search-widget.css"
+               "/includes/themes/cube.theme/widgets/finder-demo/music-brainz-search-widget/css/music-brainz-search-widget.css",
+               "*.theme/css/music-brainz-search-widget.css"
             ]
          },
          "references": {
-            "file": {
-               "reference": "finder-demo/music-brainz-search-widget"
+            "local": {
+               "self": "finder-demo/music-brainz-search-widget"
             },
             "amd": {
+               "self": "../includes/widgets/finder-demo/music-brainz-search-widget",
                "module": "laxar-application/includes/widgets/finder-demo/music-brainz-search-widget/music-brainz-search-widget"
             }
          },
@@ -208,7 +225,11 @@
             "laxar-uikit/controls/i18n",
             "finder-box-control",
             "finder-demo-utilities"
-         ]
+         ],
+         "referencedAs": {
+            "byUser": "finder-demo/music-brainz-search-widget",
+            "derivedReference": "finder-demo/music-brainz-search-widget"
+         }
       },
       {
          "path": "includes/widgets/finder-demo/omdb-search-widget",
@@ -218,28 +239,29 @@
          },
          "resources": {
             "watch": [
+               "/includes/themes/cube.theme/widgets/finder-demo/omdb-search-widget/omdb-search-widget.html",
+               "/includes/themes/cube.theme/widgets/finder-demo/omdb-search-widget/css/omdb-search-widget.css",
                "widget.json",
                "*.theme/omdb-search-widget.html",
                "*.theme/css/omdb-search-widget.css",
-               "omdb-search-widget.js",
-               "/includes/themes/cube.theme/widgets/finder-demo/omdb-search-widget/css/omdb-search-widget.css",
-               "/includes/themes/cube.theme/widgets/finder-demo/omdb-search-widget/omdb-search-widget.html"
+               "omdb-search-widget.js"
             ],
             "embed": [
+               "/includes/themes/cube.theme/widgets/finder-demo/omdb-search-widget/omdb-search-widget.html",
                "widget.json",
-               "*.theme/omdb-search-widget.html",
-               "/includes/themes/cube.theme/widgets/finder-demo/omdb-search-widget/omdb-search-widget.html"
+               "*.theme/omdb-search-widget.html"
             ],
             "list": [
-               "*.theme/css/omdb-search-widget.css",
-               "/includes/themes/cube.theme/widgets/finder-demo/omdb-search-widget/css/omdb-search-widget.css"
+               "/includes/themes/cube.theme/widgets/finder-demo/omdb-search-widget/css/omdb-search-widget.css",
+               "*.theme/css/omdb-search-widget.css"
             ]
          },
          "references": {
-            "file": {
-               "reference": "finder-demo/omdb-search-widget"
+            "local": {
+               "self": "finder-demo/omdb-search-widget"
             },
             "amd": {
+               "self": "../includes/widgets/finder-demo/omdb-search-widget",
                "module": "laxar-application/includes/widgets/finder-demo/omdb-search-widget/omdb-search-widget"
             }
          },
@@ -247,7 +269,11 @@
             "laxar-uikit/controls/i18n",
             "finder-box-control",
             "finder-demo-utilities"
-         ]
+         ],
+         "referencedAs": {
+            "byUser": "finder-demo/omdb-search-widget",
+            "derivedReference": "finder-demo/omdb-search-widget"
+         }
       },
       {
          "path": "includes/widgets/finder-demo/open-street-map-widget",
@@ -257,28 +283,29 @@
          },
          "resources": {
             "watch": [
+               "/includes/themes/cube.theme/widgets/finder-demo/open-street-map-widget/open-street-map-widget.html",
+               "/includes/themes/cube.theme/widgets/finder-demo/open-street-map-widget/css/open-street-map-widget.css",
                "widget.json",
                "*.theme/open-street-map-widget.html",
                "*.theme/css/open-street-map-widget.css",
-               "open-street-map-widget.js",
-               "/includes/themes/cube.theme/widgets/finder-demo/open-street-map-widget/css/open-street-map-widget.css",
-               "/includes/themes/cube.theme/widgets/finder-demo/open-street-map-widget/open-street-map-widget.html"
+               "open-street-map-widget.js"
             ],
             "embed": [
+               "/includes/themes/cube.theme/widgets/finder-demo/open-street-map-widget/open-street-map-widget.html",
                "widget.json",
-               "*.theme/open-street-map-widget.html",
-               "/includes/themes/cube.theme/widgets/finder-demo/open-street-map-widget/open-street-map-widget.html"
+               "*.theme/open-street-map-widget.html"
             ],
             "list": [
-               "*.theme/css/open-street-map-widget.css",
-               "/includes/themes/cube.theme/widgets/finder-demo/open-street-map-widget/css/open-street-map-widget.css"
+               "/includes/themes/cube.theme/widgets/finder-demo/open-street-map-widget/css/open-street-map-widget.css",
+               "*.theme/css/open-street-map-widget.css"
             ]
          },
          "references": {
-            "file": {
-               "reference": "finder-demo/open-street-map-widget"
+            "local": {
+               "self": "finder-demo/open-street-map-widget"
             },
             "amd": {
+               "self": "../includes/widgets/finder-demo/open-street-map-widget",
                "module": "laxar-application/includes/widgets/finder-demo/open-street-map-widget/open-street-map-widget"
             }
          },
@@ -286,7 +313,11 @@
             "laxar-uikit/controls/i18n",
             "finder-box-control",
             "finder-demo-utilities"
-         ]
+         ],
+         "referencedAs": {
+            "byUser": "finder-demo/open-street-map-widget",
+            "derivedReference": "finder-demo/open-street-map-widget"
+         }
       },
       {
          "path": "includes/widgets/finder-demo/open-weather-map-widget",
@@ -296,25 +327,30 @@
          },
          "resources": {
             "watch": [
-               "*.js",
+               "/includes/themes/cube.theme/widgets/finder-demo/open-weather-map-widget/open-weather-map-widget.html",
                "/includes/themes/cube.theme/widgets/finder-demo/open-weather-map-widget/css/open-weather-map-widget.css",
-               "/includes/themes/cube.theme/widgets/finder-demo/open-weather-map-widget/open-weather-map-widget.html"
-            ],
-            "embed": [
                "widget.json",
                "*.theme/open-weather-map-widget.html",
-               "/includes/themes/cube.theme/widgets/finder-demo/open-weather-map-widget/open-weather-map-widget.html"
+               "*.theme/css/open-weather-map-widget.css",
+               "open-weather-map-widget.js",
+               "*.js"
+            ],
+            "embed": [
+               "/includes/themes/cube.theme/widgets/finder-demo/open-weather-map-widget/open-weather-map-widget.html",
+               "widget.json",
+               "*.theme/open-weather-map-widget.html"
             ],
             "list": [
-               "*.theme/css/open-weather-map-widget.css",
-               "/includes/themes/cube.theme/widgets/finder-demo/open-weather-map-widget/css/open-weather-map-widget.css"
+               "/includes/themes/cube.theme/widgets/finder-demo/open-weather-map-widget/css/open-weather-map-widget.css",
+               "*.theme/css/open-weather-map-widget.css"
             ]
          },
          "references": {
-            "file": {
-               "reference": "finder-demo/open-weather-map-widget"
+            "local": {
+               "self": "finder-demo/open-weather-map-widget"
             },
             "amd": {
+               "self": "../includes/widgets/finder-demo/open-weather-map-widget",
                "module": "laxar-application/includes/widgets/finder-demo/open-weather-map-widget/open-weather-map-widget"
             }
          },
@@ -322,7 +358,11 @@
             "laxar-uikit/controls/i18n",
             "finder-box-control",
             "finder-demo-utilities"
-         ]
+         ],
+         "referencedAs": {
+            "byUser": "finder-demo/open-weather-map-widget",
+            "derivedReference": "finder-demo/open-weather-map-widget"
+         }
       },
       {
          "path": "includes/widgets/finder-demo/search-box-widget",
@@ -332,34 +372,39 @@
          },
          "resources": {
             "watch": [
+               "/includes/themes/cube.theme/widgets/finder-demo/search-box-widget/search-box-widget.html",
+               "/includes/themes/cube.theme/widgets/finder-demo/search-box-widget/css/search-box-widget.css",
                "widget.json",
                "*.theme/search-box-widget.html",
                "*.theme/css/search-box-widget.css",
-               "search-box-widget.js",
-               "/includes/themes/cube.theme/widgets/finder-demo/search-box-widget/css/search-box-widget.css",
-               "/includes/themes/cube.theme/widgets/finder-demo/search-box-widget/search-box-widget.html"
+               "search-box-widget.js"
             ],
             "embed": [
+               "/includes/themes/cube.theme/widgets/finder-demo/search-box-widget/search-box-widget.html",
                "widget.json",
-               "*.theme/search-box-widget.html",
-               "/includes/themes/cube.theme/widgets/finder-demo/search-box-widget/search-box-widget.html"
+               "*.theme/search-box-widget.html"
             ],
             "list": [
-               "*.theme/css/search-box-widget.css",
-               "/includes/themes/cube.theme/widgets/finder-demo/search-box-widget/css/search-box-widget.css"
+               "/includes/themes/cube.theme/widgets/finder-demo/search-box-widget/css/search-box-widget.css",
+               "*.theme/css/search-box-widget.css"
             ]
          },
          "references": {
-            "file": {
-               "reference": "finder-demo/search-box-widget"
+            "local": {
+               "self": "finder-demo/search-box-widget"
             },
             "amd": {
+               "self": "../includes/widgets/finder-demo/search-box-widget",
                "module": "laxar-application/includes/widgets/finder-demo/search-box-widget/search-box-widget"
             }
          },
          "controls": [
             "laxar-uikit/controls/i18n"
-         ]
+         ],
+         "referencedAs": {
+            "byUser": "finder-demo/search-box-widget",
+            "derivedReference": "finder-demo/search-box-widget"
+         }
       },
       {
          "path": "includes/widgets/finder-demo/wikipedia-search-widget",
@@ -369,28 +414,29 @@
          },
          "resources": {
             "watch": [
+               "/includes/themes/cube.theme/widgets/finder-demo/wikipedia-search-widget/wikipedia-search-widget.html",
+               "/includes/themes/cube.theme/widgets/finder-demo/wikipedia-search-widget/css/wikipedia-search-widget.css",
                "widget.json",
                "*.theme/wikipedia-search-widget.html",
                "*.theme/css/wikipedia-search-widget.css",
-               "wikipedia-search-widget.js",
-               "/includes/themes/cube.theme/widgets/finder-demo/wikipedia-search-widget/css/wikipedia-search-widget.css",
-               "/includes/themes/cube.theme/widgets/finder-demo/wikipedia-search-widget/wikipedia-search-widget.html"
+               "wikipedia-search-widget.js"
             ],
             "embed": [
+               "/includes/themes/cube.theme/widgets/finder-demo/wikipedia-search-widget/wikipedia-search-widget.html",
                "widget.json",
-               "*.theme/wikipedia-search-widget.html",
-               "/includes/themes/cube.theme/widgets/finder-demo/wikipedia-search-widget/wikipedia-search-widget.html"
+               "*.theme/wikipedia-search-widget.html"
             ],
             "list": [
-               "*.theme/css/wikipedia-search-widget.css",
-               "/includes/themes/cube.theme/widgets/finder-demo/wikipedia-search-widget/css/wikipedia-search-widget.css"
+               "/includes/themes/cube.theme/widgets/finder-demo/wikipedia-search-widget/css/wikipedia-search-widget.css",
+               "*.theme/css/wikipedia-search-widget.css"
             ]
          },
          "references": {
-            "file": {
-               "reference": "finder-demo/wikipedia-search-widget"
+            "local": {
+               "self": "finder-demo/wikipedia-search-widget"
             },
             "amd": {
+               "self": "../includes/widgets/finder-demo/wikipedia-search-widget",
                "module": "laxar-application/includes/widgets/finder-demo/wikipedia-search-widget/wikipedia-search-widget"
             }
          },
@@ -398,7 +444,11 @@
             "laxar-uikit/controls/i18n",
             "finder-box-control",
             "finder-demo-utilities"
-         ]
+         ],
+         "referencedAs": {
+            "byUser": "finder-demo/wikipedia-search-widget",
+            "derivedReference": "finder-demo/wikipedia-search-widget"
+         }
       }
    ],
    "controls": [
@@ -410,23 +460,31 @@
          },
          "resources": {
             "watch": [
+               "/includes/themes/cube.theme/controls/ax-i18n-control/css/ax-i18n-control.css",
                "*.theme/css/ax-i18n-control.css",
-               "ax-i18n-control.js",
-               "includes/themes/cube.theme/controls/laxar-uikit/controls/i18n/css/ax-i18n-control.css"
+               "ax-i18n-control.js"
             ],
             "embed": [
                "control.json"
             ],
             "list": [
-               "*.theme/css/ax-i18n-control.css",
-               "includes/themes/cube.theme/controls/laxar-uikit/controls/i18n/css/ax-i18n-control.css"
+               "/includes/themes/cube.theme/controls/ax-i18n-control/css/ax-i18n-control.css",
+               "*.theme/css/ax-i18n-control.css"
             ]
          },
          "references": {
+            "local": {
+               "self": "../laxar-uikit/dist/controls/i18n"
+            },
             "amd": {
-               "reference": "laxar-uikit/controls/i18n",
+               "self": "laxar-uikit/dist/controls/i18n",
                "module": "laxar-uikit/controls/i18n/ax-i18n-control"
             }
+         },
+         "referencedAs": {
+            "byUser": "laxar-uikit/controls/i18n",
+            "derivedScheme": "amd",
+            "derivedReference": "laxar-uikit/controls/i18n"
          }
       },
       {
@@ -437,23 +495,31 @@
          },
          "resources": {
             "watch": [
+               "/includes/themes/cube.theme/controls/finder-box-control/css/finder-box-control.css",
                "*.theme/css/finder-box-control.css",
-               "finder-box-control.js",
-               "includes/themes/cube.theme/controls/finder-box-control/css/finder-box-control.css"
+               "finder-box-control.js"
             ],
             "embed": [
                "control.json"
             ],
             "list": [
-               "*.theme/css/finder-box-control.css",
-               "includes/themes/cube.theme/controls/finder-box-control/css/finder-box-control.css"
+               "/includes/themes/cube.theme/controls/finder-box-control/css/finder-box-control.css",
+               "*.theme/css/finder-box-control.css"
             ]
          },
          "references": {
+            "local": {
+               "self": "../../includes/controls/finder-demo/finder-box-control"
+            },
             "amd": {
-               "reference": "finder-box-control",
+               "self": "../includes/controls/finder-demo/finder-box-control",
                "module": "finder-box-control/finder-box-control"
             }
+         },
+         "referencedAs": {
+            "byUser": "finder-box-control",
+            "derivedScheme": "amd",
+            "derivedReference": "finder-box-control"
          }
       },
       {
@@ -464,23 +530,31 @@
          },
          "resources": {
             "watch": [
+               "/includes/themes/cube.theme/controls/finder-demo-utilities/css/finder-demo-utilities.css",
                "*.theme/css/finder-demo-utilities.css",
-               "finder-demo-utilities.js",
-               "includes/themes/cube.theme/controls/finder-demo-utilities/css/finder-demo-utilities.css"
+               "finder-demo-utilities.js"
             ],
             "embed": [
                "control.json"
             ],
             "list": [
-               "*.theme/css/finder-demo-utilities.css",
-               "includes/themes/cube.theme/controls/finder-demo-utilities/css/finder-demo-utilities.css"
+               "/includes/themes/cube.theme/controls/finder-demo-utilities/css/finder-demo-utilities.css",
+               "*.theme/css/finder-demo-utilities.css"
             ]
          },
          "references": {
+            "local": {
+               "self": "../../includes/lib/finder-demo-utilities"
+            },
             "amd": {
-               "reference": "finder-demo-utilities",
+               "self": "../includes/lib/finder-demo-utilities",
                "module": "finder-demo-utilities/finder-demo-utilities"
             }
+         },
+         "referencedAs": {
+            "byUser": "finder-demo-utilities",
+            "derivedScheme": "amd",
+            "derivedReference": "finder-demo-utilities"
          }
       }
    ]

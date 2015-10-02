@@ -5,7 +5,7 @@
             "separator": "require.paths[ 'laxar-path-flow' ] = \"../application/flow/flow.json\";\n"
          },
          "src": [
-            "require_config.js",
+            "var/flows/main/require_config.js",
             "bower_components/requirejs/require.js"
          ],
          "dest": "var/flows/main/work/require-configured.js"
@@ -18,7 +18,8 @@
                "target": "main",
                "src": "application/flow/flow.json"
             },
-            "mainConfigFile": "require_config.js",
+            "baseUrl": "bower_components/",
+            "mainConfigFile": "var/flows/main/require_config.js",
             "name": "../init",
             "optimize": "uglify2",
             "deps": [
@@ -29,7 +30,8 @@
             "tasks": [
                "concat:laxar-flow-main",
                "requirejs:laxar-flow-main"
-            ]
+            ],
+            "testDirectory": "var/tests"
          }
       }
    }

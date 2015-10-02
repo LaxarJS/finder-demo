@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2015 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -95,7 +95,7 @@ define( 'laxar/lib/logging/console_channel',[], function() {
 } );
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2015 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -302,7 +302,7 @@ define( 'laxar/lib/utilities/assert',[], function() {
 } );
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2015 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -624,7 +624,7 @@ define( 'laxar/lib/utilities/object',[], function() {
 } );
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2015 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -686,7 +686,7 @@ define( 'laxar/lib/utilities/configuration',[
 } );
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2015 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -1100,7 +1100,7 @@ define( 'laxar/lib/logging/log',[
 } );
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2015 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -1185,7 +1185,7 @@ define( 'laxar/lib/directives/id/id',[
 } );
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2015 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -1241,7 +1241,7 @@ define( 'laxar/lib/directives/layout/layout',[
 } );
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2015 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -1568,7 +1568,7 @@ define( 'laxar/lib/utilities/string',[], function() {
 } );
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2015 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -1651,7 +1651,7 @@ define( 'laxar/lib/directives/widget_area/widget_area',[
 } );
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2015 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -1672,7 +1672,7 @@ define( 'laxar/lib/directives/directives',[
 } );
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2015 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -2400,13 +2400,14 @@ define( 'laxar/lib/event_bus/event_bus',[
 } );
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2015 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
 define( 'laxar/lib/utilities/path',[
+   'require',
    './assert'
-], function( assert ) {
+], function( require, assert ) {
    'use strict';
 
    var PATH_SEPARATOR = '/';
@@ -2518,6 +2519,35 @@ define( 'laxar/lib/utilities/path',[
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+   function resolveAssetPath( refWithScheme, defaultAssetDirectory, optionalDefaultScheme ) {
+      var info = extractScheme( refWithScheme, optionalDefaultScheme || 'amd' );
+      if( typeof schemeLoaders[ info.scheme ] !== 'function' ) {
+         throw new Error( 'Unknown schema type "' + info.scheme + '" in reference "' + refWithScheme + '".' );
+      }
+      return normalize( schemeLoaders[ info.scheme ]( info.ref, defaultAssetDirectory ) );
+   }
+
+   var schemeLoaders = {
+      local: function( ref, defaultAssetDirectory ) {
+         return join( defaultAssetDirectory, ref );
+      },
+      amd: function( ref ) {
+         return require.toUrl( ref );
+      }
+   };
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function extractScheme( ref, defaultScheme ) {
+      var parts = ref.split( ':' );
+      return {
+         scheme: parts.length === 2 ? parts[ 0 ] : defaultScheme,
+         ref: parts.length === 2 ? parts[ 1 ]: parts[ 0 ]
+      };
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
    function normalizeFragments( fragments ) {
       return fragments.reduce( function( pathStack, fragment ) {
          fragment = fragment.replace( /^\/+|\/+$/g, '' );
@@ -2543,6 +2573,8 @@ define( 'laxar/lib/utilities/path',[
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    return {
+      resolveAssetPath: resolveAssetPath,
+      extractScheme: extractScheme,
       join: join,
       normalize: normalize,
       relative: relative
@@ -2551,7 +2583,7 @@ define( 'laxar/lib/utilities/path',[
 } );
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2015 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -2868,7 +2900,7 @@ define( 'laxar/lib/file_resource_provider/file_resource_provider',[
 } );
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2015 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -3106,7 +3138,7 @@ define( 'laxar/lib/i18n/i18n',[
 } );
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2015 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -3119,6 +3151,7 @@ define( 'laxar/lib/loaders/paths',[
       PRODUCT: require.toUrl( 'laxar-path-root' ),
       THEMES: require.toUrl( 'laxar-path-themes' ),
       LAYOUTS: require.toUrl( 'laxar-path-layouts' ),
+      CONTROLS: require.toUrl( 'laxar-path-controls' ),
       WIDGETS: require.toUrl( 'laxar-path-widgets' ),
       PAGES: require.toUrl( 'laxar-path-pages' ),
       FLOW_JSON: require.toUrl( 'laxar-path-flow' ),
@@ -3128,7 +3161,7 @@ define( 'laxar/lib/loaders/paths',[
 } );
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2015 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -3271,7 +3304,7 @@ define( 'laxar/lib/json/schema',[
 } );
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2015 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -3386,7 +3419,7 @@ define( 'laxar/lib/json/validator',[
 } );
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2015 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -3541,10 +3574,11 @@ define( 'laxar/lib/widget_adapters/plain_adapter',[], function() {
     * @param {String}      environment.context.widget.id
     * @param {String}      environment.context.widget.path
     * @param {Object}      environment.specification
+    * @param {Object}      services
     *
     * @return {Object}
     */
-   function create( environment ) {
+   function create( environment, services ) {
 
       var exports = {
          createController: createController,
@@ -3608,11 +3642,15 @@ define( 'laxar/lib/widget_adapters/plain_adapter',[], function() {
                   return map;
                }
 
-               if( !( name in map ) ) {
-                  throw new Error( 'Unknown dependency "' + name + '".' );
+               if( name in map ) {
+                  return map[ name ];
                }
 
-               return map[ name ];
+               if( name in services ) {
+                  return services[ name ];
+               }
+
+               throw new Error( 'Unknown dependency "' + name + '".' );
             }
          };
       }
@@ -3635,7 +3673,7 @@ define( 'laxar/lib/widget_adapters/plain_adapter',[], function() {
 } );
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2015 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -3657,8 +3695,13 @@ define( 'laxar/lib/widget_adapters/angular_adapter',[
 
    function bootstrap( widgetModules ) {
       var dependencies = ( widgetModules || [] ).map( function( module ) {
-         controllerNames[ module.name ] = capitalize( module.name ) + 'Controller';
+         // for lookup, use a normalized module name that can also be derived from the widget.json name:
+         var moduleKey = normalize( module.name );
+         controllerNames[ moduleKey ] = capitalize( module.name ) + 'Controller';
+
+         // add an additional lookup entry for deprecated "my.category.MyWidget" style module names:
          supportPreviousNaming( module.name );
+
          return module.name;
       } );
 
@@ -3685,10 +3728,13 @@ define( 'laxar/lib/widget_adapters/angular_adapter',[
     * @param {String}      environment.context.widget.id
     * @param {String}      environment.context.widget.path
     * @param {Object}      environment.specification
+    * @param {Object}      services
     *
     * @return {Object}
     */
-   function create( environment ) {
+   function create( environment, services ) {
+
+      // services are not relevant for now, since all LaxarJS services are already available via AngularJS DI.
 
       var exports = {
          createController: createController,
@@ -3704,13 +3750,13 @@ define( 'laxar/lib/widget_adapters/angular_adapter',[
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
       function createController( config ) {
-         var widgetName = environment.specification.name;
-         var moduleName = widgetName.replace( /^./, function( _ ) { return _.toLowerCase(); } );
-         var controllerName = controllerNames[ moduleName ];
+         var moduleKey = normalize( environment.specification.name );
+         var controllerName = controllerNames[ moduleKey ];
 
          injections_ = {
             axContext: context,
-            axEventBus: context.eventBus
+            axEventBus: context.eventBus,
+            axFeatures: context.features || {}
          };
          Object.defineProperty( injections_, '$scope', {
             enumerable: true,
@@ -3777,6 +3823,16 @@ define( 'laxar/lib/widget_adapters/angular_adapter',[
 
    function capitalize( _ ) {
       return _.replace( /^./, function( _ ) { return _.toUpperCase(); } );
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function normalize( moduleName ) {
+      return moduleName.replace( /([a-zA-Z0-9])[-_]([a-zA-Z0-9])/g, function( $_, $1, $2 ) {
+         return $1 + $2.toUpperCase();
+      } ).replace( /^[A-Z]/, function( $_ ) {
+         return $_.toLowerCase();
+      } );
    }
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -3855,7 +3911,7 @@ define( 'laxar/lib/widget_adapters/adapters',[
 } );
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2015 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -3881,16 +3937,20 @@ define( 'laxar/lib/loaders/widget_loader',[
    var INVALID_ID_MATCHER = /[^A-Za-z0-9_\.-]/g;
 
    /**
-    * @typedef {{then: Function}} Promise
+    * @param {Q} q
+    *    a promise library
+    * @param {Object} services
+    *    all services available to the loader an widgets
     *
-    * @param q
-    * @param fileResourceProvider
-    * @param themeManager
-    * @param cssLoader
-    * @param eventBus
     * @returns {{load: Function}}
     */
-   function create( q, fileResourceProvider, themeManager, cssLoader, eventBus ) {
+   function create( q, services ) {
+
+      var fileResourceProvider = services.axFileResourceProvider;
+      var themeManager = services.axThemeManager;
+      var cssLoader = services.axCssLoader;
+      var eventBus = services.axGlobalEventBus;
+
 
       return {
          load: load
@@ -3917,8 +3977,9 @@ define( 'laxar/lib/loaders/widget_loader',[
        * @return {Promise} a promise for a widget adapter, with an already instantiated controller
        */
       function load( widgetConfiguration, optionalOptions ) {
-         var widgetPath = widgetConfiguration.widget;
-         var widgetJsonPath = path.join( paths.WIDGETS, widgetPath, 'widget.json' );
+         var resolvedWidgetPath = path.resolveAssetPath( widgetConfiguration.widget, paths.WIDGETS, 'local' );
+         var widgetJsonPath = path.join( resolvedWidgetPath, 'widget.json' );
+
          var options = object.options( optionalOptions, {
             onBeforeControllerCreation: function() {}
          } );
@@ -3940,7 +4001,7 @@ define( 'laxar/lib/loaders/widget_loader',[
                var features =
                   featuresProvider.featuresForWidget( specification, widgetConfiguration, throwWidgetError );
                var anchorElement = document.createElement( 'DIV' );
-               anchorElement.className = camelCaseToDashed( specification.name );
+               anchorElement.className = normalizeClassName( specification.name );
                anchorElement.id = 'ax' + ID_SEPARATOR + widgetConfiguration.id;
                var widgetEventBus = createEventBusForWidget( eventBus, specification, widgetConfiguration );
 
@@ -3958,7 +4019,7 @@ define( 'laxar/lib/loaders/widget_loader',[
                      }
                   },
                   specification: specification
-               } );
+               }, services );
                adapter.createController( options );
 
                return {
@@ -3969,12 +4030,17 @@ define( 'laxar/lib/loaders/widget_loader',[
                      adapter.destroy();
                   },
                   applyViewChanges: adapterFactory.applyViewChanges || null,
-                  templatePromise: loadAssets( widgetPath, integration, specification )
+                  templatePromise: loadAssets(
+                     resolvedWidgetPath,
+                     integration,
+                     specification,
+                     widgetConfiguration
+                  )
                };
 
             }, function( err ) {
                var message = 'Could not load spec for widget [0] from [1]: [2]';
-               log.error( message, widgetPath, widgetJsonPath, err );
+               log.error( message, widgetConfiguration.widget, widgetJsonPath, err );
             } );
       }
 
@@ -3984,19 +4050,20 @@ define( 'laxar/lib/loaders/widget_loader',[
        * Locates and loads the widget HTML template for this widget (if any) as well as any CSS stylesheets
        * used by this widget or its controls.
        *
-       * @param widgetReferencePath
+       * @param widgetPath
        *    The path suffix used to look up the widget, as given in the instance configuration.
        * @param integration
        *    Details on the integration type and technology: Activities do not require assets.
        * @param widgetSpecification
        *    The widget specification, used to find out if any controls need to be loaded.
+       * @param widgetConfiguration
+       *    The widget instance configuration
        *
        * @return {Promise<String>}
        *    A promise that will be resolved with the contents of any HTML template for this widget, or with
        *    `null` if there is no template (for example, if this is an activity).
        */
-      function loadAssets( widgetReferencePath, integration, widgetSpecification ) {
-
+      function loadAssets( widgetPath, integration, widgetSpecification, widgetConfiguration ) {
          return integration.type === TYPE_ACTIVITY ? q.when( null ) : resolve().then( function( urls ) {
             urls.cssFileUrls.forEach( function( url ) { cssLoader.load( url ); } );
             return urls.templateUrl ? fileResourceProvider.provide( urls.templateUrl ) : null;
@@ -4005,39 +4072,50 @@ define( 'laxar/lib/loaders/widget_loader',[
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
          function resolve() {
-            var technicalName = widgetReferencePath.split( '/' ).pop();
-            var widgetPath = path.join( paths.WIDGETS, widgetReferencePath );
-            var htmlFile = technicalName + '.html';
-            var cssFile = path.join( 'css/', technicalName + '.css' );
+            // the name from the widget.json
+            var specifiedName = widgetSpecification.name;
+            var specifiedHtmlFile = specifiedName + '.html';
+            var specifiedCssFile = path.join( 'css/', specifiedName + '.css' );
+            // for backward compatibility: the name inferred from the reference
+            var technicalName = widgetPath.split( '/' ).pop();
+            var technicalHtmlFile = technicalName + '.html';
+            var technicalCssFile = path.join( 'css/', technicalName + '.css' );
 
+            var refPath = path.extractScheme( widgetConfiguration.widget ).ref;
             var promises = [];
             promises.push( themeManager.urlProvider(
                path.join( widgetPath, '[theme]' ),
-               path.join( paths.THEMES, '[theme]', 'widgets', widgetReferencePath )
-            ).provide( [ htmlFile, cssFile ] ) );
+               path.join( paths.THEMES, '[theme]', 'widgets', specifiedName ),
+               [ path.join( paths.THEMES, '[theme]', 'widgets', refPath ) ]
+            ).provide( [
+               specifiedHtmlFile,
+               specifiedCssFile,
+               technicalHtmlFile,
+               technicalCssFile
+            ] ) );
 
             promises = promises.concat( ( widgetSpecification.controls || [] )
                .map( function( controlReference ) {
                   // By appending a path now and .json afterwards, trick RequireJS into generating the
                   // correct descriptor path when loading from a 'package'.
-                  var controlLocation = path.normalize( require.toUrl( path.join( controlReference, 'control' ) ) );
-                  var descriptorUrl = controlLocation + '.json';
-                  return fileResourceProvider.provide( descriptorUrl ).then( function( descriptor ) {
-                     // LaxarJS 1.x style control (name determined from descriptor):
-                     var name = camelCaseToDashed( descriptor.name );
-                     return themeManager.urlProvider(
-                        path.join( controlLocation.replace( /\/control$/, '' ), '[theme]' ),
-                        path.join( paths.THEMES, '[theme]', 'controls', name )
-                     ).provide( [ path.join( 'css/',  name + '.css' ) ] );
-                  },
-                  function() {
-                     // LaxarJS 0.x style controls (no descriptor, uses AMD path as name):
-                     var name = controlReference.split( '/' ).pop();
-                     return themeManager.urlProvider(
-                        path.join( require.toUrl( controlReference ), '[theme]' ),
-                        path.join( paths.THEMES, '[theme]', controlReference )
-                     ).provide( [ path.join( 'css/', name + '.css' ) ] );
-                  } );
+                  var resolvedControlPath = path.resolveAssetPath( controlReference, paths.CONTROLS );
+                  var descriptorUrl = path.join( resolvedControlPath, 'control.json' );
+                  return fileResourceProvider.provide( descriptorUrl )
+                     .then( function( descriptor ) {
+                        // LaxarJS 1.x style control (name determined from descriptor):
+                        var name = descriptor.name;
+                        return themeManager.urlProvider(
+                           path.join( resolvedControlPath, '[theme]' ),
+                           path.join( paths.THEMES, '[theme]', 'controls', name )
+                        ).provide( [ path.join( 'css/',  name + '.css' ) ] );
+                     }, function() {
+                        // LaxarJS 0.x style controls (no descriptor, uses AMD path as name):
+                        var name = controlReference.split( '/' ).pop();
+                        return themeManager.urlProvider(
+                           path.join( resolvedControlPath, '[theme]' ),
+                           path.join( paths.THEMES, '[theme]', controlReference )
+                        ).provide( [ path.join( 'css/', name + '.css' ) ] );
+                     } );
                } ) );
 
             return q.all( promises )
@@ -4045,11 +4123,11 @@ define( 'laxar/lib/loaders/widget_loader',[
                   var widgetUrls = results[ 0 ];
                   var cssUrls = results.slice( 1 )
                      .map( function( urls ) { return urls[ 0 ]; } )
-                     .concat( widgetUrls.slice( 1 ) )
+                     .concat( ( widgetUrls[ 1 ] || widgetUrls[ 3 ] ) )
                      .filter( function( url ) { return !!url; } );
 
                   return {
-                     templateUrl: widgetUrls[ 0 ] || '',
+                     templateUrl: widgetUrls[ 0 ] || widgetUrls[ 2 ] || '',
                      cssFileUrls: cssUrls
                   };
                } );
@@ -4059,10 +4137,13 @@ define( 'laxar/lib/loaders/widget_loader',[
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   function camelCaseToDashed( str ) {
-      return str.replace( /[A-Z]/g, function( character, offset ) {
-         return ( offset > 0 ? '-' : '' ) + character.toLowerCase();
-      } );
+   function normalizeClassName( str ) {
+      return str
+         .replace( /([a-z0-9])([A-Z])/g, function( $_, $0, $1 ) {
+            return $0 + '-' + $1;
+         } )
+         .replace( /_/g, '-' )
+         .toLowerCase();
    }
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -4143,7 +4224,7 @@ define( 'laxar/lib/loaders/widget_loader',[
 } );
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2015 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -4204,7 +4285,7 @@ define( 'laxar/lib/utilities/fn',[], function() {
 } );
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2015 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -4477,7 +4558,7 @@ define( 'laxar/lib/utilities/storage',[
 } );
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2015 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -4507,7 +4588,7 @@ define( 'laxar/lib/runtime/runtime',[
    // Initialize the theme manager
    module.run( [ 'axCssLoader', 'axThemeManager', function( CssLoader, themeManager ) {
       themeManager
-         .urlProvider( path.join( paths.THEMES, '[theme]' ), null, paths.DEFAULT_THEME )
+         .urlProvider( path.join( paths.THEMES, '[theme]' ), null, [ paths.DEFAULT_THEME ] )
          .provide( [ 'css/theme.css' ] )
          .then( function( files ) {
             CssLoader.load( files[0] );
@@ -4531,7 +4612,7 @@ define( 'laxar/lib/runtime/runtime',[
 } );
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2015 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -4597,7 +4678,7 @@ define( 'laxar/lib/loaders/layout_loader',[
 } );
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2015 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -4654,22 +4735,22 @@ define( 'laxar/lib/runtime/theme_manager',[
     *    a path pattern for search within the artifact directory itself, based on the current theme
     * @param {String} [themePathPattern]
     *    a path pattern for search within the current theme
-    * @param {String} [fallbackPathPattern]
-    *    a fallback path, used if all else fails.
-    *    Usually without placeholders, e.g. for loading the default theme itself.
+    * @param {String[]} [fallbackPathPatterns]
+    *    fallback paths, used if all else fails.
+    *    Possibly without placeholders, e.g. for loading the default theme itself.
     *
     * @returns {{provide: Function}}
     *    an object with a provide method
     */
-   ThemeManager.prototype.urlProvider = function( artifactPathPattern, themePathPattern, fallbackPathPattern ) {
+   ThemeManager.prototype.urlProvider = function( artifactPathPattern, themePathPattern, fallbackPathPatterns ) {
       var self = this;
 
       return {
          provide: function( fileNames ) {
             var searchPrefixes = [];
 
+            var themeDirectory = self.theme_ + '.theme';
             if( self.theme_ && self.theme_ !== 'default' ) {
-               var themeDirectory = self.theme_ + '.theme';
                if( artifactPathPattern ) {
                   // highest precedence: artifacts with (multiple) embedded theme styles:
                   searchPrefixes.push( artifactPathPattern.replace( '[theme]', themeDirectory ) );
@@ -4680,20 +4761,22 @@ define( 'laxar/lib/runtime/theme_manager',[
                }
             }
 
+            ( fallbackPathPatterns || []  ).forEach( function( pattern ) {
+               // additional paths, usually for backward compatibility
+               if( self.theme_ !== 'default' || pattern.indexOf( '[theme]' ) === -1 ) {
+                  searchPrefixes.push( pattern.replace( '[theme]', themeDirectory ) );
+               }
+            } );
+
             if( artifactPathPattern ) {
                // fall back to default theme provided by the artifact
                searchPrefixes.push( artifactPathPattern.replace( '[theme]', 'default.theme' ) );
             }
 
-            if( fallbackPathPattern ) {
-               // mostly to load the default-theme itself from any location
-               searchPrefixes.push( fallbackPathPattern );
-            }
-
             var promises = [];
-            for( var i = 0; i < fileNames.length; ++i ) {
-               promises.push( findExistingPath( self, searchPrefixes, fileNames[ i ] ) );
-            }
+            fileNames.forEach( function( fileName ) {
+               promises.push( findExistingPath( self, searchPrefixes, fileName ) );
+            } );
 
             return self.q_.all( promises )
                .then( function( results ) {
@@ -4717,7 +4800,6 @@ define( 'laxar/lib/runtime/theme_manager',[
             if( available ) {
                return self.q_.when( searchPrefixes[0] );
             }
-
             return findExistingPath( self, searchPrefixes.slice( 1 ), fileName );
          } );
    }
@@ -4747,7 +4829,7 @@ define( 'laxar/lib/runtime/theme_manager',[
 } );
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2015 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -5514,7 +5596,7 @@ define( 'laxar/lib/runtime/runtime_services',[
 } );
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2015 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -5726,7 +5808,7 @@ define("json!laxar/static/schemas/flow.json", function(){ return {
 ;});
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2015 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -6262,7 +6344,7 @@ define("json!laxar/static/schemas/page.json", function(){ return {
 ;});
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2015 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -6851,7 +6933,7 @@ define( 'laxar/lib/runtime/layout_widget_adapter',[
 } );
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2015 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -7031,7 +7113,7 @@ define( 'laxar/lib/runtime/area_helper',[
 } );
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2015 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -7115,7 +7197,7 @@ define( 'laxar/lib/runtime/locale_event_manager',[
 } );
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2015 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -7279,7 +7361,7 @@ define( 'laxar/lib/runtime/visibility_event_manager',[], function() {
 } );
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2015 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -7291,13 +7373,14 @@ define( 'laxar/lib/runtime/page',[
    '../loaders/widget_loader',
    '../loaders/paths',
    './layout_widget_adapter',
+   './flow',
    './area_helper',
    './locale_event_manager',
    './visibility_event_manager'
-], function( ng, assert, layoutModule, pageLoader, widgetLoader, paths, layoutWidgetAdapter, createAreaHelper, createLocaleEventManager, createVisibilityEventManager ) {
+], function( ng, assert, layoutModule, pageLoader, widgetLoader, paths, layoutWidgetAdapter, flowModule, createAreaHelper, createLocaleEventManager, createVisibilityEventManager ) {
    'use strict';
 
-   var module = ng.module( 'axPage', [ layoutModule.name, layoutWidgetAdapter.name ] );
+   var module = ng.module( 'axPage', [ layoutModule.name, layoutWidgetAdapter.name, flowModule.name ] );
 
    /** Delay between sending didLifeCycle and attaching widget templates. */
    var WIDGET_ATTACH_DELAY_MS = 5;
@@ -7333,179 +7416,203 @@ define( 'laxar/lib/runtime/page',[
    /**
     * Manages widget adapters and their DOM for the current page
     */
-   module.controller( 'AxPageController', [
-      '$scope', '$q', '$timeout', 'axPageService', 'axVisibilityService', 'axConfiguration', 'axCssLoader', 'axLayoutLoader', 'axGlobalEventBus', 'axFileResourceProvider', 'axThemeManager',
-      function( $scope, $q, $timeout , pageService, visibilityService, configuration, cssLoader, layoutLoader, eventBus, fileResourceProvider, themeManager ) {
+   ( function() {
 
-         var self = this;
-         var pageLoader_ = pageLoader.create( $q, null, paths.PAGES, fileResourceProvider );
+      var pageControllerDependencies = [ '$scope', '$q', '$timeout', 'axPageService'];
 
-         var areaHelper_;
-         var widgetAdapters_ = [];
-         var viewChangeApplyFunctions_ = [];
+      var axServiceDependencies = [
+         'axFlowService', 'axHeartbeat', 'axTimestamp', 'axGlobalEventBus', 'axConfiguration', 'axI18n',
+         'axFileResourceProvider', 'axThemeManager', 'axLayoutLoader', 'axCssLoader', 'axVisibilityService'
+      ];
 
-         var theme = themeManager.getTheme();
-         var localeManager = createLocaleEventManager( $q, eventBus, configuration );
-         var visibilityManager = createVisibilityEventManager( $q, eventBus );
-         var lifecycleEvent = { lifecycleId: 'default' };
-         var senderOptions = { sender: 'AxPageController' };
+      var createPageControllerInjected = pageControllerDependencies
+            .concat( axServiceDependencies )
+            .concat( function( $scope, $q, $timeout, pageService ) {
 
-         var renderLayout = function( layoutInfo ) {
-            assert.codeIsUnreachable( 'No renderer for page layout ' + layoutInfo.className );
-         };
-
-         var cleanup = pageService.registerPageController( this );
-         $scope.$on( '$destroy', cleanup );
-
-         /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-         function widgetsForPage( page ) {
-            var widgets = [];
-            ng.forEach( page.areas, function( area, areaName ) {
-               area.forEach( function( widget ) {
-                  widget.area = areaName;
-                  widgets.push( widget );
-               } );
+            var axServices = {};
+            var injections = [].slice.call( arguments );
+            axServiceDependencies.forEach( function( name, index ) {
+               axServices[ name ] = injections[ pageControllerDependencies.length + index ];
             } );
-            return widgets;
-         }
 
-         /////////////////////////////////////////////////////////////////////////////////////////////////////
+            var visibilityService = axServices.axVisibilityService;
+            var configuration = axServices.axConfiguration;
+            var layoutLoader = axServices.axLayoutLoader;
+            var eventBus = axServices.axGlobalEventBus;
+            var fileResourceProvider = axServices.axFileResourceProvider;
+            var themeManager = axServices.axThemeManager;
 
-         function beginLifecycle() {
-            return eventBus.publishAndGatherReplies(
-               'beginLifecycleRequest.default',
-               lifecycleEvent,
-               senderOptions );
-         }
+            var self = this;
+            var pageLoader_ = pageLoader.create( $q, null, paths.PAGES, fileResourceProvider );
 
-         /////////////////////////////////////////////////////////////////////////////////////////////////////
+            var areaHelper_;
+            var widgetAdapters_ = [];
+            var viewChangeApplyFunctions_ = [];
 
-         function publishTheme() {
-            return eventBus.publish( 'didChangeTheme.' + theme, { theme: theme }, senderOptions );
-         }
+            var theme = themeManager.getTheme();
+            var localeManager = createLocaleEventManager( $q, eventBus, configuration );
+            var visibilityManager = createVisibilityEventManager( $q, eventBus );
+            var lifecycleEvent = { lifecycleId: 'default' };
+            var senderOptions = { sender: 'AxPageController' };
 
-         /////////////////////////////////////////////////////////////////////////////////////////////////////
+            var renderLayout = function( layoutInfo ) {
+               assert.codeIsUnreachable( 'No renderer for page layout ' + layoutInfo.className );
+            };
 
-         /**
-          * Instantiate all widget controllers on this page, and then load their UI.
-          *
-          * @return {Promise}
-          *    A promise that is resolved when all controllers have been instantiated, and when the initial
-          *    events have been sent.
-          */
-         function setupPage( pageName ) {
-            var widgetLoader_ = widgetLoader.create( $q, fileResourceProvider, themeManager, cssLoader, eventBus );
+            var cleanup = pageService.registerPageController( this );
+            $scope.$on( '$destroy', cleanup );
 
-            var layoutDeferred = $q.defer();
-            var pagePromise = pageLoader_.loadPage( pageName )
-               .then( function( page ) {
-                  areaHelper_ = createAreaHelper( $q, page, visibilityService );
-                  visibilityManager.setAreaHelper( areaHelper_ );
-                  self.areas = areaHelper_;
-                  layoutLoader.load( page.layout ).then( layoutDeferred.resolve );
+            /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-                  localeManager.subscribe();
-                  // instantiate controllers
-                  var widgets = widgetsForPage( page );
-                  return $q.all( widgets.map( function( widget ) {
+            function widgetsForPage( page ) {
+               var widgets = [];
+               ng.forEach( page.areas, function( area, areaName ) {
+                  area.forEach( function( widget ) {
+                     widget.area = areaName;
+                     widgets.push( widget );
+                  } );
+               } );
+               return widgets;
+            }
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+            function beginLifecycle() {
+               return eventBus.publishAndGatherReplies(
+                  'beginLifecycleRequest.default',
+                  lifecycleEvent,
+                  senderOptions );
+            }
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+            function publishTheme() {
+               return eventBus.publish( 'didChangeTheme.' + theme, { theme: theme }, senderOptions );
+            }
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+            /**
+             * Instantiate all widget controllers on this page, and then load their UI.
+             *
+             * @return {Promise}
+             *    A promise that is resolved when all controllers have been instantiated, and when the initial
+             *    events have been sent.
+             */
+            function setupPage( pageName ) {
+               var widgetLoader_ = widgetLoader.create( $q, axServices );
+
+               var layoutDeferred = $q.defer();
+               var pagePromise = pageLoader_.loadPage( pageName )
+                  .then( function( page ) {
+                     areaHelper_ = createAreaHelper( $q, page, visibilityService );
+                     visibilityManager.setAreaHelper( areaHelper_ );
+                     self.areas = areaHelper_;
+                     layoutLoader.load( page.layout ).then( layoutDeferred.resolve );
+
+                     localeManager.subscribe();
+                     // instantiate controllers
+                     var widgets = widgetsForPage( page );
+                     return $q.all( widgets.map( function( widget ) {
                         if( 'layout' in widget ) {
                            return createLayoutWidgetAdapter( widget );
                         }
 
                         return widgetLoader_.load( widget );
                      } ) );
-               } )
-               .then( function( widgetAdapters ) {
-                  widgetAdapters.forEach( function( adapter ) {
-                     if( typeof adapter.applyViewChanges === 'function' &&
-                         viewChangeApplyFunctions_.indexOf( adapter.applyViewChanges ) === -1 ) {
-                        viewChangeApplyFunctions_.push( adapter.applyViewChanges );
-                     }
-                  } );
-                  widgetAdapters_ = widgetAdapters;
-               } )
-               .then( localeManager.initialize )
-               .then( publishTheme )
-               .then( beginLifecycle )
-               .then( visibilityManager.initialize );
+                  } )
+                  .then( function( widgetAdapters ) {
+                     widgetAdapters.forEach( function( adapter ) {
+                        if( typeof adapter.applyViewChanges === 'function' &&
+                            viewChangeApplyFunctions_.indexOf( adapter.applyViewChanges ) === -1 ) {
+                           viewChangeApplyFunctions_.push( adapter.applyViewChanges );
+                        }
+                     } );
+                     widgetAdapters_ = widgetAdapters;
+                  } )
+                  .then( localeManager.initialize )
+                  .then( publishTheme )
+                  .then( beginLifecycle )
+                  .then( visibilityManager.initialize );
 
-            var layoutReady = layoutDeferred.promise.then( function( result ) {
-               // function wrapper is necessary here to dereference `renderlayout` _after_ the layout is ready
-               renderLayout( result );
-            } );
-
-            // Give the widgets (a little) time to settle on the event bus before $digesting and painting:
-            var widgetsInitialized = pagePromise.then( function() {
-               return $timeout( function(){}, WIDGET_ATTACH_DELAY_MS, false );
-            } );
-
-            return $q.all( [ layoutReady, widgetsInitialized ] )
-               .then( function() {
-                  areaHelper_.attachWidgets( widgetAdapters_ );
+               var layoutReady = layoutDeferred.promise.then( function( result ) {
+                  // function wrapper is necessary here to dereference `renderlayout` _after_ the layout is ready
+                  renderLayout( result );
                } );
-         }
 
-         /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-         function tearDownPage() {
-            visibilityManager.unsubscribe();
-            localeManager.unsubscribe();
-
-            return eventBus
-               .publishAndGatherReplies( 'endLifecycleRequest.default', lifecycleEvent, senderOptions )
-               .then( function() {
-                  widgetAdapters_.forEach( function( adapterRef ) {
-                     adapterRef.destroy();
-                  } );
-                  widgetAdapters_ = [];
-                  viewChangeApplyFunctions_ = [];
+               // Give the widgets (a little) time to settle on the event bus before $digesting and painting:
+               var widgetsInitialized = pagePromise.then( function() {
+                  return $timeout( function(){}, WIDGET_ATTACH_DELAY_MS, false );
                } );
-         }
 
-         /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-         function registerLayoutRenderer( render ) {
-            renderLayout = render;
-         }
-
-         /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-         function createLayoutWidgetAdapter( widget ) {
-            return layoutLoader.load( widget.layout )
-               .then( function( layout ) {
-                  var adapter = layoutWidgetAdapter.create( layout, {
-                     area: widget.area,
-                     id: widget.id,
-                     path: widget.layout
+               return $q.all( [ layoutReady, widgetsInitialized ] )
+                  .then( function() {
+                     areaHelper_.attachWidgets( widgetAdapters_ );
                   } );
+            }
 
-                  return {
-                     id: widget.id,
-                     adapter: adapter,
-                     destroy: adapter.destroy,
-                     templatePromise: $q.when( layout.htmlContent )
-                  };
+            /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+            function tearDownPage() {
+               visibilityManager.unsubscribe();
+               localeManager.unsubscribe();
+
+               return eventBus
+                  .publishAndGatherReplies( 'endLifecycleRequest.default', lifecycleEvent, senderOptions )
+                  .then( function() {
+                     widgetAdapters_.forEach( function( adapterRef ) {
+                        adapterRef.destroy();
+                     } );
+                     widgetAdapters_ = [];
+                     viewChangeApplyFunctions_ = [];
+                  } );
+            }
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+            function registerLayoutRenderer( render ) {
+               renderLayout = render;
+            }
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+            function createLayoutWidgetAdapter( widget ) {
+               return layoutLoader.load( widget.layout )
+                  .then( function( layout ) {
+                     var adapter = layoutWidgetAdapter.create( layout, {
+                        area: widget.area,
+                        id: widget.id,
+                        path: widget.layout
+                     } );
+
+                     return {
+                        id: widget.id,
+                        adapter: adapter,
+                        destroy: adapter.destroy,
+                        templatePromise: $q.when( layout.htmlContent )
+                     };
+                  } );
+            }
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+            function applyViewChanges() {
+               viewChangeApplyFunctions_.forEach( function( applyFunction ) {
+                  applyFunction();
                } );
-         }
+            }
 
-         /////////////////////////////////////////////////////////////////////////////////////////////////////
+            /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-         function applyViewChanges() {
-            viewChangeApplyFunctions_.forEach( function( applyFunction ) {
-               applyFunction();
-            } );
-         }
+            this.applyViewChanges = applyViewChanges;
+            this.setupPage = setupPage;
+            this.tearDownPage = tearDownPage;
+            this.registerLayoutRenderer = registerLayoutRenderer;
+         } );
 
-         /////////////////////////////////////////////////////////////////////////////////////////////////////
+      module.controller( 'AxPageController', createPageControllerInjected );
 
-         this.applyViewChanges = applyViewChanges;
-         this.setupPage = setupPage;
-         this.tearDownPage = tearDownPage;
-         this.registerLayoutRenderer = registerLayoutRenderer;
-      }
-
-   ] );
+   } )();
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -7555,7 +7662,7 @@ define( 'laxar/lib/runtime/page',[
 } );
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2015 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -7768,7 +7875,7 @@ define( 'laxar/lib/profiling/output',[
 } );
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2015 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -8008,7 +8115,7 @@ define( 'laxar/lib/profiling/profiling',[
 } );
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2015 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -8037,7 +8144,7 @@ define( 'laxar/lib/runtime/runtime_dependencies',[
 } );
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2015 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */

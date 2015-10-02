@@ -1,5 +1,5 @@
 {
-   "name": "SearchBoxWidget",
+   "name": "search-box-widget",
    "description": "Simple Box for entering search words.",
 
    "integration": {
