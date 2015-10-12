@@ -2,6 +2,7 @@
 
 ## Last Changes
 
+- [#15](https://github.com/LaxarJS/finder-demo/issues/15): fixed laxar-mocks/laxar dependency mismatch
 - [#14](https://github.com/LaxarJS/finder-demo/issues/14): fixed jasmine2 paths in spec-runners and require_config
 
 
