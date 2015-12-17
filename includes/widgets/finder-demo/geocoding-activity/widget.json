@@ -18,7 +18,8 @@
             "properties": {
                "resource": {
                   "type": "string",
-                  "format": "topic"
+                  "format": "topic",
+                  "axRole": "inlet"
                }
             }
          },
@@ -29,11 +30,14 @@
             "properties": {
                "resource": {
                   "type": "string",
-                  "format": "topic"
+                  "format": "topic",
+                  "axRole": "outlet"
                },
                "searching": {
                   "type": "string",
                   "format": "topic",
+                  "axRole": "outlet",
+                  "axPattern": "flag",
                   "description": "Flag, indicating that geocoding using the search term is still in progress."
                }
             }

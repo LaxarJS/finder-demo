@@ -34,6 +34,7 @@ module.exports = function( grunt ) {
    // basic aliases
    grunt.registerTask( 'test', [ 'laxar-test' ] );
    grunt.registerTask( 'build', [ 'laxar-build' ] );
+   grunt.registerTask( 'dist', [ 'laxar-dist' ] );
    grunt.registerTask( 'develop', [ 'laxar-develop' ] );
 
    // additional (possibly) more intuitive aliases
