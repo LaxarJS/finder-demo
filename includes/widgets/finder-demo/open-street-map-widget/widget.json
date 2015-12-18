@@ -1,5 +1,5 @@
 {
-   "name": "OpenStreetMapWidget",
+   "name": "open-street-map-widget",
    "description": "A widget displaying a map using location searching and maps from openstreetmap.org.",
 
    "integration": {

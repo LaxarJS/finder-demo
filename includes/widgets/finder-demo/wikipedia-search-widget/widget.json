@@ -1,5 +1,5 @@
 {
-   "name": "WikipediaSearchWidget",
+   "name": "wikipedia-search-widget",
    "description": "A widget displaying results found on wikipedia.",
 
    "integration": {

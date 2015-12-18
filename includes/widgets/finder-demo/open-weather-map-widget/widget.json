@@ -1,5 +1,5 @@
 {
-   "name": "OpenWeatherMapWidget",
+   "name": "open-weather-map-widget",
    "description": "A widget displaying weather info for the given location.",
 
    "integration": {
