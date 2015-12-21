@@ -12,6 +12,6 @@
    },
    "devDependencies": {
       "grunt": "~0.4.4",
-      "grunt-laxar": "~1.1.0-alpha.9"
+      "grunt-laxar": "1.1.0"
    }
 }

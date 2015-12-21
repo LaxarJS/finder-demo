@@ -24,7 +24,8 @@
             "properties": {
                "resource": {
                   "type": "string",
-                  "format": "topic"
+                  "format": "topic",
+                  "axRole": "inlet"
                }
             }
          },
@@ -34,6 +35,8 @@
             "properties": {
                "locale": {
                   "type": "string",
+                  "format": "topic",
+                  "axRole": "inlet",
                   "default": "default"
                }
             }

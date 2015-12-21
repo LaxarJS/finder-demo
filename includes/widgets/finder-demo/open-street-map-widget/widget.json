@@ -1,5 +1,5 @@
 {
-   "name": "OpenStreetMapWidget",
+   "name": "open-street-map-widget",
    "description": "A widget displaying a map using location searching and maps from openstreetmap.org.",
 
    "integration": {
@@ -24,7 +24,8 @@
             "properties": {
                "resource": {
                   "type": "string",
-                  "format": "topic"
+                  "format": "topic",
+                  "axRole": "inlet"
                }
             }
          },
@@ -34,13 +35,16 @@
             "properties": {
                "resource": {
                   "type": "string",
-                  "format": "topic"
+                  "format": "topic",
+                  "axRole": "inlet"
                },
                "searchingOn": {
                   "type": "array",
                   "items": {
                      "type": "string",
-                     "format": "topic"
+                     "format": "topic",
+                     "axRole": "inlet",
+                     "axPattern": "flag"
                   },
                   "description": "One or more flags, indicating that geocoding is still in progress."
                }
@@ -52,6 +56,8 @@
             "properties": {
                "locale": {
                   "type": "string",
+                  "format": "topic",
+                  "axRole": "inlet",
                   "default": "default"
                }
             }
