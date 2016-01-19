@@ -2,7 +2,8 @@
 
 ## Last Changes
 
-- [#16](https://github.com/LaxarJS/mashup-demo/issues/16): Expanded widget definitions and updated laxar
+- [#17](https://github.com/LaxarJS/mashup-demo/issues/17): fixed copyright holder in license
+- [#16](https://github.com/LaxarJS/mashup-demo/issues/16): expanded widget definitions and updated laxar
 - [#15](https://github.com/LaxarJS/finder-demo/issues/15): fixed laxar-mocks/laxar dependency mismatch
 - [#14](https://github.com/LaxarJS/finder-demo/issues/14): fixed jasmine2 paths in spec-runners and require_config
 
