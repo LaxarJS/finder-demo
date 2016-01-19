@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -50,8 +50,9 @@ define( 'laxar-mocks/lib/helpers',[
    };
 
 } );
+
 /**
- * Copyright 2015 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -130,8 +131,9 @@ define( 'laxar-mocks/lib/mini_http',[
    };
 
 } );
+
 /**
- * Copyright 2015 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -163,7 +165,7 @@ define( 'laxar-mocks/lib/widget_spec_initializer',[
             return helpers.require( deps );
          } )
          .then( function( modules ) {
-            return registerModules( modules[ 0 ], modules.slice( 1 ), widgetDescriptor.integration.technology );
+            return registerModules( specContext, modules[ 0 ], modules.slice( 1 ), widgetDescriptor.integration.technology );
          } )
          .then( function() {
             return {
@@ -200,8 +202,10 @@ define( 'laxar-mocks/lib/widget_spec_initializer',[
             features: widgetPrivateApi.featureConfiguration || {}
          } );
 
+
          return ax._tooling.widgetLoader
             .create( helpers.legacyQ(), {
+               axControls: ax._tooling.controlsService.create( fileResourceProvider ),
                axFileResourceProvider: fileResourceProvider,
                axThemeManager: themeManager,
                axCssLoader: cssLoader,
@@ -237,18 +241,19 @@ define( 'laxar-mocks/lib/widget_spec_initializer',[
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   function registerModules( widgetModule, controlModules, widgetTechnology ) {
+   function registerModules( specContext, widgetModule, controlModules, widgetTechnology ) {
       var adapter = ax._tooling.widgetAdapters.getFor( widgetTechnology );
       if( !adapter ) {
          ax.log.error( 'Unknown widget technology: [0]', widgetTechnology );
          return Promise.reject( new Error( 'Unknown widget technology: ' + widgetTechnology ) );
       }
 
-      if( widgetTechnology === 'angular' ) {
-         return helpers.require( [ 'angular-mocks' ] )
-            .then( function( modules ) {
-               var ngMocks = modules[ 0 ];
-               var adapterModule = adapter.bootstrap( [ widgetModule ] );
+      return helpers.require( [ 'angular-mocks' ] )
+         .then( function( modules ) {
+            var ngMocks = modules[ 0 ];
+            var adapterModule = adapter.bootstrap( [ widgetModule ] );
+
+            if( widgetTechnology === 'angular' ) {
                ngMocks.module( ax._tooling.runtimeDependenciesModule.name );
                ngMocks.module( adapterModule.name );
                controlModules.forEach( function( controlModule ) {
@@ -256,13 +261,16 @@ define( 'laxar-mocks/lib/widget_spec_initializer',[
                      ngMocks.module( controlModule.name );
                   }
                } );
-               ngMocks.inject();
-               return adapter;
-            } );
-      }
+            }
 
-      adapter.bootstrap( [ widgetModule ] );
-      return Promise.resolve( adapter );
+            ngMocks.inject( function( $q ) {
+               // Support mocked promises created by the event bus:
+               ax._tooling.eventBus.init( $q, specContext.eventBusTick, specContext.eventBusTick );
+               // Support mocked promises created by libraries:
+               ax._tooling.provideQ = function() { return $q; };
+            } );
+            return adapter;
+         } );
    }
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -311,8 +319,9 @@ define( 'laxar-mocks/lib/widget_spec_initializer',[
    };
 
 } );
+
 /**
- * Copyright 2015 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  *
@@ -329,7 +338,7 @@ define( 'laxar-mocks/lib/jasmine_boot',[
       if( optionalJasmineEnv ) {
          return createRunner( optionalJasmineEnv );
       }
-      
+
       /**
        * ## Require &amp; Instantiate
        *
@@ -414,14 +423,14 @@ define( 'laxar-mocks/lib/jasmine_boot',[
       window.setInterval = window.setInterval;
       window.clearTimeout = window.clearTimeout;
       window.clearInterval = window.clearInterval;
-      
+
       htmlReporter.initialize();
-      
+
       return createRunner( env );
    }
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-   
+
    function createRunner( jasmineEnv ) {
       return {
          run: function() {
@@ -430,16 +439,17 @@ define( 'laxar-mocks/lib/jasmine_boot',[
          env: jasmineEnv
       };
    }
-   
+
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-   
+
    return {
       create: create
    };
 
 } );
+
 /**
- * Copyright 2015 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  *
@@ -583,12 +593,39 @@ define( 'laxar-mocks/laxar-mocks',[
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    var axMocks = {
+
       createSetupForWidget: createSetupForWidget,
+
+      /**
+       * The {@link Widget} instrumentation instance for this test.
+       * After the setup-method (provided by {@link createSetupForWidget}) has been run, this also contains
+       * the widget's injections.
+       *
+       * @type {Widget}
+       * @name widget
+       */
       widget: widget,
+
+      /**
+       * This method is used by the spec-runner (HTML- or karma-based) to start running the spec suite.
+       */
       runSpec: null,
+
+      /**
+       * The _"test end"_ of the LaxarJS event bus.
+       * Tests should use this event bus instance to interact with the widget under test by publishing
+       * synthetic events. Tests can also use this handle for subscribing to events published  by the widget.
+       *
+       * There is also the event bus instance used by the widget itself, with spied-upon publish/subscribe
+       * methods. That instance can be accessed as `axMocks.widget.axEventBus`.
+       *
+       * @name eventBus
+       */
       eventBus: null,
+
       tearDown: tearDown,
-      triggerStartupEvents: triggerStartupEvents
+      triggerStartupEvents: triggerStartupEvents,
+      configureMockDebounce: configureMockDebounce
    };
 
    var widgetDomContainer;
@@ -677,6 +714,10 @@ define( 'laxar-mocks/laxar-mocks',[
     *    the widget descriptor (taken from `widget.json`)
     * @param {Object} [optionalOptions]
     *    optional map of options
+    * @param {Object} optionalOptions.adapter
+    *    a technology adapter to use for this widget.
+    *    When using a custom integration technology (something other than "plain" or "angular"), pass the
+    *    adapter module using this option.
     * @param {Array} optionalOptions.knownMissingResources
     *    list of file name parts as strings or regular expressions, that are known to be absent and as such
     *    won't be found by the file resource provider and thus result in the logging of a 404 HTTP error.
@@ -689,21 +730,25 @@ define( 'laxar-mocks/laxar-mocks',[
    function createSetupForWidget( widgetDescriptor, optionalOptions ) {
 
       var options = ax.object.options( optionalOptions, {
+         adapter: null,
          knownMissingResources: []
       } );
 
-      var adapterFactory = ax._tooling.widgetAdapters
-         .getFor( widgetDescriptor.integration.technology );
+      if( options.adapter ) {
+         ax._tooling.widgetAdapters.addAdapters( [ options.adapter ] );
+      }
+
+      var adapterFactory = ax._tooling.widgetAdapters.getFor( widgetDescriptor.integration.technology );
       var applyViewChanges = adapterFactory.applyViewChanges ? adapterFactory.applyViewChanges : function() {};
 
       return function( done ) {
          axMocks.eventBus = ax._tooling.eventBus.create();
          axMocks.eventBus.flush = function() {
-            flushEventBusTicks();
-            applyViewChanges();
+            flushEventBusTicks( applyViewChanges );
          };
          specContextLoaded
             .then( function( specContext ) {
+               specContext.eventBusTick = eventBusTick;
                specContext.eventBus = axMocks.eventBus;
                specContext.options = options;
                return widgetSpecInitializer
@@ -884,6 +929,58 @@ define( 'laxar-mocks/laxar-mocks',[
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+   /**
+    * Installs an `laxar.fn.debounce`-compatible mock replacement that supports manual `flush()`.
+    * When called, `flush` will process all pending debounced calls,
+    * Additionally, there is a `debounce.waiting` array, to inspect waiting calls.
+    *
+    * When called from a `beforeEach` block, only a manual flush will cause debounced calls to be processed
+    * within that block. The passing of time (wall-clock or jasmine-mock clock) will have no effect on calls
+    * that were debounced in this context.
+    *
+    * The mocks are automatically cleaned up after each test case.
+    */
+   function configureMockDebounce() {
+      var fn = ax.fn;
+      spyOn( fn, 'debounce' ).and.callThrough();
+      fn.debounce.flush = flush;
+      fn.debounce.waiting = [];
+
+      var timeoutId = 0;
+      spyOn( fn, '_setTimeout' ).and.callFake( function( f, interval ) {
+         var timeout = ++timeoutId;
+         var run = function( force ) {
+            if( timeout === null ) { return; }
+            removeWaiting( timeout );
+            timeout = null;
+            f( force );
+         };
+
+         fn.debounce.waiting.push( run );
+         run.timeout = timeout;
+         return timeout;
+      } );
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      function flush() {
+         fn.debounce.waiting.forEach( function( run ) {
+            run( true );
+         } );
+         fn.debounce.waiting.splice( 0 );
+      }
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      function removeWaiting( timeout ) {
+         fn.debounce.waiting = fn.debounce.waiting.filter( function( waiting ) {
+            return waiting.timeout !== timeout;
+         } );
+      }
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
    function dirname( file ) {
       return file.substr( 0, file.lastIndexOf( '/' ) );
    }
@@ -895,11 +992,12 @@ define( 'laxar-mocks/laxar-mocks',[
       scheduledFunctions.push( func );
    }
 
-   function flushEventBusTicks() {
+   function flushEventBusTicks( applyViewChanges ) {
       while( scheduledFunctions.length > 0 ) {
          var funcs = scheduledFunctions.slice( 0 );
          scheduledFunctions = [];
          funcs.forEach( function( func ) { func(); } );
+         applyViewChanges();
       }
    }
 
@@ -952,5 +1050,6 @@ define( 'laxar-mocks/laxar-mocks',[
    return axMocks;
 
 } );
+
 define('laxar-mocks', ['laxar-mocks/laxar-mocks'], function (main) { return main; });
 

@@ -1,6 +1,6 @@
 {
    "name": "finder-demo",
-   "version": "1.4.1",
+   "version": "1.5.0",
    "description": "The Almighty Finder of Things.",
    "license": "MIT",
    "scripts": {
@@ -12,6 +12,6 @@
    },
    "devDependencies": {
       "grunt": "~0.4.4",
-      "grunt-laxar": "~1.1.0-alpha.9"
+      "grunt-laxar": "1.1.0"
    }
 }

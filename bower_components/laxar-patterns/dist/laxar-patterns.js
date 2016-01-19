@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -10,15 +10,9 @@
  * @module actions
  */
 define( 'laxar-patterns/lib/actions',[
-   'angular',
    'laxar'
-], function( ng, ax ) {
+], function( ax ) {
    'use strict';
-
-   var $q;
-   ng.injector( [ 'ng' ] ).invoke( [ '$q', function( _$q_ ) {
-      $q = _$q_;
-   } ] );
 
    var NOOP = function() {};
    var DELIVER_TO_SENDER = { deliverToSender: false };
@@ -311,9 +305,9 @@ define( 'laxar-patterns/lib/actions',[
          throw error;
       }
 
-      $q.when( returnValue )
+      q().when( returnValue )
          .then( function( promiseValue ) {
-            if( ng.isObject( promiseValue ) ) {
+            if( isObject( promiseValue ) ) {
                responseEvent.outcome =
                   promiseValue.outcome === OUTCOME_ERROR ? OUTCOME_ERROR : OUTCOME_SUCCESS;
             }
@@ -321,7 +315,7 @@ define( 'laxar-patterns/lib/actions',[
             return promiseValue;
          }, function( promiseValue ) {
             responseEvent.outcome = OUTCOME_ERROR;
-            if( ng.isObject( promiseValue ) ) {
+            if( isObject( promiseValue ) ) {
                responseEvent.outcome =
                   promiseValue.outcome === OUTCOME_SUCCESS ? OUTCOME_SUCCESS : OUTCOME_ERROR;
             }
@@ -337,6 +331,18 @@ define( 'laxar-patterns/lib/actions',[
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+   function isObject( value ) {
+      return value !== null && typeof value === 'object';
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function q() {
+      return ax._tooling.provideQ();
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
    return {
       publisher: publisher,
       publisherForFeature: publisherForFeature,
@@ -348,7 +354,7 @@ define( 'laxar-patterns/lib/actions',[
 } );
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -419,7 +425,7 @@ define( 'laxar-patterns/lib/errors',[ 'laxar' ], function( ax ) {
 } );
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -490,7 +496,7 @@ define( 'laxar-patterns/lib/flags',[
     *    example `flags.myFlag` would set `scope.flags.myFlag` to the currently valid accumulated state
     * @param {String} optionalOptions.predicate
     *    one of these:
-    *    - `any`: if any of the flag's states is `true`, the accumulated state is `true. This is the default
+    *    - `any`: if any of the flag's states is `true`, the accumulated state is `true`. This is the default
     *    - `all`: if all of the flag's states are `true`, the accumulated state is `true`
     *
     * @return {FlagHandler}
@@ -524,7 +530,7 @@ define( 'laxar-patterns/lib/flags',[
     *    example `flags.myFlag` would set `scope.flags.myFlag` to the currently valid accumulated state
     * @param {String} optionalOptions.predicate
     *    one of these:
-    *    - `any`: if any of the flag's sates is `true`, the accumulated state is `true. This is the default
+    *    - `any`: if any of the flag's sates is `true`, the accumulated state is `true`. This is the default
     *    - `all`: if all of the flag's states are `true`, the accumulated state is `true`
     *
     * @return {FlagHandler}
@@ -631,7 +637,7 @@ define( 'laxar-patterns/lib/flags',[
 } );
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -796,7 +802,7 @@ define( 'laxar-patterns/lib/i18n',[
 } );
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -943,16 +949,16 @@ define( 'laxar-patterns/lib/json',[
    /**
     * Calls fast-json-patch to create a rfc-6902 conform JSON patch sequence.
     *
-    * @param {Object|Array} objectA
-    *    the first item for comparison
-    * @param {Object|Array} objectB
-    *    the second item for comparison
+    * @param {Object|Array} fromState
+    *    the state on which to base the list of patches
+    * @param {Object|Array} toState
+    *    the target state: the desired result of applying the newly created patches to the `fromState`
     *
     * @return {Array}
     *    a sequence of patches as defined by rfc-6902
     */
-   function createPatch( objectA, objectB ) {
-      return jsonPatch.compare( objectA, objectB );
+   function createPatch( fromState, toState ) {
+      return jsonPatch.compare( fromState, toState );
    }
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -971,7 +977,7 @@ define( 'laxar-patterns/lib/json',[
 } );
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -993,6 +999,10 @@ define( 'laxar-patterns/lib/patches',[
     * Applies all patches given as mapping from object path to new value. If a path fragment doesn't exist
     * it is automatically inserted, using an array if the next key would be an integer. If a value is
     * appended to an array all values in between are set to `null`.
+    *
+    * This patch format cannot express all operations. Use `json.applyPatch` instead.
+    *
+    * @deprecated since v1.1
     *
     * @param {Object} obj
     *    the object to apply the patches on
@@ -1027,6 +1037,10 @@ define( 'laxar-patterns/lib/patches',[
     *
     * Properties that start with '$$' are ignored when creating patches, so that for example the $$hashCode
     * added by AngularJS ngRepeat is ignored.
+    *
+    * This patch format cannot express all operations. Use `json.createPatch` instead.
+    *
+    * @deprecated since v1.1
     *
     * @param {Object} result
     *    the resulting object the patch map should establish
@@ -1086,6 +1100,11 @@ define( 'laxar-patterns/lib/patches',[
    /**
     * Merges two patch maps and returns the result. When properties exist in both patch maps, properties
     * within the second map overwrite those found within the first one.
+    *
+    * This patch format cannot express all operations.
+    * Concatenate `json.createPatch` sequences instead of using this method.
+    *
+    * @deprecated since v1.1
     *
     * @param {Object} first
     *    first map to merge
@@ -1190,7 +1209,7 @@ define( 'laxar-patterns/lib/patches',[
 } );
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -1209,15 +1228,12 @@ define( 'laxar-patterns/lib/patches',[
  * @module resources
  */
 define( 'laxar-patterns/lib/resources',[
-   'angular',
    'laxar',
-   'json-patch',
-   './patches'
-], function( ng, ax, jsonPatch, patches ) {
+   'json-patch'
+], function( ax, jsonPatch ) {
    'use strict';
 
    var assert = ax.assert;
-   var $q;
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1294,6 +1310,9 @@ define( 'laxar-patterns/lib/resources',[
     * @param {Boolean} optionalOptions.deliverToSender
     *    the value is forwarded to `eventBus.publish`: if `true` the event will also be delivered to the
     *    publisher. Default is `false`
+    * @param {Boolean} optionalOptions.isOptional
+    *    if `true`, don't throw an error if `featurePath.resource` is missing. Instead return a publisher
+    *    that doesn't do anything when called. Default is `false`.
     *
     * @return {Function}
     *    the publisher function. Takes the data to publish as single argument
@@ -1302,12 +1321,17 @@ define( 'laxar-patterns/lib/resources',[
       assert( context ).hasType( Object ).isNotNull();
       assert( context.eventBus ).hasType( Object ).isNotNull();
 
-      var resourceName = ax.object.path( context.features, featurePath + '.resource' );
-      assert( resourceName ).hasType( String ).isNotNull();
-
       var options = ax.object.options( optionalOptions, {
          deliverToSender: false
       } );
+
+      var resourceName = ax.object.path( context.features, featurePath + '.resource' );
+      if( !resourceName && options.isOptional ) {
+         return function() {
+            return q().when();
+         };
+      }
+      assert( resourceName ).hasType( String ).isNotNull();
 
       return function didReplacePublisher( replacement ) {
          return context.eventBus.publish( 'didReplace.' + resourceName, {
@@ -1365,6 +1389,9 @@ define( 'laxar-patterns/lib/resources',[
     * @param {Boolean} optionalOptions.deliverToSender
     *    the value is forward to `eventBus.publish`: if `true` the event will also be delivered to the
     *    publisher. Default is `false`
+    * @param {Boolean} optionalOptions.isOptional
+    *    if `true`, don't throw an error if `featurePath.resource` is missing. Instead return a publisher
+    *    that doesn't do anything when called. Default is `false`.
     *
     * @return {Function}
     *    the publisher function as described above
@@ -1373,12 +1400,21 @@ define( 'laxar-patterns/lib/resources',[
       assert( context ).hasType( Object ).isNotNull();
       assert( context.eventBus ).hasType( Object ).isNotNull();
 
-      var resourceName = ax.object.path( context.features, featurePath + '.resource' );
-      assert( resourceName ).hasType( String ).isNotNull();
-
       var options = ax.object.options( optionalOptions, {
          deliverToSender: false
       } );
+
+      var resourceName = ax.object.path( context.features, featurePath + '.resource' );
+      if( !resourceName && options.isOptional ) {
+         var noopPublisher = function() {
+            return q().when();
+         };
+         noopPublisher.compareAndPublish = function() {
+            return noopPublisher();
+         };
+         return noopPublisher;
+      }
+      assert( resourceName ).hasType( String ).isNotNull();
 
       var publisher = function( patches ) {
          assert( patches ).hasType( Array ).isNotNull();
@@ -1388,8 +1424,7 @@ define( 'laxar-patterns/lib/resources',[
                'updatePublisher: Not sending empty didUpdate to resource "[0]" from sender "[1]".',
                resourceName, ( context.widget || { id: 'unknown' } ).id
             );
-            $q = $q || ng.injector( [ 'ng' ] ).get( '$q' );
-            return $q.when();
+            return q().when();
          }
 
          return context.eventBus.publish( 'didUpdate.' + resourceName, {
@@ -1500,17 +1535,17 @@ define( 'laxar-patterns/lib/resources',[
     */
    ResourceHandler.prototype.registerResourceFromFeature = function( featurePath, optionalOptions ) {
       var resource = ax.object.path( this.context_.features, featurePath + '.resource', null );
-      optionalOptions = ax.object.options( optionalOptions, { isOptional: false } );
-      if( resource === null && !!optionalOptions.isOptional ) {
+      var options = ax.object.options( optionalOptions, { isOptional: false } );
+      if( resource === null && options.isOptional ) {
          return this;
       }
       assert( resource ).isNotNull( 'Could not find resource configuration in features for "' + featurePath + '"' );
 
-      if( !optionalOptions.modelKey ) {
-         optionalOptions.modelKey = featurePath.substr( featurePath.lastIndexOf( '.' ) + 1 );
+      if( !options.modelKey ) {
+         options.modelKey = featurePath.substr( featurePath.lastIndexOf( '.' ) + 1 );
       }
 
-      return this.registerResource( resource, optionalOptions );
+      return this.registerResource( resource, options );
    };
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1547,19 +1582,19 @@ define( 'laxar-patterns/lib/resources',[
    ResourceHandler.prototype.registerResource = function( resource, optionalOptions ) {
       assert( resource ).hasType( String ).isNotNull();
 
-      optionalOptions = ax.object.options( optionalOptions, {
+      var options = ax.object.options( optionalOptions, {
          omitFirstReplace: false,
          modelKey: resource
       } );
       this.waitingFor_.push( resource );
-      registerResourceHandlers( this, resource, optionalOptions );
+      registerResourceHandlers( this, resource, options );
 
       if( !( resource in this.modelHandlers_ ) ) {
          this.modelHandlers_[ resource ] = {};
       }
 
-      registerForReplace( this,  resource, optionalOptions );
-      registerForUpdate( this, resource, optionalOptions );
+      registerForReplace( this,  resource, options );
+      registerForUpdate( this, resource, options );
 
       return this;
    };
@@ -1661,9 +1696,9 @@ define( 'laxar-patterns/lib/resources',[
       }
       self.modelHandlers_[ resource ].onReplace = [ handler ];
 
-      self.context_.eventBus.subscribe( 'didReplace.' + resource, function( event ) {
+      self.context_.eventBus.subscribe( 'didReplace.' + resource, function( event, meta ) {
          var changed = self.modelHandlers_[ resource ].onReplace.reduce( function( changed, handler ) {
-            return handler( event ) || changed;
+            return handler( event, meta ) || changed;
          }, false );
          if( !changed ) {
             return;
@@ -1671,11 +1706,11 @@ define( 'laxar-patterns/lib/resources',[
 
          try {
             self.externalHandlers_[ resource ].onReplace.forEach( function( handler ) {
-               handler( event );
+               handler( event, meta );
             } );
          }
          finally {
-            self.waitingFor_.splice( self.waitingFor_.indexOf( resource ), 1 );
+            self.waitingFor_ = self.waitingFor_.filter( function( topic  ) { return topic !== resource; } );
             if( !self.waitingFor_.length ) {
                self.allReplacedCallback_();
             }
@@ -1698,9 +1733,9 @@ define( 'laxar-patterns/lib/resources',[
       }
       self.modelHandlers_[ resource ].onUpdate = [ handler ];
 
-      self.context_.eventBus.subscribe( 'didUpdate.' + resource, function( event ) {
+      self.context_.eventBus.subscribe( 'didUpdate.' + resource, function( event, meta ) {
          var changed = self.modelHandlers_[ resource ].onUpdate.reduce( function( changed, handler ) {
-            return handler( event ) || changed;
+            return handler( event, meta ) || changed;
          }, false );
          if( !changed ) {
             return;
@@ -1708,7 +1743,7 @@ define( 'laxar-patterns/lib/resources',[
 
          try {
             self.externalHandlers_[ resource ].onUpdate.forEach( function( handler ) {
-               handler( event );
+               handler( event, meta );
             } );
          }
          finally {
@@ -1818,6 +1853,12 @@ define( 'laxar-patterns/lib/resources',[
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+   function q() {
+      return ax._tooling.provideQ();
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
    return {
 
       replaceHandler: replaceHandler,
@@ -1832,12 +1873,13 @@ define( 'laxar-patterns/lib/resources',[
 } );
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2014-2015 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
 /**
- * This module provides helpers for creating event objects to be used with *didValidate* events.
+ * This module provides helpers for patterns regarding *validateRequest*, *willValidate* and
+ * *didValidate* events.
  *
  * Validation messages can have one of the following structures:
  * - A simple html message object (locale to string mapping). It will get a default level of *ERROR*.
@@ -1846,8 +1888,241 @@ define( 'laxar-patterns/lib/resources',[
  *
  * @module validation
  */
-define( 'laxar-patterns/lib/validation',[], function() {
+define( 'laxar-patterns/lib/validation',[
+   'laxar'
+], function( ax ) {
    'use strict';
+
+   /**
+    * Creates and returns an event resembling a successful validation result.
+    *
+    * @param {String} resource
+    *    name of the validated resource
+    * @param {Object[]|...Object|String[]|...String} htmlMessages
+    *    messages associated with the result. They should have the structure as described in the module
+    *
+    * @return {Object}
+    *    the validation event
+    */
+   function successEvent( resource, htmlMessages ) {
+      return createEvent( resource, messagesFromArgs( htmlMessages, arguments ), 'SUCCESS' );
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   /**
+    * Creates and returns an event resembling the result of a validation with errors.
+    *
+    * @param {String} resource
+    *    name of the validated resource
+    * @param {Object[]|...Object|String[]|...String} htmlMessages
+    *    messages associated with the result. They should have the structure as described in the module
+    *
+    * @return {Object}
+    *    the validation event
+    */
+   function errorEvent( resource, htmlMessages ) {
+      return createEvent( resource, messagesFromArgs( htmlMessages, arguments ), 'ERROR' );
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   /**
+    * Creates and returns a new handler for `validateRequest` events for a given context. It handles sending
+    * of `willValidate` and `didValidate` events, including the output of the given `validator` function.
+    *
+    * @param {Object} context
+    *    the context the handler should work with. It expects to find an `eventBus` property, with which
+    *    it can do the event handling
+    *
+    * @return {ValidationHandler}
+    *    the validation handler instance for the given context
+    */
+   function handlerFor( context ) {
+      ax.assert( context ).hasType( Object ).hasProperty( 'eventBus' );
+
+      var eventBus = context.eventBus;
+
+      /**
+       * @name ValidationHandler
+       */
+      var api = {
+         registerResourceFromFeature: registerResourceFromFeature,
+         registerResource: registerResource
+      };
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      /**
+       * Registers a validator for `validateRequest` events for a resource configured under the given feature.
+       * It is assumed that the given feature has a `resource` property with the name of the resource to
+       * validate. If the property is not found, an assertion will fail. If on the other hand the option
+       * `isOptional` is given as `true`, this is ignored and nothing good or bad happens.
+       *
+       * Apart from that this function works just like {@link ValidationHandler#registerResource}.
+       *
+       * Example:
+       * Consider the following configuration for a widget:
+       * ```json
+       * {
+       *    "features": {
+       *       "amount": {
+       *          "resource": "theAmount"
+       *       }
+       *    }
+       * }
+       * ```
+       * An example using that would be:
+       * ```js
+       * validation.handlerFor( context )
+       *    .registerResourceFromFeature( 'amount', function( event, meta ) {
+       *       if( isAmountValid() ) {
+       *          return null;
+       *       }
+       *       return 'The given amount is not valid';
+       *    } );
+       * ```
+       *
+       * @param {String} featurePath
+       *    the feature to read the resource to validate from
+       * @param {Function} validator
+       *    the validator function called upon `validateRequest` for the given resource
+       * @param {Object} [optionalOptions]
+       *    options to use
+       * @param {Boolean} optionalOptions.isOptional
+       *    if `true` a non-configured feature is simply ignored. Otherwise this results in an error
+       *    (default is `false`)
+       *
+       * @return {ValidationHandler}
+       *    this instance for chaining
+       *
+       * @memberOf ValidationHandler
+       */
+      function registerResourceFromFeature( featurePath, validator, optionalOptions ) {
+         ax.assert( featurePath ).hasType( String ).isNotNull();
+         ax.assert( validator ).hasType( Function ).isNotNull();
+
+         var options = ax.object.options( optionalOptions, { isOptional: false } );
+
+         var resource = ax.object.path( context.features, featurePath + '.resource', null );
+         if( resource === null && options.isOptional ) {
+            return api;
+         }
+         ax.assert( resource )
+            .isNotNull( 'Could not find resource configuration in features for "' + featurePath + '"' );
+
+         return registerResource( resource, validator );
+      }
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      /**
+       * Registers a validator for `validateRequest` events for the given resource.
+       *
+       * The validator must be a function, that handles the actual validation necessary for the resource. The
+       * validation result is always signaled through one or more generated error messages or the absence of
+       * these messages. So valid results may be a string, an i18n object, an array of the former, `null` or
+       * an empty array. `null` and an empty array signal a successful validation.
+       *
+       * The validator receives the event object for the `validateRequest` event and its according `meta` object.
+       *
+       * The way these messages are returned by the validator may be one of two ways, depending on the nature
+       * of the validation:
+       *
+       * - if the validation can be handled synchronously, the result should simply be returned directly
+       * - in case the validation is asynchronous, a promise must be returned, which must be resolved with the
+       *   same kind of values as for the synchronous case
+       *
+       * If the validator throws an error or the promise is rejected, this is treated as a failed validation.
+       * Since this is due to a programming error, the error or rejection cause will be logged and a
+       * configurable message will instead be send in the `didValidate` event. The message is assumed to be
+       * found in the global configuration under the path `lib.laxar-patterns.validation.i18nHtmlExceptionMessage`
+       * as string or i18n object. If it cannot be found, an empty string is send as message.
+       *
+       * Example:
+       * ```js
+       * validation.handlerFor( context )
+       *    .registerResource( 'theAmount', function( event, meta ) {
+       *       return context.resources.theAmount > 1000;
+       *    } )
+       *    .registerResource( 'currentUser', function( event, meta ) {
+       *       return fetchUserValidityRules()
+       *          .then( function( rules ) {
+       *             return context.resources.currentUser.meets( rules );
+       *          } )
+       *          .then( function( valid ) {
+       *             return valid ? null : 'The current user isn\'t valid for some reason. Do something!';
+       *          } );
+       *    } );
+       * ```
+       *
+       * @param {String} resource
+       *    the resource to validate
+       * @param {Function} validator
+       *    the validator function called upon `validateRequest` for the given resource
+       *
+       * @return {ValidationHandler}
+       *    this instance for chaining
+       *
+       * @memberOf ValidationHandler
+       */
+      function registerResource( resource, validator ) {
+         ax.assert( resource ).hasType( String ).isNotNull();
+         ax.assert( validator ).hasType( Function ).isNotNull();
+
+         eventBus.subscribe( 'validateRequest.' + resource, function( event, meta ) {
+            callValidator( resource, validator.bind( null, event, meta ) );
+         } );
+         return api;
+      }
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      /**
+       * @private
+       */
+      function callValidator( resource, validator ) {
+         eventBus.publish( 'willValidate.' + resource, { resource: resource }  );
+         try {
+            var returnValue = validator();
+
+            q().when( returnValue )
+               .then( function( result ) {
+                  var messages = Array.isArray( result ) ? result : ( result ? [ result ] : null );
+                  var event = messages && messages.length > 0 ?
+                     errorEvent( resource, messages ) : successEvent( resource );
+
+                  eventBus.publish( 'didValidate.' + resource + '.' + event.outcome, event );
+               } )
+               .catch( handleError.bind( null, resource ) );
+         }
+         catch( err ) {
+            handleError( resource, err );
+         }
+      }
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      /**
+       * @private
+       */
+      function handleError( resource, err ) {
+         var logMessage = err && err.message ? err.message : err;
+         ax.log.error( 'Error handling validateRequest for resource "[0]": [1]', resource, logMessage );
+         if( err ) {
+            ax.log.error( 'Stacktrace for previous error: [0]', err.stack || 'unavailable' );
+         }
+
+         var message = ax.configuration.get( 'lib.laxar-patterns.validation.i18nHtmlExceptionMessage', '' );
+         eventBus.publish( 'didValidate.' + resource + '.ERROR', errorEvent( resource, message ) );
+      }
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      return api;
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    /**
     * @private
@@ -1888,45 +2163,22 @@ define( 'laxar-patterns/lib/validation',[], function() {
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+   function q() {
+      return ax._tooling.provideQ();
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
    return {
-
-      /**
-       * Creates and returns an event resembling a successful validation result.
-       *
-       * @param {String} resource
-       *    name of the validated resource
-       * @param {Object[]|...Object} htmlMessages
-       *    messages associated with the result. They should have the structure as described in the module
-       *
-       * @return {Object}
-       *    the validation event
-       */
-      successEvent: function( resource, htmlMessages ) {
-         return createEvent( resource, messagesFromArgs( htmlMessages, arguments ), 'SUCCESS' );
-      },
-
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-      /**
-       * Creates and returns an event resembling the result of a validation with errors.
-       *
-       * @param {String} resource name of the validated resource
-       * @param {Object[]|...Object} htmlMessages
-       *    messages associated with the result. They should have the structure as described in the module
-       *
-       * @return {Object}
-       *    the validation event
-       */
-      errorEvent: function( resource, htmlMessages ) {
-         return createEvent( resource, messagesFromArgs( htmlMessages, arguments ), 'ERROR' );
-      }
-
+      successEvent: successEvent,
+      errorEvent: errorEvent,
+      handlerFor: handlerFor
    };
 
 } );
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -2109,7 +2361,7 @@ define( 'laxar-patterns/lib/visibility',[
 } );
 
 /**
- * Copyright 2015 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */

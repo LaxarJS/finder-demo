@@ -77,6 +77,7 @@
          "widgets": [
             "finder-demo/language-selection-activity",
             "finder-demo/geocoding-activity",
+            "amd:laxar-developer-tools-widget",
             "finder-demo/search-box-widget",
             "finder-demo/omdb-search-widget",
             "finder-demo/wikipedia-search-widget",
@@ -117,29 +118,61 @@
    ],
    "widgets": [
       {
-         "path": "includes/widgets/finder-demo/geocoding-activity",
+         "path": "bower_components/laxar-developer-tools-widget",
          "integration": {
-            "technology": "plain",
+            "technology": "angular",
             "type": "widget"
          },
          "resources": {
             "watch": [
-               "/includes/themes/cube.theme/widgets/finder-demo/geocoding-activity/geocoding-activity.html",
-               "/includes/themes/cube.theme/widgets/finder-demo/geocoding-activity/css/geocoding-activity.css",
+               "/includes/themes/cube.theme/widgets/ax-developer-tools-widget/ax-developer-tools-widget.html",
+               "/includes/themes/cube.theme/widgets/ax-developer-tools-widget/css/ax-developer-tools-widget.css",
                "widget.json",
-               "*.theme/geocoding-activity.html",
-               "*.theme/css/geocoding-activity.css",
+               "*.theme/ax-developer-tools-widget.html",
+               "*.theme/css/ax-developer-tools-widget.css",
+               "ax-developer-tools-widget.js"
+            ],
+            "embed": [
+               "/includes/themes/cube.theme/widgets/ax-developer-tools-widget/ax-developer-tools-widget.html",
+               "widget.json",
+               "*.theme/ax-developer-tools-widget.html"
+            ],
+            "list": [
+               "/includes/themes/cube.theme/widgets/ax-developer-tools-widget/css/ax-developer-tools-widget.css",
+               "*.theme/css/ax-developer-tools-widget.css"
+            ]
+         },
+         "references": {
+            "local": {
+               "self": "../../bower_components/laxar-developer-tools-widget"
+            },
+            "amd": {
+               "self": "laxar-developer-tools-widget",
+               "module": "laxar-developer-tools-widget/ax-developer-tools-widget"
+            }
+         },
+         "controls": [],
+         "referencedAs": {
+            "byUser": "amd:laxar-developer-tools-widget",
+            "derivedScheme": "amd",
+            "derivedReference": "laxar-developer-tools-widget"
+         }
+      },
+      {
+         "path": "includes/widgets/finder-demo/geocoding-activity",
+         "integration": {
+            "technology": "plain",
+            "type": "activity"
+         },
+         "resources": {
+            "watch": [
+               "widget.json",
                "geocoding-activity.js"
             ],
             "embed": [
-               "/includes/themes/cube.theme/widgets/finder-demo/geocoding-activity/geocoding-activity.html",
-               "widget.json",
-               "*.theme/geocoding-activity.html"
+               "widget.json"
             ],
-            "list": [
-               "/includes/themes/cube.theme/widgets/finder-demo/geocoding-activity/css/geocoding-activity.css",
-               "*.theme/css/geocoding-activity.css"
-            ]
+            "list": []
          },
          "references": {
             "local": {

@@ -2,38 +2,39 @@
 var require = { 
    "baseUrl": "bower_components", 
    "paths": { 
+      "laxar": "laxar/dist/laxar.with-deps", 
       "requirejs": "requirejs/require", 
-      "jquery": "jquery/dist/jquery", 
+      "text": "requirejs-plugins/lib/text", 
+      "json": "requirejs-plugins/src/json", 
       "angular": "angular/angular", 
       "angular-mocks": "angular-mocks/angular-mocks", 
       "angular-route": "angular-route/angular-route", 
       "angular-sanitize": "angular-sanitize/angular-sanitize", 
-      "jjv": "jjv/lib/jjv", 
-      "jjve": "jjve/jjve", 
-      "jasmine2": "jasmine/lib/jasmine-core/jasmine", 
-      "text": "requirejs-plugins/lib/text", 
-      "json": "requirejs-plugins/src/json", 
+      "laxar/laxar_testing": "laxar/dist/laxar_testing", 
+      "jquery": "jquery/dist/jquery", 
+      "jasmine": "jasmine/lib/jasmine-core/jasmine", 
+      "q_mock": "q_mock/q", 
+      "laxar-mocks": "laxar-mocks/dist/laxar-mocks", 
+      "jasmine2": "jasmine2/lib/jasmine-core/jasmine", 
+      "laxar-patterns": "laxar-patterns/dist/laxar-patterns", 
       "json-patch": "fast-json-patch/src/json-patch-duplex", 
+      "laxar-uikit": "laxar-uikit/dist/laxar-uikit", 
+      "laxar-uikit/controls": "laxar-uikit/dist/controls", 
       "bootstrap": "bootstrap-sass-official/assets/javascripts/bootstrap", 
       "laxar-path-root": "..", 
       "laxar-path-layouts": "../application/layouts", 
       "laxar-path-pages": "../application/pages", 
+      "laxar-path-flow": "../application/flow/flow.json", 
       "laxar-path-widgets": "../includes/widgets", 
       "laxar-path-themes": "../includes/themes", 
-      "laxar-path-flow": "../application/flow/flow.json", 
-      "laxar-application-dependencies": "../var/static/laxar_application_dependencies", 
-      "laxar": "laxar/dist/laxar", 
-      "laxar-mocks": "laxar-mocks/dist/laxar-mocks", 
-      "laxar-patterns": "laxar-patterns/dist/laxar-patterns", 
-      "laxar-uikit": "laxar-uikit/dist/laxar-uikit", 
-      "laxar-uikit/controls": "laxar-uikit/dist/controls", 
       "laxar-path-default-theme": "laxar-uikit/dist/themes/default.theme", 
+      "laxar-application-dependencies": "../var/static/laxar_application_dependencies", 
       "finder-box-control": "../includes/controls/finder-demo/finder-box-control", 
       "finder-demo-utilities": "../includes/lib/finder-demo-utilities", 
       "openlayers": "ol3/build/ol", 
-      "promise-polyfill": "promise-polyfill/Promise", 
       "fetch": "fetch/fetch", 
-      "d3": "d3/d3"
+      "d3": "d3/d3", 
+      "promise-polyfill": "promise-polyfill/Promise"
    }, 
    "map": { 
       "*": { 
@@ -94,8 +95,9 @@ var require = {
    }
 };
 require.paths[ 'laxar-path-flow' ] = "../application/flow/flow.json";
+require.baseUrl = (typeof window !== "undefined" && window.laxar && window.laxar.amd && window.laxar.amd.baseUrl) || require.baseUrl;
 /** vim: et:ts=4:sw=4:sts=4
- * @license RequireJS 2.1.20 Copyright (c) 2010-2015, The Dojo Foundation All Rights Reserved.
+ * @license RequireJS 2.1.22 Copyright (c) 2010-2015, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
  * see: http://github.com/jrburke/requirejs for details
  */
@@ -108,7 +110,7 @@ var requirejs, require, define;
 (function (global) {
     var req, s, head, baseElement, dataMain, src,
         interactiveScript, currentlyAddingScript, mainScript, subPath,
-        version = '2.1.20',
+        version = '2.1.22',
         commentRegExp = /(\/\*([\s\S]*?)\*\/|([^:]|^)\/\/(.*)$)/mg,
         cjsRequireRegExp = /[^.]\s*require\s*\(\s*["']([^'"\s]+)["']\s*\)/g,
         jsSuffixRegExp = /\.js$/,
@@ -957,21 +959,10 @@ var requirejs, require, define;
 
                     if (this.depCount < 1 && !this.defined) {
                         if (isFunction(factory)) {
-                            //If there is an error listener, favor passing
-                            //to that instead of throwing an error. However,
-                            //only do it for define()'d  modules. require
-                            //errbacks should not be called for failures in
-                            //their callbacks (#699). However if a global
-                            //onError is set, use that.
-                            if ((this.events.error && this.map.isDefine) ||
-                                req.onError !== defaultOnError) {
-                                try {
-                                    exports = context.execCb(id, factory, depExports, exports);
-                                } catch (e) {
-                                    err = e;
-                                }
-                            } else {
+                            try {
                                 exports = context.execCb(id, factory, depExports, exports);
+                            } catch (e) {
+                                err = e;
                             }
 
                             // Favor return value over exports. If node/cjs in play,
@@ -988,12 +979,30 @@ var requirejs, require, define;
                             }
 
                             if (err) {
-                                err.requireMap = this.map;
-                                err.requireModules = this.map.isDefine ? [this.map.id] : null;
-                                err.requireType = this.map.isDefine ? 'define' : 'require';
-                                return onError((this.error = err));
+                                // If there is an error listener, favor passing
+                                // to that instead of throwing an error. However,
+                                // only do it for define()'d  modules. require
+                                // errbacks should not be called for failures in
+                                // their callbacks (#699). However if a global
+                                // onError is set, use that.
+                                if ((this.events.error && this.map.isDefine) ||
+                                    req.onError !== defaultOnError) {
+                                    err.requireMap = this.map;
+                                    err.requireModules = this.map.isDefine ? [this.map.id] : null;
+                                    err.requireType = this.map.isDefine ? 'define' : 'require';
+                                    return onError((this.error = err));
+                                } else if (typeof console !== 'undefined' &&
+                                           console.error) {
+                                    // Log the error for debugging. If promises could be
+                                    // used, this would be different, but making do.
+                                    console.error(err);
+                                } else {
+                                    // Do not want to completely lose the error. While this
+                                    // will mess up processing and lead to similar results
+                                    // as bug 1440, it at least surfaces the error.
+                                    req.onError(err);
+                                }
                             }
-
                         } else {
                             //Just a literal value
                             exports = factory;
@@ -1005,7 +1014,11 @@ var requirejs, require, define;
                             defined[id] = exports;
 
                             if (req.onResourceLoad) {
-                                req.onResourceLoad(context, this.map, this.depMaps);
+                                var resLoadMaps = [];
+                                each(this.depMaps, function (depMap) {
+                                    resLoadMaps.push(depMap.normalizedMap || depMap);
+                                });
+                                req.onResourceLoad(context, this.map, resLoadMaps);
                             }
                         }
 
@@ -1064,6 +1077,7 @@ var requirejs, require, define;
                                                       this.map.parentMap);
                         on(normalizedMap,
                             'defined', bind(this, function (value) {
+                                this.map.normalizedMap = normalizedMap;
                                 this.init([], function () { return value; }, null, {
                                     enabled: true,
                                     ignore: true
@@ -1802,7 +1816,21 @@ var requirejs, require, define;
             onScriptError: function (evt) {
                 var data = getScriptData(evt);
                 if (!hasPathFallback(data.id)) {
-                    return onError(makeError('scripterror', 'Script error for: ' + data.id, evt, [data.id]));
+                    var parents = [];
+                    eachProp(registry, function(value, key) {
+                        if (key.indexOf('_@r') !== 0) {
+                            each(value.depMaps, function(depMap) {
+                                if (depMap.id === data.id) {
+                                    parents.push(key);
+                                }
+                                return true;
+                            });
+                        }
+                    });
+                    return onError(makeError('scripterror', 'Script error for "' + data.id +
+                                             (parents.length ?
+                                             '", needed by: ' + parents.join(', ') :
+                                             '"'), evt, [data.id]));
                 }
             }
         };
@@ -2029,9 +2057,9 @@ var requirejs, require, define;
                 //In a web worker, use importScripts. This is not a very
                 //efficient use of importScripts, importScripts will block until
                 //its script is downloaded and evaluated. However, if web workers
-                //are in play, the expectation that a build has been done so that
-                //only one script needs to be loaded anyway. This may need to be
-                //reevaluated if other use cases become common.
+                //are in play, the expectation is that a build has been done so
+                //that only one script needs to be loaded anyway. This may need
+                //to be reevaluated if other use cases become common.
                 importScripts(url);
 
                 //Account for anonymous modules

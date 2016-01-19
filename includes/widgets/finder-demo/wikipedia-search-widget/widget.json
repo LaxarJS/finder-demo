@@ -1,5 +1,5 @@
 {
-   "name": "WikipediaSearchWidget",
+   "name": "wikipedia-search-widget",
    "description": "A widget displaying results found on wikipedia.",
 
    "integration": {
@@ -25,7 +25,8 @@
             "properties": {
                "resource": {
                   "type": "string",
-                  "format": "topic"
+                  "format": "topic",
+                  "axRole": "inlet"
                }
             }
          },
@@ -35,6 +36,8 @@
             "properties": {
                "locale": {
                   "type": "string",
+                  "format": "topic",
+                  "axRole": "inlet",
                   "default": "default"
                }
             }

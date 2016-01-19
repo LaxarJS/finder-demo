@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -95,7 +95,7 @@ define( 'laxar/lib/logging/console_channel',[], function() {
 } );
 
 /**
- * Copyright 2015 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -302,7 +302,7 @@ define( 'laxar/lib/utilities/assert',[], function() {
 } );
 
 /**
- * Copyright 2015 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -624,7 +624,7 @@ define( 'laxar/lib/utilities/object',[], function() {
 } );
 
 /**
- * Copyright 2015 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -686,7 +686,7 @@ define( 'laxar/lib/utilities/configuration',[
 } );
 
 /**
- * Copyright 2015 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -1100,7 +1100,7 @@ define( 'laxar/lib/logging/log',[
 } );
 
 /**
- * Copyright 2015 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -1185,7 +1185,7 @@ define( 'laxar/lib/directives/id/id',[
 } );
 
 /**
- * Copyright 2015 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -1241,7 +1241,7 @@ define( 'laxar/lib/directives/layout/layout',[
 } );
 
 /**
- * Copyright 2015 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -1568,7 +1568,7 @@ define( 'laxar/lib/utilities/string',[], function() {
 } );
 
 /**
- * Copyright 2015 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -1651,7 +1651,7 @@ define( 'laxar/lib/directives/widget_area/widget_area',[
 } );
 
 /**
- * Copyright 2015 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -1672,7 +1672,7 @@ define( 'laxar/lib/directives/directives',[
 } );
 
 /**
- * Copyright 2015 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -2400,7 +2400,7 @@ define( 'laxar/lib/event_bus/event_bus',[
 } );
 
 /**
- * Copyright 2015 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -2583,7 +2583,7 @@ define( 'laxar/lib/utilities/path',[
 } );
 
 /**
- * Copyright 2015 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -2900,7 +2900,7 @@ define( 'laxar/lib/file_resource_provider/file_resource_provider',[
 } );
 
 /**
- * Copyright 2015 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -3138,7 +3138,7 @@ define( 'laxar/lib/i18n/i18n',[
 } );
 
 /**
- * Copyright 2015 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -4112,6 +4112,8 @@ define( 'laxar/lib/loaders/paths',[
             o.schema = o.env.resolveRef(null, o.schema);
             if (o.schema) o.schema = o.schema[0];
           }
+
+          if (!o.schema.type) o.schema.type = 'object';
         }
 
         if (o.schema && o.schema.type) {
@@ -4253,7 +4255,7 @@ define( 'laxar/lib/loaders/paths',[
 }).call(this);
 
 /**
- * Copyright 2015 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -4396,7 +4398,7 @@ define( 'laxar/lib/json/schema',[
 } );
 
 /**
- * Copyright 2015 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -4511,7 +4513,7 @@ define( 'laxar/lib/json/validator',[
 } );
 
 /**
- * Copyright 2015 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -4634,7 +4636,7 @@ define( 'laxar/lib/loaders/features_provider',[
 } );
 
 /**
- * Copyright 2015 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -4765,7 +4767,7 @@ define( 'laxar/lib/widget_adapters/plain_adapter',[], function() {
 } );
 
 /**
- * Copyright 2015 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -4962,7 +4964,7 @@ define( 'laxar/lib/widget_adapters/angular_adapter',[
 } );
 
 /**
- * Copyright 2015 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -5003,7 +5005,151 @@ define( 'laxar/lib/widget_adapters/adapters',[
 } );
 
 /**
- * Copyright 2015 aixigo AG
+ * Copyright 2016 aixigo AG
+ * Released under the MIT license.
+ * http://laxarjs.org/license
+ */
+define( 'laxar/lib/tooling/pages',[
+   '../utilities/object',
+   '../logging/log'
+], function( object, log ) {
+   'use strict';
+
+   var enabled = false;
+
+   var currentPageInfo = {
+      pageReference: null,
+      pageDefinitions: {},
+      compositionDefinitions: {},
+      widgetDescriptors: {}
+   };
+
+   var listeners = [];
+
+   return {
+      /** Use to access the flattened page model, where compositions have been expanded. */
+      FLAT: 'FLAT',
+      /** Use to access the compact page/composition model, where compositions have not been expanded. */
+      COMPACT: 'COMPACT',
+
+      /** Start collecting page/composition data. */
+      enable: function() {
+         enabled = true;
+      },
+
+      /** Stop collecting page/composition data and clean up. */
+      disable: function() {
+         enabled = false;
+         currentPageInfo.pageReference = null;
+         currentPageInfo.widgetDescriptors = {};
+         cleanup();
+      },
+
+      /**
+       * Access the current page information.
+       * Everything is returned as a copy, sothis object cannot be used to modify the host application.
+       *
+       * @return {Object}
+       *   the current page information, with the following properties:
+       *    - `pageDefinitions` {Object}
+       *       both the original as well as the expanded/flattened page model for each available page
+       *    - `compositionDefinitions` {Object}
+       *       both the original as well as the expanded/flattened composition model for each composition of
+       *       any available page
+       *    - `widgetDescriptors` {Object}
+       *       the widget descriptor for each widget that was referenced
+       *    - `pageReference` {String}
+       *       the reference for the current page, to lookup page/composition definitions
+       */
+      current: function() {
+         if( !enabled ) {
+            log.warn( 'laxar page tooling: trying to access data, but collecting it was never enabled' );
+         }
+         return object.deepClone( currentPageInfo );
+      },
+
+      /**
+       * Add a listener function to be notified whenever the page information changes.
+       * As a side-effect, this also automatically enables collecting page/composition data.
+       *
+       * @param {Function}
+       *   The listener to add. Will be called with the current page information whenever that changes.
+       */
+      addListener: function( listener ) {
+         enabled = true;
+         listeners.push( listener );
+      },
+
+      /**
+       * Remove a page information listener function.
+       *
+       * @param {Function}
+       *   The listener to remove
+       */
+      removeListener: function( listener ) {
+         listeners = listeners.filter( function( _ ) {
+            return _ !== listener;
+         } );
+      },
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      /** @private */
+      setWidgetDescriptor: function( ref, descriptor ) {
+         if( !enabled ) { return; }
+         currentPageInfo.widgetDescriptors[ ref ] = descriptor;
+      },
+
+      /** @private */
+      setPageDefinition: function( ref, page, type ) {
+         if( !enabled ) { return; }
+         var definitions = currentPageInfo.pageDefinitions;
+         definitions[ ref ] = definitions[ ref ] || {
+            FLAT: null,
+            COMPACT: null
+         };
+         definitions[ ref ][ type ] = object.deepClone( page );
+      },
+
+      /** @private */
+      setCompositionDefinition: function( pageRef, compositionInstanceId, composition, type ) {
+         if( !enabled ) { return; }
+         var definitions = currentPageInfo.compositionDefinitions;
+         var definitionsByInstance = definitions[ pageRef ] = definitions[ pageRef ] || {};
+         definitionsByInstance[ compositionInstanceId ] = definitionsByInstance[ compositionInstanceId ] || {
+            FLAT: null,
+            COMPACT: null
+         };
+         definitionsByInstance[ compositionInstanceId ][ type ] = object.deepClone( composition );
+      },
+
+      /** @private */
+      setCurrentPage: function( ref ) {
+         if( !enabled ) { return; }
+         currentPageInfo.pageReference = ref;
+         listeners.forEach( function( listener ) {
+            listener( object.deepClone( currentPageInfo ) );
+         } );
+         cleanup();
+      }
+   };
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function cleanup() {
+      var currentRef = currentPageInfo.pageReference;
+      [ 'pageDefinitions', 'compositionDefinitions' ]
+         .forEach( function( collection ) {
+            Object.keys( currentPageInfo[ collection ] )
+               .filter( function( ref ) { return ref !== currentRef; } )
+               .forEach( function( ref ) { delete currentPageInfo[ collection ][ ref ]; } );
+         } );
+   }
+
+} );
+
+/**
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -5015,8 +5161,9 @@ define( 'laxar/lib/loaders/widget_loader',[
    '../utilities/string',
    './paths',
    './features_provider',
-   '../widget_adapters/adapters'
-], function( log, path, assert, object, string, paths, featuresProvider, adapters ) {
+   '../widget_adapters/adapters',
+   '../tooling/pages'
+], function( log, path, assert, object, string, paths, featuresProvider, adapters, pageTooling ) {
    'use strict';
 
    var TYPE_WIDGET = 'widget';
@@ -5038,11 +5185,11 @@ define( 'laxar/lib/loaders/widget_loader',[
     */
    function create( q, services ) {
 
+      var controlsService = services.axControls;
       var fileResourceProvider = services.axFileResourceProvider;
       var themeManager = services.axThemeManager;
       var cssLoader = services.axCssLoader;
       var eventBus = services.axGlobalEventBus;
-
 
       return {
          load: load
@@ -5076,8 +5223,20 @@ define( 'laxar/lib/loaders/widget_loader',[
             onBeforeControllerCreation: function() {}
          } );
 
-         return fileResourceProvider.provide( widgetJsonPath )
+         return fileResourceProvider
+            .provide( widgetJsonPath )
             .then( function( specification ) {
+               // The control-descriptors must be loaded prior to controller creation.
+               // This allows the widget controller to synchronously instantiate controls.
+               return q.all( ( specification.controls || [] ).map( controlsService.load ) )
+                  .then( function( descriptors ) {
+                     descriptors.forEach( checkTechnologyCompatibility( specification ) );
+                     return specification;
+                  } );
+            } )
+            .then( function( specification ) {
+               pageTooling.setWidgetDescriptor( widgetConfiguration.widget, specification );
+
                var integration = object.options( specification.integration, DEFAULT_INTEGRATION );
                var type = integration.type;
                var technology = integration.technology;
@@ -5186,30 +5345,7 @@ define( 'laxar/lib/loaders/widget_loader',[
                technicalCssFile
             ] ) );
 
-            promises = promises.concat( ( widgetSpecification.controls || [] )
-               .map( function( controlReference ) {
-                  // By appending a path now and .json afterwards, trick RequireJS into generating the
-                  // correct descriptor path when loading from a 'package'.
-                  var resolvedControlPath = path.resolveAssetPath( controlReference, paths.CONTROLS );
-                  var descriptorUrl = path.join( resolvedControlPath, 'control.json' );
-                  return fileResourceProvider.provide( descriptorUrl )
-                     .then( function( descriptor ) {
-                        // LaxarJS 1.x style control (name determined from descriptor):
-                        var name = descriptor.name;
-                        return themeManager.urlProvider(
-                           path.join( resolvedControlPath, '[theme]' ),
-                           path.join( paths.THEMES, '[theme]', 'controls', name )
-                        ).provide( [ path.join( 'css/',  name + '.css' ) ] );
-                     }, function() {
-                        // LaxarJS 0.x style controls (no descriptor, uses AMD path as name):
-                        var name = controlReference.split( '/' ).pop();
-                        return themeManager.urlProvider(
-                           path.join( resolvedControlPath, '[theme]' ),
-                           path.join( paths.THEMES, '[theme]', controlReference )
-                        ).provide( [ path.join( 'css/', name + '.css' ) ] );
-                     } );
-               } ) );
-
+            promises = promises.concat( loadControlAssets() );
             return q.all( promises )
                .then( function( results ) {
                   var widgetUrls = results[ 0 ];
@@ -5224,7 +5360,52 @@ define( 'laxar/lib/loaders/widget_loader',[
                   };
                } );
          }
+
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+         function loadControlAssets() {
+            return ( widgetSpecification.controls || [] )
+               .map( function( controlRef ) {
+                  var descriptor = controlsService.descriptor( controlRef );
+                  var resolvedPath = controlsService.resolve( controlRef );
+                  var name = descriptor.name;
+
+                  var cssPathInControl = path.join( resolvedPath, '[theme]' );
+                  var cssPathInTheme = path.join( paths.THEMES, '[theme]', 'controls', name );
+                  if( descriptor._compatibility_0x ) {
+                     // LaxarJS v0.x compatibility: use compatibility paths to load CSS.
+                     log.warn( 'Deprecation: Control is missing control.json descriptor: [0]', controlRef );
+                     cssPathInTheme = path.join( paths.THEMES, '[theme]', controlRef );
+                  }
+                  return themeManager
+                     .urlProvider( cssPathInControl, cssPathInTheme )
+                     .provide( [ path.join( 'css/',  name + '.css' ) ] );
+               } );
+         }
+
       }
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function checkTechnologyCompatibility( widgetDescriptor ) {
+      return function( controlDescriptor ) {
+         var controlTechnology = ( controlDescriptor.integration || DEFAULT_INTEGRATION ).technology;
+         if( controlTechnology === 'plain' ) {
+            // plain is always compatible
+            return;
+         }
+
+         var widgetTechnology = ( widgetDescriptor.integration || DEFAULT_INTEGRATION ).technology;
+         if( widgetTechnology === controlTechnology ) {
+            return;
+         }
+
+         log.warn(
+            'Incompatible integration technologies: widget [0] ([1]) cannot use control [2] ([3])',
+            widgetDescriptor.name, widgetTechnology, controlDescriptor.name, controlTechnology
+         );
+      };
    }
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -5316,7 +5497,7 @@ define( 'laxar/lib/loaders/widget_loader',[
 } );
 
 /**
- * Copyright 2015 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -5330,54 +5511,113 @@ define( 'laxar/lib/loaders/widget_loader',[
 define( 'laxar/lib/utilities/fn',[], function() {
    'use strict';
 
-   return {
+   var api = {
+      debounce: debounce,
+      _nowMilliseconds: _nowMilliseconds,
+      _setTimeout: _setTimeout
+   };
 
-      /**
-       * [Underscore `debounce`](http://underscorejs.org/#debounce), but with LaxarJS offering mocking in
-       * tests. See [http://underscorejs.org/#debounce](http://underscorejs.org/#debounce) for detailed
-       * documentation.
-       *
-       * @param {Function} f
-       *    the function to return a debounced version of
-       * @param {Number} waitMs
-       *    milliseconds to debounce before invoking `f`
-       * @param {Boolean} immediate
-       *    if `true` `f` is invoked prior to start waiting `waitMs` milliseconds. Otherwise `f` is invoked
-       *    after the given debounce duration has passed. Default is `false`
-       *
-       * @return {Function}
-       *    the debounced function
-       */
-      debounce: function( f, waitMs, immediate ) {
-         var timeout, args, context, timestamp, result;
-         return function() {
-            context = this;
-            args = arguments;
-            timestamp = new Date();
-            var later = function() {
-               var last = (new Date()) - timestamp;
-               if( last < waitMs ) {
-                  timeout = setTimeout(later, waitMs - last);
-               }
-               else {
-                  timeout = null;
-                  if( !immediate ) {
-                     result = f.apply(context, args);
+   return api;
+
+   /**
+    * [Underscore `debounce`](http://underscorejs.org/#debounce) with the following modifications:
+    *  - automatically mocked when accessed through `laxar/laxar_testing`
+    *  - the generated function provides a `cancel()` method
+    *
+    * See [http://underscorejs.org/#debounce](http://underscorejs.org/#debounce) for detailed
+    * documentation on the original version.
+    *
+    * ### Note on testing:
+    *
+    * You can set `laxar.fn._nowMilliseconds` and `laxar.fn._setTimout` to mock-functions in order to
+    * help testing components that use `laxar.fn` or to test `laxar.fn` itself.
+    *
+    *
+    * @param {Function} f
+    *    the function to return a debounced version of
+    * @param {Number} waitMs
+    *    milliseconds to debounce before invoking `f`
+    * @param {Boolean} immediate
+    *    if `true` `f` is invoked prior to start waiting `waitMs` milliseconds. Otherwise `f` is invoked
+    *    after the given debounce duration has passed. Default is `false`
+    *
+    * @return {Function}
+    *    a debounced wrapper around the argument function f, with an additional method `cancel()`:
+    *    After `cancel()` has been called, f will not be invoked anymore, no matter how often the wrapper\
+    *    is called.
+    */
+   function debounce( f, waitMs, immediate ) {
+      var MARK = {};
+      var timeout, timestamp, result;
+      var canceled = false;
+
+      var debounced = function() {
+         var context = this;
+         var args = [].slice.call( arguments );
+         timestamp = api._nowMilliseconds();
+         var callNow = immediate && !timeout;
+
+         if( !timeout ) {
+            timeout = api._setTimeout( later, waitMs );
+         }
+         if( callNow && !canceled ) {
+            result = f.apply( context, args );
+         }
+
+         return result;
+
+         /**
+          * Check if the debounced function is ready for execution, and do so if it is.
+          * @param {Boolean} _force
+          *    This is only relevant when mocking `fn._setTimeout` to implement a force/flush for tests.
+          *    If the parameter is passed as `true`, no timing checks are performed prior to execution.
+          */
+         function later( _force ) {
+            var sinceLast = api._nowMilliseconds() - timestamp;
+            if( _force || sinceLast >= waitMs  ) {
+               timeout = null;
+               if( !immediate && !canceled ) {
+                  result = f.apply( context, args );
+                  if( !timeout ) {
+                     context = args = null;
                   }
                }
-            };
-            var callNow = immediate && !timeout;
-            if( !timeout ) { timeout = setTimeout(later, waitMs); }
-            if( callNow ) { result = f.apply(context, args); }
-            return result;
-         };
-      }
-   };
+               return;
+            }
+            timeout = api._setTimeout( later, waitMs - sinceLast );
+         }
+      };
+
+      debounced.cancel = function() {
+         canceled = true;
+      };
+
+      return debounced;
+   }
+
+   /**
+    * Get the current time in milliseconds.
+    * This API is intended to be used from tests only.
+    *
+    * @return {Number}
+    *   the current time in milliseconds (`Date.now()`).
+    *   Ovewrride this from tests for reproducible results.
+    */
+   function _nowMilliseconds() {
+     return Date.now();
+   }
+
+   /**
+    * By default, invoke window.setTimeout with the given arguments.
+    */
+   function _setTimeout() {
+     return window.setTimeout.apply( window, arguments );
+   }
 
 } );
 
 /**
- * Copyright 2015 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -5650,18 +5890,24 @@ define( 'laxar/lib/utilities/storage',[
 } );
 
 /**
- * Copyright 2015 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
 define( 'laxar/lib/runtime/runtime',[
    'angular',
+   '../utilities/assert',
    '../utilities/path',
    '../loaders/paths'
-], function( ng, path, paths ) {
+], function( ng, assert, path, paths ) {
    'use strict';
 
    var module = ng.module( 'axRuntime', [] );
+   var api = {
+      provideQ: function() {
+         assert.codeIsUnreachable( 'Cannot provide q before AngularJS modules have been set up.' );
+      }
+   };
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -5699,12 +5945,24 @@ define( 'laxar/lib/runtime/runtime',[
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   return module;
+   // Provide q as a tooling API to make sure all clients see the same mocked version during testing
+   module.run( [ '$q', function( $q ) {
+      api.provideQ = function() {
+         return $q;
+      };
+   } ] );
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   return {
+      module: module,
+      api: api
+   };
 
 } );
 
 /**
- * Copyright 2015 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -5770,7 +6028,158 @@ define( 'laxar/lib/loaders/layout_loader',[
 } );
 
 /**
- * Copyright 2015 aixigo AG
+ * Copyright 2016 aixigo AG
+ * Released under the MIT license.
+ * http://laxarjs.org/license
+ */
+/**
+ * The controls service helps to lookup control assets and implementations.
+ * It should be used via dependency injection as the *axControls* service.
+ *
+ * @module controls_service
+ */
+define( 'laxar/lib/runtime/controls_service',[
+   '../utilities/path',
+   '../utilities/string',
+   '../loaders/paths'
+], function( path, string, paths ) {
+   'use strict';
+
+   return {
+      create: create
+   };
+
+   function create( fileResourceProvider ) {
+
+      var notDeclaredMessage =
+         'Tried to load control reference [0] without declaration in widget.json.\nDetails: [1]';
+      var missingDescriptorMessage =
+         'Cannot use axControls service to load control [0] without descriptor.\nDetails: [1]';
+      var errorInfoLink =
+         'https://github.com/LaxarJS/laxar/blob/master/docs/manuals/providing_controls.md#compatibility';
+
+      var descriptors = {};
+      var descriptorPromises = {};
+
+      return {
+         load: load,
+         provide: provide,
+         resolve: resolve,
+         descriptor: descriptor
+      };
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      /**
+       * Provides the implementation module of the given control, for manual instantiation by a widget.
+       *
+       * Because the method must return synchronously, it may only be called for controls that have been
+       * loaded before (using `load`)!
+       *
+       * @param {String} controlRef
+       *   a valid control reference as used in the `widget.json`
+       * @return {*}
+       *   the AMD module for the requested control reference
+       */
+      function provide( controlRef ) {
+         var resolvedControlPath = resolve( controlRef );
+         var descriptor = descriptors[ resolvedControlPath ];
+         if( !descriptor ) {
+            fail( notDeclaredMessage );
+         }
+         if( descriptor._compatibility_0x ) {
+            fail( missingDescriptorMessage );
+         }
+
+         var amdControlRef = path.extractScheme( controlRef ).ref;
+         return require( path.join( amdControlRef, descriptor.name ) );
+
+         function fail( reason ) {
+            var message = string.format( 'axControls: ' + reason, [ controlRef, errorInfoLink ] );
+            throw new Error( message );
+         }
+      }
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      /**
+       * Fetches the descriptor for a given control reference, and saves it as a side-effect.
+       * This is part of the internal API used by the widget loader.
+       *
+       * This process must be completed before the descriptor or the module for a control can be provided.
+       * For this reason, `load` is called by the widget-loader, using information from the `widet.json`.
+       *
+       * For backward-compatibility, missing descriptors are synthesized.
+       *
+       * @return {Promise}
+       *   A promise for the (fetched or synthesized) control descriptor.
+       *
+       * @private
+       */
+      function load( controlRef ) {
+         // By appending a path now and .json afterwards, 'help' RequireJS to generate the
+         // correct descriptor path when loading from a 'package'.
+         var resolvedPath = resolve( controlRef );
+         if( !descriptorPromises[ resolvedPath ] ) {
+            var descriptorUrl = path.join( resolvedPath, 'control.json' );
+            descriptorPromises[ resolvedPath ] = fileResourceProvider
+               .provide( descriptorUrl )
+               .catch( function() {
+                  // LaxarJS 0.x style (no control.json): generate descriptor
+                  return {
+                     _compatibility_0x: true,
+                     name: controlRef.split( '/' ).pop(),
+                     integration: { technology: 'angular' }
+                  };
+               } )
+               .then( function( descriptor ) {
+                  descriptors[ resolvedPath ] = descriptor;
+                  return descriptor;
+               } );
+         }
+         return descriptorPromises[ resolvedPath ];
+      }
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      /**
+       * Takes a control reference and resolves it to a URL.
+       * This is part of the internal API used by the widget loader.
+       *
+       * @param {String} controlRef
+       *   a valid control reference as used in the `widget.json`
+       * @return {String}
+       *   the url under which the `control.json` should be found
+       *
+       * @private
+       */
+      function resolve( controlRef ) {
+         return path.resolveAssetPath( controlRef, paths.CONTROLS );
+      }
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      /**
+       * Gets the (previously loaded) descriptor for a widget reference.
+       * This is part of the internal API used by the widget loader.
+       *
+       * @param controlRef
+       *   a valid control referenceas used in the `widget.json`
+       * @return {Object}
+       *   The control descriptor.
+       *
+       * @private
+       */
+      function descriptor( controlRef ) {
+         var resolvedControlPath = resolve( controlRef );
+         return descriptors[ resolvedControlPath ];
+      }
+   }
+
+} );
+
+/**
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -5921,7 +6330,7 @@ define( 'laxar/lib/runtime/theme_manager',[
 } );
 
 /**
- * Copyright 2015 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -5943,6 +6352,7 @@ define( 'laxar/lib/runtime/runtime_services',[
    '../loaders/layout_loader',
    '../loaders/paths',
    '../utilities/configuration',
+   './controls_service',
    './theme_manager'
 ], function(
    ng,
@@ -5955,6 +6365,7 @@ define( 'laxar/lib/runtime/runtime_services',[
    layoutLoader,
    paths,
    configuration,
+   controlsService,
    themeManager
 ) {
    'use strict';
@@ -6095,6 +6506,19 @@ define( 'laxar/lib/runtime/runtime_services',[
          return new Date().getTime();
       };
    } );
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   /**
+    * Provides access to the control-implementation-modules used by a widget.
+    * Further documentation on the api can be found at the *controls_service* module api doc.
+    *
+    * @name axControls
+    * @injection
+    */
+   module.factory( 'axControls', [ 'axFileResourceProvider', function( fileResourceProvider ) {
+      return controlsService.create( fileResourceProvider );
+   } ] );
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -6688,7 +7112,7 @@ define( 'laxar/lib/runtime/runtime_services',[
 } );
 
 /**
- * Copyright 2015 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -6900,7 +7324,7 @@ define("json!laxar/static/schemas/flow.json", function(){ return {
 ;});
 
 /**
- * Copyright 2015 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -7436,7 +7860,7 @@ define("json!laxar/static/schemas/page.json", function(){ return {
 ;});
 
 /**
- * Copyright 2015 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -7447,8 +7871,9 @@ define( 'laxar/lib/loaders/page_loader',[
    '../utilities/path',
    '../json/validator',
    './features_provider',
-   'json!../../static/schemas/page.json'
-], function( assert, object, string, path, jsonValidator, featuresProvider, pageSchema ) {
+   'json!../../static/schemas/page.json',
+   '../tooling/pages'
+], function( assert, object, string, path, jsonValidator, featuresProvider, pageSchema, pageTooling ) {
    'use strict';
 
    var SEGMENTS_MATCHER = /[_/-]./g;
@@ -7523,12 +7948,13 @@ define( 'laxar/lib/loaders/page_loader',[
             return processExtends( self, page, extensionChain );
          } )
          .then( function() {
-            return processCompositions( self, page, [], page );
+            return processCompositions( self, page, pageName );
          } )
          .then( function() {
-            return postProcessWidgets( self, page );
+            return checkForDuplicateWidgetIds( self, page );
          } )
          .then( function() {
+            pageTooling.setPageDefinition( pageName, page, pageTooling.FLAT );
             return page;
          } );
    }
@@ -7578,69 +8004,93 @@ define( 'laxar/lib/loaders/page_loader',[
    //
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   function processCompositions( self, page, compositionChain, topPage ) {
-      var promise = self.q_.when();
-      var seenCompositionIdCount = {};
+   function processCompositions( self, topPage, topPageName ) {
 
-      object.forEach( page.areas, function( widgets ) {
-         /*jshint loopfunc:true*/
-         for( var i = widgets.length - 1; i >= 0; --i ) {
-            ( function( widgetSpec, index ) {
-               if( has( widgetSpec, 'composition' ) ) {
+      return processNestedCompositions( topPage, null, [] );
+
+      function processNestedCompositions( page, instanceId, compositionChain ) {
+
+         var promise = self.q_.when();
+         var seenCompositionIdCount = {};
+
+         object.forEach( page.areas, function( widgets ) {
+            /*jshint loopfunc:true*/
+            for( var i = widgets.length - 1; i >= 0; --i ) {
+               ( function( widgetSpec, index ) {
                   if( widgetSpec.enabled === false ) {
                      return;
                   }
 
-                  var compositionName = widgetSpec.composition;
-                  if( compositionChain.indexOf( compositionName ) !== -1 ) {
-                     var message = 'Cycle in compositions detected: ' +
-                                   compositionChain.concat( [ compositionName ] ).join( ' -> ' );
-                     throwError( topPage, message );
+                  if( has( widgetSpec, 'widget' ) ) {
+                     if( !has( widgetSpec, 'id' ) ) {
+                        var widgetName = widgetSpec.widget.split( '/' ).pop();
+                        widgetSpec.id = nextId( self, widgetName.replace( SEGMENTS_MATCHER, dashToCamelcase ) );
+                     }
+                     return;
                   }
 
-                  if( !has( widgetSpec, 'id' ) ) {
-                     var escapedCompositionName =
-                        widgetSpec.composition.replace( SEGMENTS_MATCHER, dashToCamelcase );
-                     widgetSpec.id = nextId( self, escapedCompositionName );
-                  }
+                  if( has( widgetSpec, 'composition' ) ) {
+                     var compositionName = widgetSpec.composition;
+                     if( compositionChain.indexOf( compositionName ) !== -1 ) {
+                        var message = 'Cycle in compositions detected: ' +
+                                      compositionChain.concat( [ compositionName ] ).join( ' -> ' );
+                        throwError( topPage, message );
+                     }
 
-                  if( widgetSpec.id in seenCompositionIdCount ) {
-                     seenCompositionIdCount[ widgetSpec.id ]++;
-                  }
-                  else {
-                     seenCompositionIdCount[ widgetSpec.id ] = 1;
-                  }
+                     if( !has( widgetSpec, 'id' ) ) {
+                        var escapedCompositionName =
+                           widgetSpec.composition.replace( SEGMENTS_MATCHER, dashToCamelcase );
+                        widgetSpec.id = nextId( self, escapedCompositionName );
+                     }
 
-                  // Loading compositionUrl can be started asynchronously, but replacing the according widgets
-                  // in the page needs to take place in order. Otherwise the order of widgets could be messed up.
-                  promise = promise
-                     .then( function() {
-                        return load( self, assetUrl( self.baseUrl_, compositionName ) );
-                     } )
-                     .then( function( composition ) {
-                        return prefixCompositionIds( composition, widgetSpec );
-                     } )
-                     .then( function( composition ) {
-                        return processCompositionExpressions( composition, widgetSpec, throwError.bind( null, topPage ) );
-                     } )
-                     .then( function( composition ) {
-                        var chain = compositionChain.concat( compositionName );
-                        return processCompositions( self, composition, chain, topPage )
-                           .then( function() {
-                              return composition;
-                           } );
-                     } )
-                     .then( function( composition ) {
-                        mergeCompositionAreasWithPageAreas( composition, page, widgets, index );
-                     } );
-               }
-            } )( widgets[ i ], i );
+                     if( widgetSpec.id in seenCompositionIdCount ) {
+                        seenCompositionIdCount[ widgetSpec.id ]++;
+                     }
+                     else {
+                        seenCompositionIdCount[ widgetSpec.id ] = 1;
+                     }
+
+                     // Loading compositionUrl can be started asynchronously, but replacing the according widgets
+                     // in the page needs to take place in order. Otherwise the order of widgets could be messed up.
+                     promise = promise
+                        .then( function() {
+                           return load( self, assetUrl( self.baseUrl_, compositionName ) );
+                        } )
+                        .then( function( composition ) {
+                           return prefixCompositionIds( composition, widgetSpec );
+                        } )
+                        .then( function( composition ) {
+                           return processCompositionExpressions( composition, widgetSpec, throwError.bind( null, topPage ) );
+                        } )
+                        .then( function( composition ) {
+                           var chain = compositionChain.concat( compositionName );
+                           return processNestedCompositions( composition, widgetSpec.id, chain )
+                              .then( function() {
+                                 pageTooling.setCompositionDefinition( topPageName, widgetSpec.id, composition, pageTooling.FLAT );
+                                 return composition;
+                              } );
+                        } )
+                        .then( function( composition ) {
+                           mergeCompositionAreasWithPageAreas( composition, page, widgets, index );
+                        } );
+                  }
+               } )( widgets[ i ], i );
+            }
+         } );
+
+         // now that all IDs have been created, we can store a copy of the page prior to composition expansion
+         if( page === topPage ) {
+            pageTooling.setPageDefinition( topPageName, page, pageTooling.COMPACT );
          }
-      } );
+         else {
+            pageTooling.setCompositionDefinition( topPageName, instanceId, page, pageTooling.COMPACT );
+         }
 
-      checkForDuplicateCompositionIds( page, seenCompositionIdCount );
+         checkForDuplicateCompositionIds( page, seenCompositionIdCount );
 
-      return promise;
+         return promise;
+      }
+
    }
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -7783,7 +8233,7 @@ define( 'laxar/lib/loaders/page_loader',[
    //
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   function postProcessWidgets( self, page ) {
+   function checkForDuplicateWidgetIds( self, page ) {
       var idCount = {};
 
       object.forEach( page.areas, function( widgetList, index ) {
@@ -7791,15 +8241,7 @@ define( 'laxar/lib/loaders/page_loader',[
             if( widgetSpec.enabled === false ) {
                return false;
             }
-
-            if( has( widgetSpec, 'widget' ) ) {
-               if( !has( widgetSpec, 'id' ) ) {
-                  var widgetName = widgetSpec.widget.split( '/' ).pop();
-                  widgetSpec.id = nextId( self, widgetName.replace( SEGMENTS_MATCHER, dashToCamelcase ) );
-               }
-
-               idCount[ widgetSpec.id ] = idCount[ widgetSpec.id ] ? idCount[ widgetSpec.id ] + 1 : 1;
-            }
+            idCount[ widgetSpec.id ] = idCount[ widgetSpec.id ] ? idCount[ widgetSpec.id ] + 1 : 1;
             return true;
          } );
       } );
@@ -7943,7 +8385,7 @@ define( 'laxar/lib/loaders/page_loader',[
 } );
 
 /**
- * Copyright 2015 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -8025,7 +8467,7 @@ define( 'laxar/lib/runtime/layout_widget_adapter',[
 } );
 
 /**
- * Copyright 2015 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -8205,7 +8647,7 @@ define( 'laxar/lib/runtime/area_helper',[
 } );
 
 /**
- * Copyright 2015 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -8289,7 +8731,7 @@ define( 'laxar/lib/runtime/locale_event_manager',[
 } );
 
 /**
- * Copyright 2015 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -8453,7 +8895,7 @@ define( 'laxar/lib/runtime/visibility_event_manager',[], function() {
 } );
 
 /**
- * Copyright 2015 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -8468,8 +8910,9 @@ define( 'laxar/lib/runtime/page',[
    './flow',
    './area_helper',
    './locale_event_manager',
-   './visibility_event_manager'
-], function( ng, assert, layoutModule, pageLoader, widgetLoader, paths, layoutWidgetAdapter, flowModule, createAreaHelper, createLocaleEventManager, createVisibilityEventManager ) {
+   './visibility_event_manager',
+   '../tooling/pages'
+], function( ng, assert, layoutModule, pageLoader, widgetLoader, paths, layoutWidgetAdapter, flowModule, createAreaHelper, createLocaleEventManager, createVisibilityEventManager, pageTooling ) {
    'use strict';
 
    var module = ng.module( 'axPage', [ layoutModule.name, layoutWidgetAdapter.name, flowModule.name ] );
@@ -8513,8 +8956,18 @@ define( 'laxar/lib/runtime/page',[
       var pageControllerDependencies = [ '$scope', '$q', '$timeout', 'axPageService'];
 
       var axServiceDependencies = [
-         'axFlowService', 'axHeartbeat', 'axTimestamp', 'axGlobalEventBus', 'axConfiguration', 'axI18n',
-         'axFileResourceProvider', 'axThemeManager', 'axLayoutLoader', 'axCssLoader', 'axVisibilityService'
+         'axConfiguration',
+         'axControls',
+         'axCssLoader',
+         'axFileResourceProvider',
+         'axFlowService',
+         'axGlobalEventBus',
+         'axHeartbeat',
+         'axI18n',
+         'axLayoutLoader',
+         'axThemeManager',
+         'axTimestamp',
+         'axVisibilityService'
       ];
 
       var createPageControllerInjected = pageControllerDependencies
@@ -8614,6 +9067,7 @@ define( 'laxar/lib/runtime/page',[
                      } ) );
                   } )
                   .then( function( widgetAdapters ) {
+                     pageTooling.setCurrentPage( pageName );
                      widgetAdapters.forEach( function( adapter ) {
                         if( typeof adapter.applyViewChanges === 'function' &&
                             viewChangeApplyFunctions_.indexOf( adapter.applyViewChanges ) === -1 ) {
@@ -8643,7 +9097,7 @@ define( 'laxar/lib/runtime/page',[
                   } );
             }
 
-            /////////////////////////////////////////////////////////////////////////////////////////////////////
+            //////////////////////////////////////////////////////////////////////////////////////////////////
 
             function tearDownPage() {
                visibilityManager.unsubscribe();
@@ -8754,7 +9208,7 @@ define( 'laxar/lib/runtime/page',[
 } );
 
 /**
- * Copyright 2015 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -8967,7 +9421,7 @@ define( 'laxar/lib/profiling/output',[
 } );
 
 /**
- * Copyright 2015 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -9207,7 +9661,7 @@ define( 'laxar/lib/profiling/profiling',[
 } );
 
 /**
- * Copyright 2015 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -9236,7 +9690,7 @@ define( 'laxar/lib/runtime/runtime_dependencies',[
 } );
 
 /**
- * Copyright 2015 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -9257,8 +9711,10 @@ define( 'laxar/laxar',[
    './lib/utilities/string',
    './lib/runtime/runtime',
    './lib/runtime/runtime_dependencies',
+   './lib/runtime/controls_service',
    './lib/runtime/theme_manager',
-   './lib/widget_adapters/adapters'
+   './lib/widget_adapters/adapters',
+   './lib/tooling/pages'
 ], function(
    ng,
    log,
@@ -9276,8 +9732,10 @@ define( 'laxar/laxar',[
    string,
    runtime,
    runtimeDependencies,
+   controlsService,
    themeManager,
-   adapters
+   adapters,
+   pageToolingApi
 ) {
    'use strict';
 
@@ -9308,7 +9766,7 @@ define( 'laxar/laxar',[
       if( optionalWidgetAdapters && Array.isArray( optionalWidgetAdapters ) ) {
          adapters.addAdapters( optionalWidgetAdapters );
       }
-      var dependencies = [ runtime.name, runtimeDependencies.name ];
+      var dependencies = [ runtime.module.name, runtimeDependencies.name ];
 
       Object.keys( widgetModules ).forEach( function( technology ) {
          var adapter = adapters.getFor( technology );
@@ -9371,15 +9829,27 @@ define( 'laxar/laxar',[
       log.addTag( 'INST', instanceId );
    }
 
-   // API to leverage tooling support. For example laxar-testing needs this for widget tests
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   // API to leverage tooling support.
+   // Not for direct use by widgets/activities!
+   //  - laxar-mocks needs this for widget tests
+   //  - laxar-patterns needs this to have the same (mocked) q version as the event bus
    var toolingApi = {
+      controlsService: controlsService,
       eventBus: eventBus,
       fileResourceProvider: fileResourceProvider,
       path: path,
       themeManager: themeManager,
       widgetAdapters: adapters,
       widgetLoader: widgetLoader,
-      runtimeDependenciesModule: runtimeDependencies
+      runtimeDependenciesModule: runtimeDependencies,
+      provideQ: function() {
+         return runtime.api.provideQ();
+      },
+
+      // Prototype support for page inspection tools:
+      pages: pageToolingApi
    };
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////

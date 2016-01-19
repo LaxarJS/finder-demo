@@ -1,0 +1,18 @@
+{
+   "laxar-test-merge-results": {
+      "main": {
+         "src": [
+            "var/tests/bower_components/laxar-developer-tools-widget/test-results.xml",
+            "var/tests/includes/widgets/finder-demo/geocoding-activity/test-results.xml",
+            "var/tests/includes/widgets/finder-demo/language-selection-activity/test-results.xml",
+            "var/tests/includes/widgets/finder-demo/music-brainz-search-widget/test-results.xml",
+            "var/tests/includes/widgets/finder-demo/omdb-search-widget/test-results.xml",
+            "var/tests/includes/widgets/finder-demo/open-street-map-widget/test-results.xml",
+            "var/tests/includes/widgets/finder-demo/open-weather-map-widget/test-results.xml",
+            "var/tests/includes/widgets/finder-demo/search-box-widget/test-results.xml",
+            "var/tests/includes/widgets/finder-demo/wikipedia-search-widget/test-results.xml"
+         ],
+         "dest": "var/flows/main/tooling/test-results.xml"
+      }
+   }
+}
