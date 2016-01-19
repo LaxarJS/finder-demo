@@ -1,45 +1,46 @@
 var require = {
    baseUrl: 'bower_components',
    paths: {
-      // LaxarJS Core:
+      // LaxarJS Core and dependencies:
+      laxar: 'laxar/dist/laxar.with-deps',
       requirejs: 'requirejs/require',
-      jquery: 'jquery/dist/jquery',
+      text: 'requirejs-plugins/lib/text',
+      json: 'requirejs-plugins/src/json',
       angular: 'angular/angular',
       'angular-mocks': 'angular-mocks/angular-mocks',
       'angular-route': 'angular-route/angular-route',
       'angular-sanitize': 'angular-sanitize/angular-sanitize',
-      jjv: 'jjv/lib/jjv',
-      jjve: 'jjve/jjve',
 
-      // LaxarJS Mocks:
+      // LaxarJS Core (tests only):
+      'laxar/laxar_testing': 'laxar/dist/laxar_testing',
+      jquery: 'jquery/dist/jquery',
+      jasmine: 'jasmine/lib/jasmine-core/jasmine',
+      q_mock: 'q_mock/q',
+
+      // LaxarJS Testing:
+      'laxar-mocks': 'laxar-mocks/dist/laxar-mocks',
       jasmine2: 'jasmine2/lib/jasmine-core/jasmine',
 
-      // LaxarJS Core Legacy:
-      text: 'requirejs-plugins/lib/text',
-      json: 'requirejs-plugins/src/json',
-
       // LaxarJS Patterns:
+      'laxar-patterns': 'laxar-patterns/dist/laxar-patterns',
       'json-patch': 'fast-json-patch/src/json-patch-duplex',
 
       // LaxarJS UIKit:
+      'laxar-uikit': 'laxar-uikit/dist/laxar-uikit',
+      'laxar-uikit/controls': 'laxar-uikit/dist/controls',
       'bootstrap': 'bootstrap-sass-official/assets/javascripts/bootstrap',
 
-      // App Parts:
+      // LaxarJS application paths:
       'laxar-path-root': '..',
       'laxar-path-layouts': '../application/layouts',
       'laxar-path-pages': '../application/pages',
+      'laxar-path-flow': '../application/flow/flow.json',
       'laxar-path-widgets': '../includes/widgets',
       'laxar-path-themes': '../includes/themes',
-      'laxar-path-flow': '../application/flow/flow.json',
-
-      'laxar-application-dependencies': '../var/static/laxar_application_dependencies',
-
-      'laxar': 'laxar/dist/laxar',
-      'laxar-mocks': 'laxar-mocks/dist/laxar-mocks',
-      'laxar-patterns': 'laxar-patterns/dist/laxar-patterns',
-      'laxar-uikit': 'laxar-uikit/dist/laxar-uikit',
-      'laxar-uikit/controls': 'laxar-uikit/dist/controls',
       'laxar-path-default-theme': 'laxar-uikit/dist/themes/default.theme',
+
+      // LaxarJS application modules (contents are generated):
+      'laxar-application-dependencies': '../var/static/laxar_application_dependencies',
 
       // App specific
       'finder-box-control': '../includes/controls/finder-demo/finder-box-control',
@@ -47,6 +48,7 @@ var require = {
       openlayers: 'ol3/build/ol',
       fetch: 'fetch/fetch',
       d3: 'd3/d3',
+
       // Heads-up: this is a dep of the finder-demo, and of LaxarJS Mocks
       'promise-polyfill': 'promise-polyfill/Promise'
    },

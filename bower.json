@@ -9,15 +9,16 @@
       "laxar": "~1.2.0",
       "laxar-patterns": "~1.2.0",
       "laxar-uikit": "~1.1.0",
+      "angular": "~1.4.3",
       "ol3": "~3.4.0",
       "require-css": "~0.1.8",
       "promise-polyfill": "~2.1.0",
       "fetch": "~0.9.0",
       "d3": "~3.5.6",
-      "laxar-developer-tools-widget": "2.0.0"
+      "laxar-developer-tools-widget": "~2.0.1"
    },
    "devDependencies": {
-      "laxar-mocks": "1.0.0",
+      "laxar-mocks": "~1.0.0",
       "angular-mocks": "~1.4.3"
    }
 }
