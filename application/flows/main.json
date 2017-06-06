@@ -1,0 +1,9 @@
+{
+   "places": {
+
+      "home": {
+         "patterns": [ "/", "/:query" ],
+         "page": "finder"
+      }
+   }
+}

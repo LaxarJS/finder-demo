@@ -1,0 +1,23 @@
+{
+   "layout": "one-column",
+
+   "areas": {
+      "activities": [
+      ],
+
+      "header": [
+      ],
+
+      "content": [
+         {
+            "widget": "example/plain-hello-world-widget"
+         },
+         {
+            "widget": "example/angular-hello-world-widget"
+         }
+      ],
+
+      "footer": [
+      ]
+   }
+}

@@ -7,32 +7,6 @@
          {
             "widget": "finder-demo/language-selection-activity",
             "id": "languageSelectionActivity"
-         },
-         {
-            "widget": "finder-demo/geocoding-activity",
-            "id": "geocodingActivity",
-            "features": {
-               "search": {
-                  "resource": "searchString"
-               },
-               "locations": {
-                  "resource": "availableLocations",
-                  "searching": "geocodingInProgress"
-               }
-            }
-         },
-         {
-            "widget": "amd:laxar-developer-tools-widget",
-            "id": "developerTools",
-            "features": {
-               "button": {
-                  "enabled": false
-               },
-               "open": {
-                  "onActions": [ "showDevTools" ],
-                  "onGlobalMethod": "goDevelop"
-               }
-            }
          }
       ],
 
@@ -63,58 +37,22 @@
 
       "content1a": [
          {
-            "widget": "finder-demo/wikipedia-search-widget",
-            "id": "wikipediaSearch",
-            "features": {
-               "search": {
-                  "resource": "searchString"
-               }
-            },
-            "enabled": true
+            "widget": "example/plain-hello-world-widget"
          }
       ],
       "content1b": [
          {
-            "widget": "finder-demo/music-brainz-search-widget",
-            "id": "musicBrainzSearch",
-            "features": {
-               "search": {
-                  "resource": "searchString"
-               }
-            },
-            "enabled": true
+            "widget": "example/plain-hello-world-widget"
          }
       ],
       "content2a": [
          {
-            "widget": "finder-demo/open-weather-map-widget",
-            "id": "openWeatherMap",
-            "features": {
-               "search": {
-                  "resource": "searchString"
-               },
-               "locations": {
-                  "resource": "availableLocations",
-                  "searchingOn": [ "geocodingInProgress" ]
-               }
-            },
-            "enabled": true
+            "widget": "example/plain-hello-world-widget"
          }
       ],
       "content2b": [
          {
-            "widget": "finder-demo/open-street-map-widget",
-            "id": "openStreetMap",
-            "features": {
-               "search": {
-                  "resource": "searchString"
-               },
-               "locations": {
-                  "resource": "availableLocations",
-                  "searchingOn": [ "geocodingInProgress" ]
-               }
-            },
-            "enabled": true
+            "widget": "example/plain-hello-world-widget"
          }
       ]
    }
