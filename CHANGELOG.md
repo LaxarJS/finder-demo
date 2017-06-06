@@ -2,6 +2,9 @@
 
 ## Last Changes
 
+- [#18](https://github.com/LaxarJS/mashup-demo/issues/18): upgraded to LaxarJS 2 and removed widgets
+   + **BREAKING CHANGE:** see ticket for details
+
 
 ## v1.5.0
 
