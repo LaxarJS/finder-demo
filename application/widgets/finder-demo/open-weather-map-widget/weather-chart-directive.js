@@ -10,8 +10,7 @@ define( [
    './messages',
    'd3',
    'moment',
-   'jquery',
-   'bootstrap/tooltip'
+   'jquery'
 ], function( ng, ax, ui, messages, d3, moment, $ ) {
    'use strict';
 

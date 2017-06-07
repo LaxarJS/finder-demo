@@ -5,9 +5,9 @@
 define( [
    'laxar',
    'laxar-patterns',
-   'fetch', // will directly change the global object
+   'whatwg-fetch', // will directly change the global object
    'promise-polyfill' // will directly change the global object
-], function( ax, patterns ) {
+], ( ax, patterns ) => {
    'use strict';
 
    /**
@@ -15,30 +15,30 @@ define( [
     *
     * @type {string}
     */
-   var locationSearchUrl = 'http://nominatim.openstreetmap.org/search?format=json&polygon=0&addressdetails=1&q=';
+   const locationSearchUrl = 'http://nominatim.openstreetmap.org/search?format=json&polygon=0&addressdetails=1&q=';
 
-   var injections = [ 'axEventBus', 'axContext' ];
+   const injections = [ 'axEventBus', 'axContext', 'axStorage' ];
 
-   function create( eventBus, context ) {
-
-      var cache = ax.storage.getLocalStorage( 'geocodingActivity-' + context.widget.id );
-      var nextSearchId = 0;
+   function create( eventBus, context, storage ) {
+      //StorageFactory.getApplicationLocalStorage()
+      const cache = storage.session;//.getItem( `geocodingActivity-${context.widget.id}` );
+      let nextSearchId = 0;
 
       context.resources = {};
       patterns.resources.handlerFor( context )
          .registerResourceFromFeature( 'search', { onUpdateReplace: searchForLocations } );
 
-      var locationsPublisher = patterns.resources.replacePublisherForFeature( context, 'locations' );
+      const locationsPublisher = patterns.resources.replacePublisherForFeature( context, 'locations' );
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
       function searchForLocations() {
          publishSearchingFlagState( true );
 
-         var currentSearchId = nextSearchId++;
-         var url = locationSearchUrl + encodeURIComponent( context.resources.search.queryString );
-         var cachedEntry = cache.getItem( url );
-         var jsonResultPromise;
+         const currentSearchId = nextSearchId++;
+         const url = locationSearchUrl + encodeURIComponent( context.resources.search.queryString );
+         const cachedEntry = cache.getItem( url );
+         let jsonResultPromise;
 
          if( cachedEntry ) {
             ax.log.trace(
@@ -49,25 +49,25 @@ define( [
          }
          else {
             jsonResultPromise = window.fetch( url )
-               .then( function( response ) {
+               .then( response => {
                   return response.json();
                } )
-               .then( function( parsedJson ) {
+               .then( parsedJson => {
                   cache.setItem( url, parsedJson );
                   return parsedJson;
                } );
          }
 
          jsonResultPromise
-            .then( function( parsedJson ) {
+            .then( parsedJson => {
                if( currentSearchId + 1 === nextSearchId ) {
                   locationsPublisher( parsedJson );
                }
                // skip old searches
-            }, function( err ) {
+            }, err => {
                ax.log.error( err );
             } )
-            .then( function() {
+            .then( () => {
                if( currentSearchId + 1 === nextSearchId ) {
                   publishSearchingFlagState( false );
                }
@@ -81,7 +81,7 @@ define( [
             return;
          }
 
-         eventBus.publish( 'didChangeFlag.' + context.features.locations.searching + '.' + searching, {
+         eventBus.publish( `didChangeFlag.${context.features.locations.searching}.${searching}`, {
             flag: context.features.locations.searching,
             state: searching
          } );
@@ -92,8 +92,8 @@ define( [
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    return {
-      injections: injections,
-      create: create,
+      injections,
+      create,
       name: 'geocoding-activity'
    };
 

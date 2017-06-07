@@ -8,6 +8,7 @@
             "widget": "finder-demo/language-selection-activity",
             "id": "languageSelectionActivity"
          }
+
       ],
 
       "searchBox": [
@@ -23,9 +24,12 @@
       ],
 
       "content1c": [
+      ],
+
+      "content1a": [
          {
-            "widget": "finder-demo/omdb-search-widget",
-            "id": "omdbSearch",
+            "widget": "finder-demo/wikipedia-search-widget",
+            "id": "wikipediaSearch",
             "features": {
                "search": {
                   "resource": "searchString"
@@ -34,26 +38,14 @@
             "enabled": true
          }
       ],
-
-      "content1a": [
-         {
-            "widget": "example/plain-hello-world-widget"
-         }
-      ],
       "content1b": [
-         {
-            "widget": "example/plain-hello-world-widget"
-         }
+
       ],
       "content2a": [
-         {
-            "widget": "example/plain-hello-world-widget"
-         }
+
       ],
       "content2b": [
-         {
-            "widget": "example/plain-hello-world-widget"
-         }
+
       ]
    }
 }

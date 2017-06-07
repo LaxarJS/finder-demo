@@ -20,19 +20,6 @@
                   "searching": "geocodingInProgress"
                }
             }
-         },
-         {
-            "widget": "amd:laxar-developer-tools-widget",
-            "id": "developerTools",
-            "features": {
-               "button": {
-                  "enabled": false
-               },
-               "open": {
-                  "onActions": [ "showDevTools" ],
-                  "onGlobalMethod": "goDevelop"
-               }
-            }
          }
       ],
 

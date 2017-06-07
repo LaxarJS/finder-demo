@@ -21,18 +21,19 @@ define( [
     *
     * @type {string}
     */
-   var searchUrl = 'http://[languageTag].wikipedia.org/w/api.php?action=query&list=search&continue=&format=json&callback=JSON_CALLBACK&srsearch=';
-   var extractsUrl = 'http://[languageTag].wikipedia.org/w/api.php?action=query&prop=extracts|pageimages&exintro=&exlimit=10&pilimit=5&continue=&format=json&callback=JSON_CALLBACK&titles=';
-   var imagesUrl = 'http://[languageTag].wikipedia.org/w/api.php?action=query&prop=imageinfo&iiprop=url&continue=&format=json&callback=JSON_CALLBACK&titles=';
+   var searchUrl = 'http://[languageTag].wikipedia.org/w/api.php?action=query&list=search&continue=&format=json&srsearch=';
+   var extractsUrl = 'http://[languageTag].wikipedia.org/w/api.php?action=query&prop=extracts|pageimages&exintro=&exlimit=10&pilimit=5&continue=&format=json&titles=';
+   var imagesUrl = 'http://[languageTag].wikipedia.org/w/api.php?action=query&prop=imageinfo&iiprop=url&continue=&format=json&titles=';
    var externalLinkPrefix = 'http://[languageTag].wikipedia.org/wiki/';
 
-   Controller.$inject = [ '$scope', '$http', 'finderDemoUtilities' ];
+   Controller.$inject = [ '$scope', '$http', '$sce', 'finderDemoUtilities', 'axI18n', 'axLog' ];
 
-   function Controller( $scope, $http, finderDemoUtils ) {
+   function Controller( $scope, $http, $sce, finderDemoUtils, i18n, log ) {
 
       $scope.messages = messages;
+      $scope.i18n = i18n;
 
-      patterns.i18n.handlerFor( $scope ).scopeLocaleFromFeature( 'i18n' );
+      patterns.i18n.handlerFor( $scope ).registerLocaleFromFeature( 'i18n' );
 
       $scope.resources = {};
       $scope.model = {
@@ -86,8 +87,8 @@ define( [
          $scope.model.selectedArticle = null;
 
          var url = ax.string.format( searchUrl, { languageTag: $scope.i18n.tags[ 'default' ] } );
-
-         $http.jsonp( url + encodeURIComponent( $scope.resources.search.queryString ) )
+         url = $sce.trustAsResourceUrl( url + encodeURIComponent( $scope.resources.search.queryString ) );
+         $http.jsonp( url )
             .then( function( response ) {
                var results = ax.object.path( response.data, 'query.search', [] );
                $scope.model.resultCount = ax.object.path( response.data, 'query.searchinfo.totalhits', 0 );
@@ -98,7 +99,7 @@ define( [
                }
             } )
             .catch( function( err ) {
-               ax.log.error( err );
+               log.error( err );
             } )
             .finally( stateHandler.searchFinished );
       }
@@ -108,8 +109,8 @@ define( [
       function queryDetailsForArticle( article ) {
 
          var url = ax.string.format( extractsUrl, { languageTag: $scope.i18n.tags[ 'default' ] } );
-
-         return $http.jsonp( url + article.title )
+         url = $sce.trustAsResourceUrl( url + article.title );
+         return $http.jsonp( url )
             .then( function( response ) {
                var pages = ax.object.path( response.data, 'query.pages', {} );
                var extract = pages[ Object.keys( pages )[ 0 ] ];
@@ -120,7 +121,8 @@ define( [
 
                if( extract.pageimage ) {
                   var imageUrl = ax.string.format( imagesUrl, { languageTag: $scope.i18n.tags[ 'default' ] } );
-                  return $http.jsonp( imageUrl + 'File:' + encodeURIComponent( extract.pageimage ) )
+                  imageUrl = $sce.trustAsResourceUrl( imageUrl + + 'File:' + encodeURIComponent( extract.pageimage ) );
+                  return $http.jsonp( imageUrl )
                      .then( function( response ) {
                         var pages = ax.object.path( response.data, 'query.pages', {} );
                         details.images = Object.keys( pages ).map( function( key ) {
@@ -134,7 +136,7 @@ define( [
                return details;
             } )
             .catch( function( err ) {
-               ax.log.error( err );
+               log.error( err );
                return {
                   extract: null,
                   images: []
@@ -145,6 +147,17 @@ define( [
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   return ng.module( 'wikipediaSearchWidget', [] ).controller( 'WikipediaSearchWidgetController', Controller );
-
-} );
+   return ng.module( 'wikipediaSearchWidget', [] )
+      .controller( 'WikipediaSearchWidgetController', Controller )
+      .config( function( $sceDelegateProvider ) {
+         $sceDelegateProvider.resourceUrlWhitelist( [
+            // Allow same origin resource loads.
+            'self',
+            // Allow loading from our assets domain. **.
+            'http://en.wikipedia.org/**',
+            extractsUrl + '/**',
+            imagesUrl + '/**',
+            externalLinkPrefix + '/**'
+         ] );
+      } );
+});

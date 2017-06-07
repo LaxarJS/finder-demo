@@ -4,7 +4,8 @@
  * https://laxarjs.org/
  */
 import { create } from 'laxar';
-import artifacts from 'laxar-loader/artifacts?flow=main&theme=default';
+import artifacts from 'laxar-loader/artifacts?flow=main&theme=cube';
+
 var angularAdapter = require( 'laxar-angular-adapter' );
 
 const config = {

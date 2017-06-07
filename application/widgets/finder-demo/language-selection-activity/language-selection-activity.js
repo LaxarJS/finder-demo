@@ -1,37 +1,23 @@
 /**
- * Copyright 2015 aixigo AG
+ * Copyright 2017 aixigo AG
  * Released under the MIT license.
  */
-define( [
-   'laxar'
-], function( ax ) {
-   'use strict';
 
-   var injections = [ 'axEventBus', 'axConfiguration' ];
+export const injections = [ 'axEventBus', 'axConfiguration' ];
 
-   function create( eventBus, config ) {
-      // IE < 11 needs `window.navigator.browserLanguage`
-      var browserLanguage = ( window.navigator.language || window.navigator.browserLanguage ).split( '-' )[0];
-      var defaultLanguage = config.get( 'i18n.locales.default', 'en' );
-      var supportedLanguages = [ 'de', 'en' ];
-      var language = supportedLanguages.indexOf( browserLanguage ) === -1 ? defaultLanguage : browserLanguage;
-      language = 'de';
-      if( language === defaultLanguage ) {
-         return;
-      }
+export function create( eventBus, config ) {
+   // IE < 11 needs `window.navigator.browserLanguage`
+   const browserLanguage = ( window.navigator.language ||
+                             window.navigator.browserLanguage ).split( '-' )[ 0 ];
+   const defaultLanguage = config.get( 'i18n.locales.default', 'en' );
+   const supportedLanguages = [ 'de', 'en' ];
+   const language = supportedLanguages.indexOf( browserLanguage ) === -1 ? defaultLanguage : browserLanguage;
 
-      eventBus.subscribe( 'beginLifecycleRequest', function() {
-         eventBus.publish( 'changeLocaleRequest.default', { locale: 'default', languageTag: language } );
-      } );
-
+   if( language === defaultLanguage ) {
+      return;
    }
 
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   return {
-      injections: injections,
-      create: create,
-      name: 'language-selection-activity'
-   };
-
-} );
+   eventBus.subscribe( 'beginLifecycleRequest', () => {
+      eventBus.publish( 'changeLocaleRequest.default', { locale: 'default', languageTag: language } );
+   } );
+}

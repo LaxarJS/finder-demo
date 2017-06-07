@@ -33,13 +33,14 @@ define( [
 
    var RELEASE_ID_KEY = 'reid:';
 
-   Controller.$inject = [ '$scope', '$http', '$q', 'finderDemoUtilities' ];
+   Controller.$inject = [ '$scope', '$http', '$q', 'finderDemoUtilities', 'axI18n' ];
 
-   function Controller( $scope, $http, $q, finderDemoUtils ) {
+   function Controller( $scope, $http, $q, finderDemoUtils, i18n ) {
 
       $scope.messages = messages;
+      $scope.i18n = i18n;
 
-      patterns.i18n.handlerFor( $scope ).scopeLocaleFromFeature( 'i18n' );
+      patterns.i18n.handlerFor( $scope ).registerLocaleFromFeature( 'i18n' );
 
       $scope.resources = {};
       $scope.model = {

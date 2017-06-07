@@ -27,13 +27,14 @@ define( [
    var forecastWeatherUrlTemplate =
       'http://api.openweathermap.org/data/2.5/forecast?lat=[lat]&lon=[lon]&units=metric&lang=[lang]&callback=JSON_CALLBACK';
 
-   Controller.$inject = [ '$scope', '$http', '$q', 'finderDemoUtilities' ];
+   Controller.$inject = [ '$scope', '$http', '$q', 'finderDemoUtilities', 'axI18n' ];
 
-   function Controller( $scope, $http, $q, finderDemoUtils ) {
+   function Controller( $scope, $http, $q, finderDemoUtils, i18n ) {
 
       $scope.messages = messages;
+      $scope.i18n = i18n;
 
-      patterns.i18n.handlerFor( $scope ).scopeLocaleFromFeature( 'i18n', {
+      patterns.i18n.handlerFor( $scope ).registerLocaleFromFeature( 'i18n', {
          onChange: function( i18n ) {
             loadMomentLocale( i18n.languageTag );
          }
