@@ -3,7 +3,7 @@
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
-define( {
+export const messages = {
 
    ACTIVE_SINCE: {
       de: 'Aktiv seit',
@@ -55,4 +55,4 @@ define( {
       en: 'Still active'
    }
 
-} );
+};

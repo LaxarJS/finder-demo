@@ -23,9 +23,6 @@
          }
       ],
 
-      "content1c": [
-      ],
-
       "content1a": [
          {
             "widget": "finder-demo/wikipedia-search-widget",
@@ -38,9 +35,23 @@
             "enabled": true
          }
       ],
-      "content1b": [
 
+      "content1b": [
+         {
+            "widget": "finder-demo/music-brainz-search-widget",
+            "id": "musicBrainzSearch",
+            "features": {
+               "search": {
+                  "resource": "searchString"
+               }
+            },
+            "enabled": true
+         }
       ],
+
+      "content1c": [
+      ],
+
       "content2a": [
 
       ],

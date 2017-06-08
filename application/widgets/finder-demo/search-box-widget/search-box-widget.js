@@ -2,57 +2,59 @@
  * Copyright 2015 aixigo AG
  * Released under the MIT license.
  */
-define( [
-   'angular',
-   'laxar',
-   'laxar-patterns',
-   './messages'
-], function( ng, ax, patterns, messages ) {
-   'use strict';
+
+import * as ng from 'angular';
+import * as ax from 'laxar';
+import * as patterns from 'laxar-patterns';
+import messages from './messages';
+
+Controller.$inject = [ '$scope', 'axEventBus', 'axI18n' ];
+
+function Controller( $scope, eventBus, i18n ) {
+
+   $scope.messages = messages;
+   $scope.i18n = i18n;
+
+   patterns.i18n.handlerFor( $scope ).registerLocaleFromFeature( 'i18n' );
+
+   $scope.model = {
+      queryString: ''
+   };
+
+   const searchPublisher = patterns.resources.replacePublisherForFeature( $scope, 'search' );
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   Controller.$inject = [ '$scope', 'axEventBus', 'axI18n' ];
+   eventBus.subscribe( 'didNavigate', event => {
+      const query = ax.object.path( event, 'data.query', '' );
+      if( query && query.length > 0 ) {
+         $scope.model.queryString = query;
+         $scope.functions.startSearch();
+      }
+   } );
 
-   function Controller( $scope, eventBus, i18n ) {
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-      $scope.messages = messages;
-      $scope.i18n = i18n;
+   $scope.functions = {
+      startSearch: () => {
+         searchPublisher( {
+            queryString: $scope.model.queryString
+         } );
+      }
+   };
 
-      patterns.i18n.handlerFor( $scope ).registerLocaleFromFeature( 'i18n' );
-
-      $scope.model = {
-         queryString: ''
-      };
-
-      var searchPublisher = patterns.resources.replacePublisherForFeature( $scope, 'search' );
-
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-      eventBus.subscribe( 'didNavigate', function( event ) {
-         var query = ax.object.path( event, 'data.query', '' );
-         if( query && query.length > 0 ) {
-            $scope.model.queryString = query;
-            $scope.functions.startSearch();
-         }
+   // Event for testing other widgets
+   eventBus.subscribe( 'beginLifecycleRequest',  () => {
+      searchPublisher( {
+         queryString: 'The Doors'
       } );
+   } );
 
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+}
 
-      $scope.functions = {
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-         startSearch: function() {
-            searchPublisher( {
-               queryString: $scope.model.queryString
-            } );
-         }
+export const name = ng.module( 'searchBoxWidget', [] )
+   .controller( 'SearchBoxWidgetController', Controller ).name;
 
-      };
 
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   return ng.module( 'searchBoxWidget', [] ).controller( 'SearchBoxWidgetController', Controller );
-
-} );

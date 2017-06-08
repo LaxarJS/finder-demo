@@ -3,7 +3,8 @@
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
-define( {
+
+export const messages = {
 
    EXTERNAL_LINK: {
       de: 'Zum Artikel',
@@ -25,4 +26,4 @@ define( {
       en: 'Searching ...'
    }
 
-} );
+};

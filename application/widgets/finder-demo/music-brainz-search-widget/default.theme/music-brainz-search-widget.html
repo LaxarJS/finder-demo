@@ -40,8 +40,8 @@
                   </tr>
                   <tr>
                      <td>{{ messages.ACTIVE_UNTIL | axLocalize:i18n }}:</td>
-                     <td data-ng-if="model.selectedArtist.lifeSpanEnd == 'true'">{{ messages.NOT_ACTIVE_ANYMORE | axLocalize:i18n }}</td>
-                     <td data-ng-if="model.selectedArtist.lifeSpanEnd == 'false'">{{ messages.STILL_ACTIVE | axLocalize:i18n }}</td>
+                     <td data-ng-if="model.selectedArtist.lifeSpanEnd == true">{{ messages.NOT_ACTIVE_ANYMORE | axLocalize:i18n }}</td>
+                     <td data-ng-if="model.selectedArtist.lifeSpanEnd == false">{{ messages.STILL_ACTIVE | axLocalize:i18n }}</td>
                   </tr>
                   <tr>
                      <td>{{ messages.AREA | axLocalize:i18n }}:</td>
