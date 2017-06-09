@@ -1,9 +1,9 @@
 /**
- * Copyright 2015 aixigo AG
+ * Copyright 2017 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
-define( {
+export const messages = {
 
    EXTERNAL_LINK: {
       de: 'Zum Film auf IMDb',
@@ -50,4 +50,4 @@ define( {
       en: 'Year of Publication'
    }
 
-} );
+};

@@ -7,6 +7,19 @@
          {
             "widget": "finder-demo/language-selection-activity",
             "id": "languageSelectionActivity"
+         },
+         {
+            "widget": "finder-demo/geocoding-activity",
+            "id": "geocodingActivity",
+            "features": {
+               "search": {
+                  "resource": "searchString"
+               },
+               "locations": {
+                  "resource": "availableLocations",
+                  "searching": "geocodingInProgress"
+               }
+            }
          }
 
       ],
@@ -49,14 +62,21 @@
          }
       ],
 
-      "content1c": [
-      ],
-
       "content2a": [
-
-      ],
-      "content2b": [
-
+         {
+            "widget": "finder-demo/open-street-map-widget",
+            "id": "openStreetMap",
+            "features": {
+               "search": {
+                  "resource": "searchString"
+               },
+               "locations": {
+                  "resource": "availableLocations",
+                  "searchingOn": [ "geocodingInProgress" ]
+               }
+            },
+            "enabled": true
+         }
       ]
    }
 }

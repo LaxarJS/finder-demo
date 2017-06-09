@@ -2,99 +2,89 @@
  * Copyright 2015 aixigo AG
  * Released under the MIT license.
  */
-define( [
-   'laxar',
-   'laxar-patterns',
-   'whatwg-fetch', // will directly change the global object
-   'promise-polyfill' // will directly change the global object
-], ( ax, patterns ) => {
-   'use strict';
 
-   /**
-    * Uses nominatim for Geocoding: http://wiki.openstreetmap.org/wiki/Nominatim
-    *
-    * @type {string}
-    */
+import 'whatwg-fetch';// will directly change the global object
+import 'promise-polyfill';// will directly change the global object
+import * as patterns from 'laxar-patterns';
+/**
+ * Uses nominatim for Geocoding: http://wiki.openstreetmap.org/wiki/Nominatim
+ *
+ * @type {string}
+ */
+
+export const injections = [ 'axEventBus', 'axContext', 'axStorage', 'axLog' ];
+
+export function create( eventBus, context, storage, log ) {
    const locationSearchUrl = 'http://nominatim.openstreetmap.org/search?format=json&polygon=0&addressdetails=1&q=';
 
-   const injections = [ 'axEventBus', 'axContext', 'axStorage' ];
+   //StorageFactory.getApplicationLocalStorage()
 
-   function create( eventBus, context, storage ) {
-      //StorageFactory.getApplicationLocalStorage()
-      const cache = storage.session;//.getItem( `geocodingActivity-${context.widget.id}` );
-      let nextSearchId = 0;
+   const cache = storage.session;//.getItem( `geocodingActivity-${context.widget.id}` );
+   let nextSearchId = 0;
 
-      context.resources = {};
-      patterns.resources.handlerFor( context )
-         .registerResourceFromFeature( 'search', { onUpdateReplace: searchForLocations } );
+   context.resources = {};
+   patterns.resources.handlerFor( context )
+      .registerResourceFromFeature( 'search', { onUpdateReplace: searchForLocations } );
 
-      const locationsPublisher = patterns.resources.replacePublisherForFeature( context, 'locations' );
+   const locationsPublisher = patterns.resources.replacePublisherForFeature( context, 'locations' );
 
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+   ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-      function searchForLocations() {
-         publishSearchingFlagState( true );
+   function searchForLocations() {
+      publishSearchingFlagState( true );
 
-         const currentSearchId = nextSearchId++;
-         const url = locationSearchUrl + encodeURIComponent( context.resources.search.queryString );
-         const cachedEntry = cache.getItem( url );
-         let jsonResultPromise;
+      const currentSearchId = nextSearchId++;
+      const url = locationSearchUrl + encodeURIComponent( context.resources.search.queryString );
+      const cachedEntry = cache.getItem( url );
+      let jsonResultPromise;
 
-         if( cachedEntry ) {
-            ax.log.trace(
-               'Fetched location search for "[0]" from cache.',
-               context.resources.search.queryString
-            );
-            jsonResultPromise = Promise.resolve( cachedEntry );
-         }
-         else {
-            jsonResultPromise = window.fetch( url )
-               .then( response => {
-                  return response.json();
-               } )
-               .then( parsedJson => {
-                  cache.setItem( url, parsedJson );
-                  return parsedJson;
-               } );
-         }
-
-         jsonResultPromise
-            .then( parsedJson => {
-               if( currentSearchId + 1 === nextSearchId ) {
-                  locationsPublisher( parsedJson );
-               }
-               // skip old searches
-            }, err => {
-               ax.log.error( err );
+      if( cachedEntry ) {
+         log.trace(
+            'Fetched location search for "[0]" from cache.',
+            context.resources.search.queryString
+         );
+         jsonResultPromise = Promise.resolve( cachedEntry );
+      }
+      else {
+         jsonResultPromise = window.fetch( url )
+            .then( response => {
+               return response.json();
             } )
-            .then( () => {
-               if( currentSearchId + 1 === nextSearchId ) {
-                  publishSearchingFlagState( false );
-               }
+            .then( parsedJson => {
+               cache.setItem( url, parsedJson );
+               return parsedJson;
             } );
       }
 
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-      function publishSearchingFlagState( searching ) {
-         if( !context.features.locations.searching ) {
-            return;
-         }
-
-         eventBus.publish( `didChangeFlag.${context.features.locations.searching}.${searching}`, {
-            flag: context.features.locations.searching,
-            state: searching
+      jsonResultPromise
+         .then( parsedJson => {
+            if( currentSearchId + 1 === nextSearchId ) {
+               locationsPublisher( parsedJson );
+            }
+            // skip old searches
+         }, err => {
+            log.error( err );
+         } )
+         .then( () => {
+            if( currentSearchId + 1 === nextSearchId ) {
+               publishSearchingFlagState( false );
+            }
          } );
-      }
-
    }
 
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+   ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   return {
-      injections,
-      create,
-      name: 'geocoding-activity'
-   };
+   function publishSearchingFlagState( searching ) {
+      if( !context.features.locations.searching ) {
+         return;
+      }
 
-} );
+      eventBus.publish( `didChangeFlag.${context.features.locations.searching}.${searching}`, {
+         flag: context.features.locations.searching,
+         state: searching
+      } );
+   }
+
+}
+
+

@@ -3,7 +3,7 @@
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
-define( {
+export const messages = {
 
    NO_RESULTS: {
       de: 'Zu Ihrer Suche konnte leider nichts gefunden werden.',
@@ -70,4 +70,4 @@ define( {
       en: 'Cloudiness'
    }
 
-} );
+};

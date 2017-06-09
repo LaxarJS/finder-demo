@@ -44,9 +44,9 @@ function Controller( $scope, eventBus, i18n ) {
    };
 
    // Event for testing other widgets
-   eventBus.subscribe( 'beginLifecycleRequest',  () => {
+   eventBus.subscribe( 'beginLifecycleRequest', () => {
       searchPublisher( {
-         queryString: 'The Doors'
+         queryString: 'Aachen'
       } );
    } );
 
