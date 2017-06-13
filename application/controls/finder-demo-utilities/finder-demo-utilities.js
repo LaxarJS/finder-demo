@@ -1,54 +1,43 @@
 /**
- * Copyright 2015 aixigo AG
+ * Copyright 2017 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
-define( [
-   'angular',
-   'laxar'
-], function( ng, ax ) {
-   'use strict';
 
-   var module = ng.module( 'finderDemoUtilities', [] );
+import { module } from 'angular';
+import * as ax from 'laxar';
 
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   module.filter( 'urlEncode', function() {
+export const name = module( 'finderDemoUtilities', [] )
+   .filter( 'urlEncode', () => {
       return function( uriComponent ) {
          return encodeURIComponent( uriComponent );
       };
-   } );
+   } )
+   .factory( 'finderDemoUtilities', [ () => {
 
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   module.factory( 'finderDemoUtilities', [ function() {
-
-      return {
-         stateWatcherFor: stateWatcherFor,
-         parseXml: parseXml
-      };
+      return { stateWatcherFor, parseXml };
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
       function stateWatcherFor( scope, selectionModelKey, queryStringKey ) {
 
-         var pendingSearches = 0;
+         let pendingSearches = 0;
 
          return {
 
-            searchStarted: function() {
+            searchStarted: () => {
                ++pendingSearches;
             },
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
-            searchFinished: function() {
+            searchFinished: () => {
                --pendingSearches;
             },
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
-            currentState: function() {
+            currentState: () => {
                if( pendingSearches > 0 ) {
                   return 'SEARCHING';
                }
@@ -66,7 +55,7 @@ define( [
 
          };
       }
-      
+
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
       function parseXml( xmlString ) {
@@ -75,8 +64,8 @@ define( [
          }
 
          if( typeof window.ActiveXObject !== 'undefined' &&
-            new window.ActiveXObject( 'Microsoft.XMLDOM' ) ) {
-            var xmlDoc = new window.ActiveXObject( 'Microsoft.XMLDOM' );
+             new window.ActiveXObject( 'Microsoft.XMLDOM' ) ) {
+            const xmlDoc = new window.ActiveXObject( 'Microsoft.XMLDOM' );
             xmlDoc.async = 'false';
             xmlDoc.loadXML( xmlString );
             return xmlDoc;
@@ -85,10 +74,5 @@ define( [
          throw new Error( 'No XML parser found' );
       }
 
-   } ] );
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   return module;
-
-} );
+   } ] )
+   .name;

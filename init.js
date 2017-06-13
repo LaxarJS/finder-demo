@@ -1,12 +1,15 @@
 /**
- * Copyright 2017
- * Released under the MIT license
- * https://laxarjs.org/
+ * Copyright 2017 aixigo AG
+ * Released under the MIT license.
+ * https://laxarjs.org/license
  */
+
+/* global require */
+
 import { create } from 'laxar';
 import artifacts from 'laxar-loader/artifacts?flow=main&theme=cube';
 
-var angularAdapter = require( 'laxar-angular-adapter' );
+import * as angularAdapter from 'laxar-angular-adapter';
 
 const config = {
    name: 'finder-demo',

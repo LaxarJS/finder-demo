@@ -1,0 +1,74 @@
+@charset "UTF-8";
+
+@import "variables_all";
+
+@keyframes spinner {
+    to {transform: rotate(360deg);}
+}
+
+.wikipedia-search-widget {
+
+   .ax-finder-logo {
+      background-image: url( "../images/logo.png" );
+   }
+
+   .ax-result-image {
+      width: 35%;
+      float: right;
+      border: 1px solid #ccc;
+      background-color: white;
+      box-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+      padding: 0.2em;
+      margin-left: 0.5em;
+   }
+
+   .ax-alert {
+      color: #aaa;
+      font-family: "Exo 2", Arial, sans-serif;
+      font-weight: 300;
+      font-size: 1.2rem;
+      min-height: 6rem;
+      position: relative;
+   }
+
+   .ax-alert__text {
+      position: absolute;
+      top: 0.6rem;
+      padding-left: 2.5rem;
+
+      &.text-danger {
+         color: #d3201d;
+      }
+   }
+
+   .ax-alert__icon {
+      font-size: 1.5rem;
+      width: 1.5rem;
+      left: 0;
+      position: absolute;
+   }
+
+   .ax-spinner {
+       color: #03ade0;
+   }
+
+   .spinner:before {
+      content: "";
+       position: absolute;
+       top: 50%;
+       left: 0;
+       width: 1.5rem;
+       height: 1.5rem;
+       margin-top: -0.85rem;
+   }
+
+   .spinner:not(:required):before {
+       content: '';
+       border-radius: 50%;
+       border: 2px solid rgba(255,255,255,0);
+       border-top-color: #03ade0;
+       border-bottom-color: #03ade0;
+       animation: spinner .8s ease infinite;
+       -webkit-animation: spinner .8s ease infinite;
+   }
+}

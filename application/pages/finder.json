@@ -5,11 +5,11 @@
 
       "activities": [
          {
-            "widget": "finder-demo/language-selection-activity",
+            "widget": "language-selection-activity",
             "id": "languageSelectionActivity"
          },
          {
-            "widget": "finder-demo/geocoding-activity",
+            "widget": "geocoding-activity",
             "id": "geocodingActivity",
             "features": {
                "search": {
@@ -26,7 +26,7 @@
 
       "searchBox": [
          {
-            "widget": "finder-demo/search-box-widget",
+            "widget": "search-box-widget",
             "id": "searchBox",
             "features": {
                "search": {
@@ -38,7 +38,7 @@
 
       "content1a": [
          {
-            "widget": "finder-demo/wikipedia-search-widget",
+            "widget": "wikipedia-search-widget",
             "id": "wikipediaSearch",
             "features": {
                "search": {
@@ -51,7 +51,7 @@
 
       "content1b": [
          {
-            "widget": "finder-demo/music-brainz-search-widget",
+            "widget": "music-brainz-search-widget",
             "id": "musicBrainzSearch",
             "features": {
                "search": {
@@ -64,7 +64,7 @@
 
       "content2a": [
          {
-            "widget": "finder-demo/open-street-map-widget",
+            "widget": "open-street-map-widget",
             "id": "openStreetMap",
             "features": {
                "search": {

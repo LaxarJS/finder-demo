@@ -1,7 +1,7 @@
 /**
- * Copyright 2017 LaxarJS Team
- * Released under the MIT license
- * https://laxarjs.org
+ * Copyright 2017 aixigo AG
+ * Released under the MIT license.
+ * https://laxarjs.org/license
  */
 
 /* eslint-env node */
@@ -67,7 +67,7 @@ function config( env ) {
                test: /\.(gif|jpe?g|png|ttf|woff2?|svg|eot|otf)(\?.*)?$/,
                loader: 'file-loader',
                options: {
-                  name: env.production ? 'assets/[name]-[sha1:hash:8].[ext]' : 'assets/[name].[ext]'
+                  name: env.production ? 'assets/[name]-[sha1:hash:8].[ext]' : 'assets/[path]-[name].[ext]'
                }
             },
             {  // ... after optimizing graphics with the image-loader ...

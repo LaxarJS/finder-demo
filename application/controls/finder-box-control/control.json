@@ -1,6 +1,8 @@
 {
    "name": "finder-box-control",
 
+   "styleSource": "scss/finder-box-control.scss",
+
    "integration": {
       "technology": "angular"
    }
