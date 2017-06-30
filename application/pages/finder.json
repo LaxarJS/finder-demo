@@ -3,10 +3,18 @@
 
    "areas": {
 
-      "activities": [
+      "axActivities": [
          {
             "widget": "language-selection-activity",
             "id": "languageSelectionActivity"
+         },
+         {
+            "widget": "laxar-developer-tools-widget",
+            "features": {
+               "open": {
+                  "onGlobalMethod": "goDevelop"
+               }
+            }
          },
          {
             "widget": "geocoding-activity",
@@ -21,7 +29,6 @@
                }
             }
          }
-
       ],
 
       "searchBox": [

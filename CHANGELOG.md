@@ -3,6 +3,11 @@
 ## Last Changes
 
 
+## v2.0.1
+
+- [#21](https://github.com/LaxarJS/finder-demo/issues/21): added missing laxar-developer-tools-widget
+
+
 ## v2.0.0
 
 - [#19](https://github.com/LaxarJS/finder-demo/issues/19): final preparations for LaxarJS v2 release
