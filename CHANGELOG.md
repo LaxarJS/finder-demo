@@ -2,6 +2,9 @@
 
 ## Last Changes
 
+
+## v2.0.0
+
 - [#19](https://github.com/LaxarJS/finder-demo/issues/19): final preparations for LaxarJS v2 release
 - [#20](https://github.com/LaxarJS/finder-demo/issues/20): fixed links in changelog
 - [#18](https://github.com/LaxarJS/finder-demo/issues/18): upgraded to LaxarJS 2 and removed widgets
