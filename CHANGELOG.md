@@ -3,10 +3,18 @@
 ## Last Changes
 
 
+## v2.0.0
+
+- [#19](https://github.com/LaxarJS/finder-demo/issues/19): final preparations for LaxarJS v2 release
+- [#20](https://github.com/LaxarJS/finder-demo/issues/20): fixed links in changelog
+- [#18](https://github.com/LaxarJS/finder-demo/issues/18): upgraded to LaxarJS 2 and removed widgets
+   + **BREAKING CHANGE:** see ticket for details
+
+
 ## v1.5.0
 
-- [#17](https://github.com/LaxarJS/mashup-demo/issues/17): fixed copyright holder in license
-- [#16](https://github.com/LaxarJS/mashup-demo/issues/16): expanded widget definitions and updated laxar
+- [#17](https://github.com/LaxarJS/finder-demo/issues/17): fixed copyright holder in license
+- [#16](https://github.com/LaxarJS/finder-demo/issues/16): expanded widget definitions and updated laxar
 - [#15](https://github.com/LaxarJS/finder-demo/issues/15): fixed laxar-mocks/laxar dependency mismatch
 - [#14](https://github.com/LaxarJS/finder-demo/issues/14): fixed jasmine2 paths in spec-runners and require_config
 

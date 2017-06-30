@@ -1,0 +1,8 @@
+{
+  "generator-laxarjs2": {
+    "author": "",
+    "homepage": "https://laxarjs.org/",
+    "license": "MIT",
+    "banner": "/**\n * Copyright 2017\n * Released under the MIT license\n * https://laxarjs.org/\n */"
+  }
+}

@@ -1,7 +1,12 @@
-.idea
+*~
 *.orig
+*.backup.json
+.idea
 .sass-cache
 /node_modules
-*.backup.json
-finder-demo-*.zip
-test-results.xml
+/npm-debug.log
+/spec-output
+/test-results.xml
+atlassian-ide-plugin.xml
+/bower_components
+/tmp

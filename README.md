@@ -20,7 +20,7 @@ To fetch the required tools and libraries, make sure that you have `npm` (comes 
 Use a shell to issue the following commands:
 
 ```sh
-git clone --recursive https://github.com/LaxarJS/finder-demo.git
+git clone https://github.com/LaxarJS/finder-demo.git
 cd finder-demo
 npm install
 npm start
