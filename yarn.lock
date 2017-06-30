@@ -2555,13 +2555,9 @@ escope@^3.6.0:
     esrecurse "^4.1.0"
     estraverse "^4.1.1"
 
-eslint-config-laxarjs@^0.4.0:
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/eslint-config-laxarjs/-/eslint-config-laxarjs-0.4.0.tgz#d15d4a44378dc18b6293107178e14dbf15e08d74"
-
-eslint-config-laxarjs@^2.0.0-rc.0:
-  version "2.0.0-rc.0"
-  resolved "https://registry.yarnpkg.com/eslint-config-laxarjs/-/eslint-config-laxarjs-2.0.0-rc.0.tgz#bef8972f85dac0ead520fe4bded7993dfe654a06"
+eslint-config-laxarjs@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/eslint-config-laxarjs/-/eslint-config-laxarjs-2.0.0.tgz#720aa9c47ee4c18fac3d5f359c3fb9c15233c38f"
 
 eslint-plugin-angular@^2.4.2:
   version "2.4.2"
@@ -2851,7 +2847,7 @@ extglob@^0.3.1:
   dependencies:
     is-extglob "^1.0.0"
 
-extract-text-webpack-plugin@^2.0.0-rc.3:
+extract-text-webpack-plugin@^2.0.0:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/extract-text-webpack-plugin/-/extract-text-webpack-plugin-2.1.2.tgz#756ef4efa8155c3681833fbc34da53b941746d6c"
   dependencies:
@@ -3316,7 +3312,7 @@ glob@7.0.5:
     once "^1.3.0"
     path-is-absolute "^1.0.0"
 
-glob@7.1.1:
+glob@7.1.1, glob@^7.0.0, glob@^7.0.3, glob@^7.0.5, glob@^7.1.1, glob@~7.1.1:
   version "7.1.1"
   resolved "https://registry.yarnpkg.com/glob/-/glob-7.1.1.tgz#805211df04faaf1c63a3600306cdf5ade50b2ec8"
   dependencies:
@@ -3344,17 +3340,6 @@ glob@^6.0.1:
     inflight "^1.0.4"
     inherits "2"
     minimatch "2 || 3"
-    once "^1.3.0"
-    path-is-absolute "^1.0.0"
-
-glob@^7.0.0, glob@^7.0.3, glob@^7.0.5, glob@^7.1.1, glob@~7.1.1:
-  version "7.1.2"
-  resolved "https://registry.yarnpkg.com/glob/-/glob-7.1.2.tgz#c19c9df9a028702d678612384a6552404c636d15"
-  dependencies:
-    fs.realpath "^1.0.0"
-    inflight "^1.0.4"
-    inherits "2"
-    minimatch "^3.0.4"
     once "^1.3.0"
     path-is-absolute "^1.0.0"
 
@@ -4599,23 +4584,29 @@ latest-version@^2.0.0:
   dependencies:
     package-json "^2.0.0"
 
-laxar-angular-adapter@^2.0.0-rc.1:
-  version "2.0.0-rc.1"
-  resolved "https://registry.yarnpkg.com/laxar-angular-adapter/-/laxar-angular-adapter-2.0.0-rc.1.tgz#4274802eb0a354dc58195af3f54336395a678216"
+laxar-angular-adapter@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/laxar-angular-adapter/-/laxar-angular-adapter-2.0.0.tgz#3cf117ff14d0497ea3a852816e45b1ef8e847999"
 
-laxar-cube.theme@^2.0.0-alpha.0:
-  version "2.0.0-alpha.0"
-  resolved "https://registry.yarnpkg.com/laxar-cube.theme/-/laxar-cube.theme-2.0.0-alpha.0.tgz#883995c76173d66fabf64dbe3dff54672833786f"
+laxar-cube.theme@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/laxar-cube.theme/-/laxar-cube.theme-2.0.0.tgz#e3b2015b687a68b71388bf199b9f756c4b1ddedc"
   dependencies:
-    laxar-uikit "^2.0.0-beta.0"
+    laxar-uikit "^2.0.0"
     pkg-dir "^1.0.0"
 
-laxar-infrastructure@^2.0.0-rc.1:
-  version "2.0.0-rc.1"
-  resolved "https://registry.yarnpkg.com/laxar-infrastructure/-/laxar-infrastructure-2.0.0-rc.1.tgz#b5e80857fd1cd7e3a4b05f63493573de53c4b073"
+laxar-developer-tools-widget@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/laxar-developer-tools-widget/-/laxar-developer-tools-widget-3.0.0.tgz#ee25cf579a92dd5bae440df4b0302a46b29a6c44"
+  dependencies:
+    laxar "^2.0.0"
+
+laxar-infrastructure@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/laxar-infrastructure/-/laxar-infrastructure-2.0.0.tgz#be7350bde99542caf712201e070702fa514ea358"
   dependencies:
     eslint "^3.0.1"
-    eslint-config-laxarjs "^2.0.0-rc.0"
+    eslint-config-laxarjs "^2.0.0"
     jasmine-core "^2.5.2"
     karma "^1.5.0"
     karma-chrome-launcher "^2.0.0"
@@ -4631,49 +4622,49 @@ laxar-infrastructure@^2.0.0-rc.1:
     source-map-support "^0.4.10"
     webpack-jasmine-html-runner-plugin "^0.7.0"
 
-laxar-loader@^2.0.0-rc.3:
-  version "2.0.0-rc.3"
-  resolved "https://registry.yarnpkg.com/laxar-loader/-/laxar-loader-2.0.0-rc.3.tgz#010e6b541468b81add0cf6fb08718f5a8ee45351"
+laxar-loader@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/laxar-loader/-/laxar-loader-2.0.0.tgz#2389eee9c2ba3c5f2a441701e654c09fb59f339e"
   dependencies:
     bundle-loader "^0.5.5"
     json-loader "^0.5.4"
-    laxar-tooling "^2.0.0-rc.2"
+    laxar-tooling "^2.0.0"
     loader-utils "^0.2.15"
     raw-loader "^0.5.1"
 
-laxar-mocks@^2.0.0-rc.2:
-  version "2.0.0-rc.2"
-  resolved "https://registry.yarnpkg.com/laxar-mocks/-/laxar-mocks-2.0.0-rc.2.tgz#b97ce149a9816faa77f1fe8d42cf0d0e76257886"
+laxar-mocks@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/laxar-mocks/-/laxar-mocks-2.0.0.tgz#f0eca1272d9b8813a7bc4c02f02df01430834b41"
   dependencies:
     laxar-tooling "^2.0.0-rc.2"
 
-laxar-patterns@^2.0.0-rc.2:
-  version "2.0.0-rc.2"
-  resolved "https://registry.yarnpkg.com/laxar-patterns/-/laxar-patterns-2.0.0-rc.2.tgz#14fd19330f2092be5fa552ab5599e8584fbf38a7"
+laxar-patterns@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/laxar-patterns/-/laxar-patterns-2.0.0.tgz#cb3a635ff003bac1e9507cf2c22d7ec2e2427b4c"
   dependencies:
     fast-json-patch "~0.5.2"
-    laxar "^2.0.0-rc.2"
+    laxar "^2.0.0"
 
-laxar-tooling@^2.0.0-rc.2:
-  version "2.0.0-rc.2"
-  resolved "https://registry.yarnpkg.com/laxar-tooling/-/laxar-tooling-2.0.0-rc.2.tgz#cb30da1d51c9e17d88bfacbdff29007a49092d7a"
+laxar-tooling@^2.0.0, laxar-tooling@^2.0.0-rc.2:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/laxar-tooling/-/laxar-tooling-2.0.0.tgz#5da66e07f07ea8e998889692fac4bec5b2d724b2"
   dependencies:
     ajv "^4.11.5"
     jsonlint "^1.6.2"
     source-map-support "^0.4.2"
 
-laxar-uikit@^2.0.0-beta.0, laxar-uikit@^2.0.0-rc.1:
-  version "2.0.0-rc.1"
-  resolved "https://registry.yarnpkg.com/laxar-uikit/-/laxar-uikit-2.0.0-rc.1.tgz#0f6e5104d0c2ad79378685fb95310d9695071292"
+laxar-uikit@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/laxar-uikit/-/laxar-uikit-2.0.0.tgz#5fca9f85066a6d21a2722571b8f3a89126f1c405"
   dependencies:
     bootstrap-sass "~3.3.7"
     font-awesome "~4.7.0"
     moment "^2.17.1"
     pkg-dir "^1.0.0"
 
-laxar@^2.0.0-rc.2, laxar@^2.0.0-rc.3:
-  version "2.0.0-rc.3"
-  resolved "https://registry.yarnpkg.com/laxar/-/laxar-2.0.0-rc.3.tgz#39d3388b4cfd0a432a11f58c858071b150f4a688"
+laxar@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/laxar/-/laxar-2.0.0.tgz#86f3f15b1b9f7a53c6d36518077b66f92dc74fee"
   dependencies:
     navigo "4.3.6"
 
@@ -5132,7 +5123,7 @@ minimalistic-crypto-utils@^1.0.0, minimalistic-crypto-utils@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/minimalistic-crypto-utils/-/minimalistic-crypto-utils-1.0.1.tgz#f6c00c1c0b082246e5c4d99dfb8c7c083b2b582a"
 
-"minimatch@2 || 3", minimatch@3.0.x, minimatch@^3.0.0, minimatch@^3.0.2, minimatch@^3.0.4, minimatch@~3.0.2:
+"minimatch@2 || 3", minimatch@3.0.x, minimatch@^3.0.0, minimatch@^3.0.2, minimatch@~3.0.2:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/minimatch/-/minimatch-3.0.4.tgz#5166e286457f03306064be5497e8dbb0c3d32083"
   dependencies:
@@ -6690,9 +6681,9 @@ right-align@^0.1.1:
   dependencies:
     align-text "^0.1.1"
 
-rimraf@2, rimraf@2.5.4, rimraf@^2.2.8:
-  version "2.5.4"
-  resolved "https://registry.yarnpkg.com/rimraf/-/rimraf-2.5.4.tgz#96800093cbf1a0c86bd95b4625467535c29dfa04"
+rimraf@2, rimraf@^2.2.6, rimraf@^2.5.1, rimraf@^2.5.4, rimraf@^2.6.0, rimraf@^2.6.1:
+  version "2.6.1"
+  resolved "https://registry.yarnpkg.com/rimraf/-/rimraf-2.6.1.tgz#c2338ec643df7a1b7fe5c54fa86f57428a55f33d"
   dependencies:
     glob "^7.0.5"
 
@@ -6702,9 +6693,9 @@ rimraf@2.4.3:
   dependencies:
     glob "^5.0.14"
 
-rimraf@^2.2.6, rimraf@^2.5.1, rimraf@^2.5.4, rimraf@^2.6.0, rimraf@^2.6.1:
-  version "2.6.1"
-  resolved "https://registry.yarnpkg.com/rimraf/-/rimraf-2.6.1.tgz#c2338ec643df7a1b7fe5c54fa86f57428a55f33d"
+rimraf@2.5.4, rimraf@^2.2.8:
+  version "2.5.4"
+  resolved "https://registry.yarnpkg.com/rimraf/-/rimraf-2.5.4.tgz#96800093cbf1a0c86bd95b4625467535c29dfa04"
   dependencies:
     glob "^7.0.5"
 
@@ -7394,11 +7385,12 @@ strip-outer@^1.0.0:
   dependencies:
     escape-string-regexp "^1.0.2"
 
-style-loader@^0.13.1:
-  version "0.13.2"
-  resolved "https://registry.yarnpkg.com/style-loader/-/style-loader-0.13.2.tgz#74533384cf698c7104c7951150b49717adc2f3bb"
+style-loader@^0.18.2:
+  version "0.18.2"
+  resolved "https://registry.yarnpkg.com/style-loader/-/style-loader-0.18.2.tgz#cc31459afbcd6d80b7220ee54b291a9fd66ff5eb"
   dependencies:
     loader-utils "^1.0.2"
+    schema-utils "^0.3.0"
 
 subarg@^1.0.0:
   version "1.0.0"

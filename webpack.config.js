@@ -7,6 +7,7 @@
 /* eslint-env node */
 
 const path = require( 'path' );
+const webpack = require( 'webpack' );
 const ExtractTextPlugin = require( 'extract-text-webpack-plugin' );
 const WebpackJasmineHtmlRunnerPlugin = require( 'webpack-jasmine-html-runner-plugin' );
 
@@ -25,21 +26,25 @@ module.exports = ( env = {} ) =>
       config( env );
 
 function config( env ) {
-   const publicPath = env.production ? '/dist/' : '/build/';
+   const outputPath = env.production ? 'dist/' : 'build/';
 
    return {
       devtool: '#source-map',
       entry: { 'init': './init.js' },
 
       output: {
-         path: path.resolve( __dirname, `./${publicPath}` ),
-         publicPath,
+         path: resolve( `./${outputPath}` ),
+         publicPath: outputPath,
          filename: env.production ? '[name].bundle.min.js' : '[name].bundle.js',
          chunkFilename: env.production ? '[name].bundle.min.js' : '[name].bundle.js'
       },
 
-      plugins: env.production ? [ new ExtractTextPlugin( { filename: '[name].bundle.css' } ) ] :
-         [ new WebpackJasmineHtmlRunnerPlugin() ],
+      plugins: env.production ? [
+         new ExtractTextPlugin( { filename: '[name].bundle.css' } ),
+         new webpack.optimize.UglifyJsPlugin()
+      ] : [
+         new WebpackJasmineHtmlRunnerPlugin()
+      ],
 
       resolve: {
          modules: [ resolve( 'node_modules' ) ],
@@ -74,22 +79,34 @@ function config( env ) {
                test: /\.(gif|jpe?g|png|svg)$/,
                loader: 'img-loader?progressive=true'
             },
-            {  // ... and resolving CSS url(s) with the css loader
+            {  // ... and resolving CSS url()s with the css loader
                // (extract-loader extracts the CSS string from the JS module returned by the css-loader)
                test: /\.(css|s[ac]ss)$/,
                loader: env.production ?
-                  ExtractTextPlugin.extract( { fallback: 'style-loader', use: 'css-loader' } ) :
-                  'style-loader!css-loader'
+                  ExtractTextPlugin.extract( {
+                     fallback: 'style-loader',
+                     use: env.production ? 'css-loader' : 'css-loader?sourceMap',
+                     publicPath: ''
+                  } ) :
+                  'style-loader!css-loader?sourceMap'
             },
             {
                test: /[/]default[.]theme[/].*[.]s[ac]ss$/,
                loader: 'sass-loader',
-               options: require( 'laxar-uikit/themes/default.theme/sass-options' )
+               options: Object.assign(
+                  {},
+                  require( 'laxar-uikit/themes/default.theme/sass-options' ),
+                  { sourceMap: true }
+               )
             },
             {
                test: /[/](laxar-)?cube[.]theme[/].*[.]s[ac]ss$/,
                loader: 'sass-loader',
-               options: require( 'laxar-cube.theme/sass-options' )
+               options: Object.assign(
+                  {},
+                  require( 'laxar-cube.theme/sass-options' ),
+                  { sourceMap: true }
+               )
             }
          ]
       }

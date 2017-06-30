@@ -4,10 +4,9 @@
  * https://laxarjs.org/license
  */
 
-/* global require */
-
 import { create } from 'laxar';
 import artifacts from 'laxar-loader/artifacts?flow=main&theme=cube';
+import debugInfo from 'laxar-loader/debug-info?flow=main&theme=cube';
 
 import * as angularAdapter from 'laxar-angular-adapter';
 
@@ -21,16 +20,10 @@ const config = {
          useHash: true
       }
    },
-   logging: {
-      threshold: 'TRACE'
-   },
-   theme: 'cube',
-   tooling: {
-      enabled: true
-   }
+   theme: 'cube'
 };
 
 create( [ angularAdapter ], artifacts, config )
-   .tooling( require( 'laxar-loader/debug-info?flow=main&theme=cube' ) )
+   .tooling( debugInfo )
    .flow( 'main', document.querySelector( '[data-ax-page]' ) )
    .bootstrap();
