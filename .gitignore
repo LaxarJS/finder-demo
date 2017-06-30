@@ -3,6 +3,7 @@
 *.backup.json
 .idea
 .sass-cache
+.vscode
 /build
 /dist
 /node_modules
